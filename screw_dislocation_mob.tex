@@ -1,0 +1,89 @@
+\chapter{Screw Dislocation Mobility BCC}
+The way screw dislocations have been treated in BCC mobility laws has been by allowing them to move freely in the crystal via the drag matrix \cref{e:screw_mob_old}
+\begin{align}\label{e:screw_mob_old}
+	\mtx{B}(\vec{\xi}) &= B_{s}(\mtx{I} - \vec{\xi} \otimes \vec{\xi})\,,\quad \textrm{when } \vec{\xi} \parallel \vec{b}\,.
+\end{align}
+Edge dislocations have been restricted to on the glide plane via \cref{e:edge_mob}
+\begin{align}\label{e:edge_mob}
+	\mtx{B}(\vec{\xi}) &= B_{el} (\vec{\xi} \otimes \vec{\xi}) + B_{eg} (\vec{m} \otimes \vec{m}) + B_{ec} (\vec{n} \otimes \vec{n})\,, \quad \textrm{when } \vec{\xi} \perp \vec{b}\,.
+\end{align}
+Where the subscripts $s,\, el,\, eg,\,e c$ mean screw, edge line, edge glide and edge climb respectively. The unit vectors $ \vec{n} \equiv \vec{b} \times \vec{\xi} / \lVert \vec{b} \times \vec{\xi} \rVert $ and $ \vec{m} \equiv \vec{n} \times \vec{\xi}$.
+
+By choosing appropriate drag coefficients, $B$, one can scale the movement of edge dislocations along any particular direction to fit real dislocation mobilities. However, this is not so for screw dislocations. The result of this is unrestricted movement.
+
+However if we recognise that in BCC screw dislocations only have one family of Burgers vectors $ \langle 1\,1\,1 \rangle $, we can construct find the potential glide planes, $ \vec{n} $ orthogonal to the Burgers vector as shown in \cref{e:screw_slip_sys},
+\begin{subequations}\label{e:screw_slip_sys}
+	\begin{align}
+		\dfrac{1}{\sqrt{3}}
+		\begin{bmatrix}
+			1 & 1 & 1
+		\end{bmatrix} &\perp 	\dfrac{1}{\sqrt{2}}
+								\begin{bmatrix}
+									1 & \overline{1} & 0
+								\end{bmatrix}\,,
+								\dfrac{1}{\sqrt{2}}
+								\begin{bmatrix}
+									1 & 0 & \overline{1}
+								\end{bmatrix}\,,
+								\dfrac{1}{\sqrt{2}}
+								\begin{bmatrix}
+									0 & 1 & \overline{1}
+								\end{bmatrix}\\
+		\dfrac{1}{\sqrt{3}}
+		\begin{bmatrix}
+			\overline{1} & 1 & 1
+		\end{bmatrix} &\perp 	\dfrac{1}{\sqrt{2}}
+								\begin{bmatrix}
+									1 & 1 & 0
+								\end{bmatrix}\,,
+								\dfrac{1}{\sqrt{2}}
+								\begin{bmatrix}
+									1 & 0 & 1
+								\end{bmatrix}\,,
+								\dfrac{1}{\sqrt{2}}
+								\begin{bmatrix}
+									0 & 1 & \overline{1}
+								\end{bmatrix}\\
+		\dfrac{1}{\sqrt{3}}
+		\begin{bmatrix}
+			1 & \overline{1} & 1
+		\end{bmatrix} &\perp 	\dfrac{1}{\sqrt{2}}
+								\begin{bmatrix}
+									1 & 1 & 0
+								\end{bmatrix}\,,
+								\dfrac{1}{\sqrt{2}}
+								\begin{bmatrix}
+									0 & 1 & 1
+								\end{bmatrix}\,,
+								\dfrac{1}{\sqrt{2}}
+								\begin{bmatrix}
+								1 & 0 & \overline{1}
+								\end{bmatrix}\\
+		\dfrac{1}{\sqrt{3}}
+		\begin{bmatrix}
+			1 & 1 & \overline{1}
+		\end{bmatrix} &\perp 	\dfrac{1}{\sqrt{2}}
+								\begin{bmatrix}
+									1 & 0 & 1
+								\end{bmatrix}\,,
+								\dfrac{1}{\sqrt{2}}
+								\begin{bmatrix}
+									0 & 1 & 1
+								\end{bmatrix}\,,
+								\dfrac{1}{\sqrt{2}}
+								\begin{bmatrix}
+									1 & \overline{1} & 0
+								\end{bmatrix}\,.					
+	\end{align}
+\end{subequations}
+We can then build a mobility function that limits the free movement of screw dislocations to preferentially occur along physically reasonable planes that is more along the lines of \cref{e:edge_mob} rather than freely moving as in \cref{e:screw_mob_old}. We can then use the same definition for $ \vec{m} \equiv \vec{n} \times \vec{\xi} $ and arrive at \cref{e:screw_mob_new},
+\begin{align}\label{e:screw_mob_new}
+	\mtx{B}(\vec{\xi}) &= B_{sl} (\vec{\xi} \otimes \vec{\xi}) + B_{sg} \sum\limits_{i}(\vec{m}_{i} \otimes \vec{m}_{i}) + B_{sc} \sum\limits_{i}(\vec{n}_{i} \otimes \vec{n}_{i})\,.
+\end{align}
+Where the sum over $ i $ is over the candidate planes.
+
+For a screw dislocation with $ \vec{b} = [1\,1\,1] $
+
+%glide = on the glide plane
+%climb = on the plane normal
+%line = along the line direction
