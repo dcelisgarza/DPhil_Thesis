@@ -28,12 +28,12 @@
 	\setcounter{arabiccounter}{\value{page}}
 	%
 	\if@twocolumn
-	\addtocounter{arabiccounter}{1}
+		\addtocounter{arabiccounter}{1}
 	\else
-	\if@openright
-	\addtocounter{arabiccounter}{2}
-	\else
-	\addtocounter{arabiccounter}{1}
-	\fi
+		\if@openright
+			\addtocounter{arabiccounter}{2}
+		\else
+			\addtocounter{arabiccounter}{1}
+		\fi
 	\fi
 }
