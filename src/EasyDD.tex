@@ -33,7 +33,7 @@ where $\vec{r}_i$ are nodal coordinates, $\vec{v}_i$ are nodal velocities, $\vec
     \end{enumerate}
 \end{algorithm}
 
-The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a different way of calculating the error but other than that they were the same. Unfortunately, this only increases the time step after converging to a satisfactory answer and advancing the time. So if anything caused the timestep to decrease, such as a collision or dislocation reaction, the time step would only increase very little every subsequent step, thus eading to unecessarily small time steps in most cases. The original implementation of this is found in commit \href{https://github.com/TarletonGroup/EasyDD/blob/780a6c41b35687b443d3241674af7393d2140639/int_trapezoid.m}{65907b0} under the name \texttt{int\_trapezoid.m}. An improved algorithm is described in \cref{alg:trapezoid_improved}. This algorithm takes close to the maximum allowed time step for the maximum allowable accuracy ($\epsilon_{\rvar{max}}$, $\upsilon_{\rvar{max}}$), timestep ($\Delta t_{\rvar{max}}$) and number of iterations $\rvar{iter}_{\rvar{max}}$. It also uses a better error heuristic and more conservative timestep increase. It can be found in the most current commit of \href{https://github.com/TarletonGroup/EasyDD/blob/master/src/int_trapezoid.m}{\texttt{int\_trapezoid.m}}.
+The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a different way of calculating the error but other than that they were the same. Unfortunately, this only increases the time step after converging to a satisfactory answer and advancing the time. So if anything caused the timestep to decrease, such as a collision or dislocation reaction, the time step would only increase very little every subsequent step, thus eading to unecessarily small time steps in most cases. The original implementation of this is found in commit \href{https://github.com/TarletonGroup/EasyDD/blob/780a6c41b35687b443d3241674af7393d2140639/int_trapezoid.m}{65907b0} under the name \texttt{int\_trapezoid.m}. An improved algorithm is described in \cref{alg:trapezoid_improved}. This algorithm takes close to the maximum allowed time step for the maximum allowable accuracy ($\epsilon_{\rvar{max}}$, $\upsilon_{\rvar{max}}$), maximum and minimum timestep ($\Delta t_{\rvar{max}}$, $\Delta t_{\rvar{min}}$) and number of iterations $\rvar{iter}_{\rvar{max}}$. It also uses a better error heuristic and more conservative timestep increase. It can be found in the most current commit of \href{https://github.com/TarletonGroup/EasyDD/blob/master/src/int_trapezoid.m}{\texttt{int\_trapezoid.m}}.
 \begin{algorithm}\label{alg:trapezoid_improved}
     \caption{Improved adaptive timestep algorithm.}
     \begin{algorithmic}
@@ -46,7 +46,7 @@ The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a
         \State $\upsilon \coloneqq \max_i\left(\lVert \Delta \vec{r}_i - \vec{\overline{r}}_i \rVert\right)$
         \If{$\epsilon > \epsilon_{\rvar{max}} $ and $\upsilon > \upsilon_{\rvar{max}}$}
         \State $\Delta t_{\textrm{valid}} = \Delta t$
-        \State $\gamma \coloneqq 1.2\left(\dfrac{1}{(1 + (1.2^{20} - 1) (\epsilon / \epsilon_{\textrm{max}}))}\right)^{1/20}$
+        \State $\gamma \coloneqq 1.2\left(\dfrac{1}{\left[1 + (1.2^{20} - 1) (\epsilon / \epsilon_{\textrm{max}})\right]}\right)^{1/20}$
         \State $\rvar{flag} \coloneqq \rvar{true}$
         \State $\rvar{iter} \coloneqq \rvar{iter} + 1$
         \State $\Delta t \coloneqq \max\left(\gamma \Delta t,\, \Delta t_\rvar{max}\right)$
@@ -60,6 +60,10 @@ The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a
         \EndIf
         \If{$\rvar{iter} > \rvar{iter}_{\rvar{max}}$ or $\Delta t == \Delta t_{\rvar{max}}$}
         \State $\rvar{Convergent} = \rvar{true}$
+        \EndIf
+        \If{$\Delta t < \Delta t_\rvar{min}$}
+        \State $\Delta t \coloneqq \Delta t_{min}$
+        \State $\rvar{iter} \coloneqq \rvar{iter}_{\rvar{max}} + 1$
         \EndIf
         \EndWhile
         \State $t \coloneqq t + \Delta t$
@@ -80,4 +84,4 @@ The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a
 \subsection{Autocompilation and default values}
 \subsection{Optimisation}
 
-% 561 words
+% 564 words
