@@ -9,7 +9,7 @@
 \newglossaryentry{dl}
 {
 	name={dislocation},
-	description={Crystallographic defect which strongly influences many of a material's properties. It can consist of additional or missing partial crystallographic planes, and may come in three varieties: edge, screw and mixed. Mathematically it is a type of topological defect/soliton because it is a distinct, out of equillibrium---but stable---solution of the \kwd{pde} which in the trivial case yields the crystallographic structure of a material. Like any other soliton, it will not spontaneously decay to the ``trivial'' solution, which in this case would be a perfect crystal. Thus a dislocation preserves its identity by preserving its \kwd{bv}. Like other solitons, it can annihilate with another of opposite phase, which in this case would be an opposite \kwd{bv}}
+	description={Crystallographic defect which strongly influences many of a material's properties. It can consist of additional or missing partial crystallographic planes, and may come in three varieties: edge, screw and mixed. Mathematically it is a type of topological defect/soliton because it is a distinct, out of equillibrium---but stable---solution of the partial differential equation which in the trivial case yields the crystallographic structure of a material. Like any other soliton, it will not spontaneously decay to the ``trivial'' solution, which in this case would be a perfect crystal. Thus a dislocation preserves its identity by preserving its Burgers vector. Like other solitons, it can annihilate with another of opposite phase, which in this case would be an opposite Burgers vector}
 }
 
 \newglossaryentry{devmem}
@@ -21,31 +21,31 @@
 \newglossaryentry{atop}
 {
 	name = {atomic operation},
-	description = {An operation on shared or global \kwd{devmem} which is guaranteed to be performed without interference from other threads. However, atomic operations don't act as memory fences and do not imply \kwd{thrsync} \cite{nvidia_atomics}}
+	description = {An operation on shared or global device memory which is guaranteed to be performed without interference from other threads. However, atomic operations don't act as memory fences and do not imply thread syncronisation \cite{nvidia_atomics}}
 }
 
 \newglossaryentry{thrsync}
 {
 	name = {thread syncronisation},
-	description = {Ensures all threads catch up to each other in some way or another. The function \mintinline{c}{__syncthreads()} ensures all threads in a \kwd{wrp} reach the same point. The function \mintinline{c}{__threadfence()} flushes all global memory and shared memory writes by a thread so the updated values are visible to other threads before continuing}
+	description = {Ensures all threads catch up to each other in some way or another. The function \mintinline{c}{__syncthreads()} ensures all threads in a warp reach the same point. The function \mintinline{c}{__threadfence()} flushes all global memory and shared memory writes by a thread so the updated values are visible to other threads before continuing}
 }
 
 \newglossaryentry{cma}
 {
 	name = {coalesced memory access},
-	description = {When all active threads in a \kwd{wrp} access contiguous global memory. Therefore cache lines can be very efficiently utilised}
+	description = {When all active threads in a warp access contiguous global memory. Therefore cache lines can be very efficiently utilised}
 }
 
 \newglossaryentry{wrp}
 {
 	name = {warp},
-	description = {Collection of threads with a maximum of 32 which execute concurrently on the same \kwd{sm} resources}
+	description = {Collection of threads with a maximum of 32 which execute concurrently on the same streaming multiprocessor resources}
 }
 
 \newglossaryentry{wrpd}
 {
 	name = {warp divergence},
-	description = {Due to the fact that all threads in a \kwd{wrp} must execute the same instruction concurrently, all program branches are executed regardless of branching condition. However, only those instructions for which a branching condition is met have an effect on the state of the thread's program. As a consequence, different threads in a \kwd{wrp} may meet different branching conditions, wasting all other branched instructions}
+	description = {Due to the fact that all threads in a warp must execute the same instruction concurrently, all program branches are executed regardless of branching condition. However, only those instructions for which a branching condition is met have an effect on the state of the thread's program. As a consequence, different threads in a warp may meet different branching conditions, wasting all other branched instructions}
 }
 
 \newglossaryentry{tensor}
@@ -97,13 +97,13 @@
 {be}
 {BE}
 {Boundary Element}
-{One of the subdomains of a problem solved via \kwd{bem}}
+{One of the subdomains of a problem solved via boundary element method}
 
 \newdualentry
 {se}
 {SE}
 {Surface Element}
-{Special case of a \kwd{be}, where the boundary is a surface}
+{Special case of a boundary element, where the boundary is a surface}
 
 \newdualentry
 {ddd}

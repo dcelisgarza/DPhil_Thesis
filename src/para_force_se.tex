@@ -2,7 +2,7 @@
 \label{c:para_f_dln_se}
 %
 \section{Parallelisation on Graphics Processing Units}
-Efficient parallelisation requires \kwd{cma}, which means we have to be extremely careful when mapping CPU memory to device memory. The fact that threads work ``simultaneously''\footnote{Not quite but essentially simultaneously.} means that in order to obtain good performance, data which is to be ``simultaneously'' loaded into each thread must be contiguous. This maximises cache memory use and therefore reduces slow memory fetch operations to global or shared memory.
+Efficient parallelisation requires coalesced memory access, which means we have to be extremely careful when mapping CPU memory to device memory. The fact that threads work ``simultaneously''\footnote{Not quite but essentially simultaneously.} means that in order to obtain good performance, data which is to be ``simultaneously'' loaded into each thread must be contiguous. This maximises cache memory use and therefore reduces slow memory fetch operations to global or shared memory.
 
 The parallelisation was done only over the surface elements in order to avoid the undesirable and inefficient GPU branching that would occur under other schemes.
 
@@ -13,7 +13,7 @@ The most natural form of parallelisation is to have blocks of $ 4n $ threads whe
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{lrse_thread_map.pdf}
-	\caption[Linear rectangular surface element mapping.]{Each linear rectangular \kwd{se} is mapped to one thread.}
+	\caption[Linear rectangular surface element mapping.]{Each linear rectangular surface element is mapped to one thread.}
 	\label{f:lrse_map}
 \end{figure}
 %
@@ -81,14 +81,14 @@ The most natural form of parallelisation is to have blocks of $ 4n $ threads whe
 		\State{\Comment{Ensure nodal forces are correctly added and mapped from local thread memory to global device memory.}}
 		\State{atomicAdd(\dvar{\vec{F_{n}}[i + c\times E\times N]}, \tvar{\vec{F_{n}}[n][c]})}
 		\EndFor
-		\State{\Comment{Displace output index to point at the first coordinate of the $ (n+1)\textsuperscript{th} $ node of the \rvar{idx}\textsuperscript{th} \kwd{se}.}}
+		\State{\Comment{Displace output index to point at the first coordinate of the $ (n+1)\textsuperscript{th} $ node of the \rvar{idx}\textsuperscript{th} surface element.}}
 		\State{$ i \gets i + E $}
 		\EndFor
 		\State{\Comment{Total force.}}
 		\State{$ i \gets \rvar{idx} $} \Comment{Reset output index.}
 		\For{$ (c = 0;\, c < 3;\, c++) $} \Comment{Loop over coordinates.}
 		\State{atomicAdd(\dvar{\vec{F_{e}}[i]}, \tvar{\vec{F_{e}}[c]})}
-		\State{\Comment{Advance the output index to point at the $ (i+1)\textsuperscript{th} $ coordinate of the $ \rvar{idx}\textsuperscript{th} $ \kwd{se}.}}
+		\State{\Comment{Advance the output index to point at the $ (i+1)\textsuperscript{th} $ coordinate of the $ \rvar{idx}\textsuperscript{th} $ surface element.}}
 		\State{$ i \gets i + E $}
 		\EndFor
 		\State{\Return{\dvar{\vec{F_{n}}}, \dvar{\vec{F_{e}}}}}
@@ -101,7 +101,7 @@ The most natural form of parallelisation is to have blocks of $ 4n $ threads whe
 	\begin{algorithmic}[1]
 		\GPUFunction[dln\_add\_force\_thread\_device]{\tvar{\vec{F_{n}}[N][3]}, \tvar{\vec{F_{e}}[3]},\newline{}\dvar{\vec{F_{n}}[3\times E\times N]}, \dvar{\vec{F_{e}}[3\times E]}, $ k $}
 		\State{\Comment{Nodal force.}}
-		\State{\Comment{Set output index to correspond to whatever \kwd{se} we're on. By parallelising over dislocation lines, we must loop through surface elements in the main code, this is the value of $ k $ we provide. Multiply by 3 and $ N $ because each \kwd{se} has 3 coordinates and $ N $ nodes.}}
+		\State{\Comment{Set output index to correspond to whatever surface element we're on. By parallelising over dislocation lines, we must loop through surface elements in the main code, this is the value of $ k $ we provide. Multiply by 3 and $ N $ because each surface element has 3 coordinates and $ N $ nodes.}}
 		\State{$ i \gets 3\times N\times k $}
 		\State{$ j \gets 0 $} \Comment{Auxiliary index.}
 		\For{$ (n = 0;\, n < N;\, n++) $} \Comment{Loop over nodes.}
@@ -109,11 +109,11 @@ The most natural form of parallelisation is to have blocks of $ 4n $ threads whe
 		\State{\Comment{Ensure nodal forces are correctly added and mapped from local thread memory to global device memory.}}
 		\State{atomicAdd(\dvar{\vec{F_{n}}[i + j + c]}, \tvar{\vec{F_{n}}[n][c]})}
 		\EndFor
-		\State{\Comment{Displace auxiliary index to point at the first coordinate of the $ (n+1)\textsuperscript{th} $ node of the $ k \textsuperscript{th}$ \kwd{se}.}}
+		\State{\Comment{Displace auxiliary index to point at the first coordinate of the $ (n+1)\textsuperscript{th} $ node of the $ k \textsuperscript{th}$ surface element.}}
 		\State{$ j \gets j + 3 $}
 		\EndFor
 		\State{\Comment{Total force.}}
-		\State{\Comment{Set auxiliary index to point at the first coordinate of the $ k\textsuperscript{th} $ \kwd{se}.}}
+		\State{\Comment{Set auxiliary index to point at the first coordinate of the $ k\textsuperscript{th} $ surface element.}}
 		\State{$ j \gets 3\times k $}
 		\For{$ (c = 0;\, c < 3;\, c++) $} \Comment{Loop over coordinates.}
 		\State{atomicAdd(\dvar{\vec{F_{e}}[j+c]}, \tvar{\vec{F_{e}}[c]})}
@@ -175,9 +175,9 @@ The most natural form of parallelisation is to have blocks of $ 4n $ threads whe
 		\end{aligned}
 	\end{align}
 \end{subequations}
-where $ e $ is the \kwd{se} label, $ n $ the node label, $ E $ the number of surface elements in the scope. $ N $ the number of nodes in a \kwd{se}.
+where $ e $ is the surface element label, $ n $ the node label, $ E $ the number of surface elements in the scope. $ N $ the number of nodes in a surface element.
 
-Data-mapping according to \cref{a:fcne} and relabelling the nodes so they go from $ 0 \to N-1 $, the data from \cref{f:lrse_map} would be arranged in \kwd{devmem} like \cref{eq:fcne_eg},
+Data-mapping according to \cref{a:fcne} and relabelling the nodes so they go from $ 0 \to N-1 $, the data from \cref{f:lrse_map} would be arranged in device memory like \cref{eq:fcne_eg},
 \begin{align}\label{eq:fcne_eg}
 	\vec{X}^{\textrm{SE}} & = \begin{aligned}
 		\left[\underbrace{h_{x},\, i_{x},\, f_{x},\, g_{x}}_{\mathbf{x_{0}}},\,
@@ -190,14 +190,14 @@ Data-mapping according to \cref{a:fcne} and relabelling the nodes so they go fro
 \end{align}
 %
 
-In the GPU, each thread will cater to one \kwd{se} at a time. This means that each thread will have to extract the relevant data from the 1D array with length $ 3\times E\times N $ into four 1D arrays of length $ 3 $. The purpose of CNE mapping is to provide the \kwd{wrp} with \kwd{cma}. This is achieved via \cref{a:bcne}.
+In the GPU, each thread will cater to one surface element at a time. This means that each thread will have to extract the relevant data from the 1D array with length $ 3\times E\times N $ into four 1D arrays of length $ 3 $. The purpose of CNE mapping is to provide the warp with coalesced memory access. This is achieved via \cref{a:bcne}.
 
 
 Since \cref{a:bcne} is performed in a CUDA GPU, threads in a single block execute sequentially from,
 \begin{align}
 	\rvar{threadIdx}.x & = 0 \to \rvar{threadIdx}.x = \rvar{blockDim}.x - 1\,,
 \end{align}
-while threads in different blocks execute in parallel. \Kwd{cma} is ensured by having each block load a cache line whose entries are contiguously accessed by the threads in the block. Using the same notation as \cref{a:fcne}, full cache line utilisation (optimal cache use) is achieved if cache lines can accomodate $ l $ entries given by \cref{eq:opt_cache_len_bcne},
+while threads in different blocks execute in parallel. Coalesced memory access is ensured by having each block load a cache line whose entries are contiguously accessed by the threads in the block. Using the same notation as \cref{a:fcne}, full cache line utilisation (optimal cache use) is achieved if cache lines can accomodate $ l $ entries given by \cref{eq:opt_cache_len_bcne},
 \begin{align}
 	\label{eq:opt_cache_len_bcne}
 	l =
@@ -277,7 +277,7 @@ while threads in different blocks execute in parallel. \Kwd{cma} is ensured by h
 % End: Code for generating figure e:opt_cache_len_bcne
 \subsubsection{Node Coordinate Element Map}
 %
-The node-coordinate-element (NCE) data mapping in \cref{eq:fnce} is carried out by \cref{a:fnce}, each thread looks after a given \kwd{se}.
+The node-coordinate-element (NCE) data mapping in \cref{eq:fnce} is carried out by \cref{a:fnce}, each thread looks after a given surface element.
 \begin{algorithm}
 	\caption{NCE data mapping.}
 	\label{a:fnce}
@@ -305,9 +305,9 @@ The node-coordinate-element (NCE) data mapping in \cref{eq:fnce} is carried out 
 		\end{aligned}
 	\end{align}
 \end{subequations}
-where $ e $ is the surface \textbf{e}lement, $ n $ the \textbf{n}ode, $ E $ the total number of surface elements in scope, $ N $ the total number of nodes in each \kwd{se}.
+where $ e $ is the surface \textbf{e}lement, $ n $ the \textbf{n}ode, $ E $ the total number of surface elements in scope, $ N $ the total number of nodes in each surface element.
 
-Data-mapping according to \cref{a:fnce} and relabelling the nodes so they go from $ 0 \to N-1 $, the data from \cref{f:lrse_map} would be arranged in \kwd{devmem} like \cref{eq:fnce_eg},
+Data-mapping according to \cref{a:fnce} and relabelling the nodes so they go from $ 0 \to N-1 $, the data from \cref{f:lrse_map} would be arranged in device memory like \cref{eq:fnce_eg},
 \begin{align}\label{eq:fnce_eg}
 	\vec{X}^{\textrm{SE}} & = \begin{aligned}
 		 & \left[\underbrace{h_{x},\, i_{x},\, f_{x},\, g_{x},\,
@@ -324,7 +324,7 @@ Data write conflicts can be a problem in parallel applications where global data
 %
 \subsection[Parallel Dislocation Line Segments to Surface Elements]{Resolving Parallel Dislocation Line Segments to Surface Elements}
 %
-Dealing with the special case when the \kwd{dls} $ \vec{t} $ is parallel to the \kwd{se} is relatively trivial when in a serial program. By the mean value theorem, we can slightly perturb $ \vec{t} $ by rotating it by a small angle around the midpoint of $ \vec{t} $ with respect to the axis of rotation defined by $ \vec{t} \times \vec{n} $. In contrast to serial code, program branches can have a serious effect on parallel performance due to \kwd{wrpd}. Due to the complexity of the force calculation and relative rarity of the edge case, there is no branching behaviour in the parallel code until \emph{after} the calculation is performed. Where \cref{a:plse_p} is performed.
+Dealing with the special case when the dislocation line segment $ \vec{t} $ is parallel to the surface element is relatively trivial when in a serial program. By the mean value theorem, we can slightly perturb $ \vec{t} $ by rotating it by a small angle around the midpoint of $ \vec{t} $ with respect to the axis of rotation defined by $ \vec{t} \times \vec{n} $. In contrast to serial code, program branches can have a serious effect on parallel performance due to warp divergence. Due to the complexity of the force calculation and relative rarity of the edge case, there is no branching behaviour in the parallel code until \emph{after} the calculation is performed. Where \cref{a:plse_p} is performed.
 \begin{algorithm}
 	\caption{Resolving cases when $ \vec{t} \parallel \vec{n} $ on GPUs.}
 	\label{a:plse_p}
@@ -347,7 +347,7 @@ Dealing with the special case when the \kwd{dls} $ \vec{t} $ is parallel to the 
 	\end{algorithmic}
 \end{algorithm}
 \subsubsection{Implementation}
-The node mapping would be the same as \cref{a:fcne}. The parallelisation would be on individual packets of a \kwd{se} with a slightly rotated \kwd{dls}, as in a single iteration of the serial code where the \kwd{dls} is rotated. The forces would be averaged with atomic operations and \mintinline{c}{__syncthreads()} before they are added to the total nodal forces.
+The node mapping would be the same as \cref{a:fcne}. The parallelisation would be on individual packets of a surface element with a slightly rotated dislocation line segment, as in a single iteration of the serial code where the dislocation line segment is rotated. The forces would be averaged with atomic operations and \mintinline{c}{__syncthreads()} before they are added to the total nodal forces.
 
 \subsection{Test Case}
 \begin{figure}
