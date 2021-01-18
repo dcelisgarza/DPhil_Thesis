@@ -1,30 +1,36 @@
 \addtocounter{chapter}{-1}
 \chapter{Preface}
 \label{c:pre}
-%
-\section{Notation}
+
+\section{Notation and abbreviation}
 \label{s:nota}
-%
-For the sake of clarity the following notation conventions have been used:
+
+For the sake of clarity the following notation and abbreviation conventions have been used:
 \begin{itemize}
-	\item \Kwdp{tensor} are denoted by sans serif bold italics, $ \tns{T} $.
+	\item GPU: Graphics Processing Unit.
+	\item CPU: Central Processing Unit.
+	\item Tensors are denoted by sans serif bold italics, $ \tns{T} $.
 	\item Matrices are denoted by serif bold roman, $ \mtx{M} $.
 	\item Vectors are denoted by serif bold italics, $ \vec{V} $.
 	\item Scalars are denoted by serif italics, $ S $.
-	\item Host variables are denoted by $\hvar{a}$.
-	\item Global device variables are denoted by $\dvar{a}$.
-	\item Thread variables are denoted by $\tvar{a}$.
+	\item Operators and special functions are roman, $\exp(x)$, $\det{\mtx{J}}$.
+	\item Angles are in radians.
+	\item Individual items, be they nodes, surface elements, dislocation segments or indices are denoted by a lower-case subscript to the right, $a_n$.
+	\item Ensembles are denoted by an upper-case subscript to the right, $a_N \coloneqq \sum a_n$.
+	\item Host variables (CPU variables in parallelisation) are denoted by a roman h-superscript on the left, $\hvar{a}$.
+	\item Global device variables (global variables visible only to the GPU) are denoted by a roman d-superscript on the left, $\dvar{a}$.
+	\item Thread variables (variables visible only to a GPU thread) are denoted by a roman t-superscript on the left, $\tvar{a}$.
+	\item Serial indices/counters are the traditional $i$, $j$, $k$\ldots{}.
+	\item Parallel indices are denoted as roman variables, $\rvar{a}$.
+	\item Pseudo-code is C-style---row-major order, 0-based indexing---because it provides a more direct translation of the C-code.
 \end{itemize}
-\section{Conventions}
-All angles are given in radians unless stated otherwise. All pseudo-code is C-style and assuming C conventions (row-order, 0-start indexing, memory allocation).
 
-Elements, be they \kwdp{se}, \kwdp{fe}, \kwdp{dls} or else, are denoted by $ e $ and their total as $ E $. Similarly nodes are denoted by $ n $ and their total $ N $. Parallel indices are denoted by $ \rvar{idx} $ to distinguish them from regular indices/counters $i,~j,~k$. For disambiguation purposes the exponential function will de denoted as $ \exp(x) $.
 \section{Typesetting}
 \label{s:typeset}
-%
-This document was typeset using a custom-made \LaTeX{} document class created by the author, compiled with \hologo{XeLaTeX}, and the bibliography was produced with \hologo{BibTeX}. The custom document class can be found in \href{https://github.com/dcelisgarza/latex_templssaates}{https://github.com/dcelisgarza/latex\_templates}.
+
+The repository \href{https://github.com/dcelisgarza/latex_templates}{https://github.com/dcelisgarza/latex\_templates} contains the custom document class used to typeset this document. It was compiled with \hologo{XeLaTeX} and \hologo{BibTeX}. We recommend compiling the source with \hologo{XeLaTeX} or \hologo{LuaLaTeX}. Compilation requires \texttt{minted}, \href{https://ctan.org/pkg/minted?lang=en}{https://ctan.org/pkg/minted?lang=en}, and its dependencies.
 \section{Diagrams}
 \label{s:diag}
-%
-All diagrams are vector graphics drawn using the open-source image editing software \href{https://inkscape.org/en/}{InkScape} for its ease of use, elegant simplicity, high quality outputs, and ``Draw~Freely'' philosophy.
+
+All diagrams were drawn with Inkscape: Open Source Scalable Vector Graphics Editor, \href{https://inkscape.org/}{https://inkscape.org/}, ``Draw Freely.''
 \savearabiccounter

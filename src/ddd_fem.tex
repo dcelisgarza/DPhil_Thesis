@@ -2,38 +2,38 @@
 \label{c:ddd_fem}
 \section{Superposition Scheme}
 \label{s:sup_sch}
-Coupling \kwd{ddd} to a \kwd{fem} \cite{analytic_tractions} is important to properly simulate micromechanical tests because \kwd{ddd} provides us with a more precise set of inputs and greater granularity for solving the \kwd{fe} problem. This can be achieved by using a so-called superposition scheme \cref{f:fem_ddd} that enables the independent solution of both problems, whilst feeding information from one to the other in a continuous feedback loop.
+Coupling discrete dislocation dynamics to a finite element method \cite{analytic_tractions} is important to properly simulate micromechanical tests because discrete dislocation dynamics provides us with a more precise set of inputs and greater granularity for solving the finite element problem. This can be achieved by using a so-called superposition scheme \cref{f:fem_ddd} that enables the independent solution of both problems, whilst feeding information from one to the other in a continuous feedback loop.
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{fem_ddd.eps}
-	\caption[Coupling Discrete Dislocation Dynamics to Finite Element Methods.]{The \kwd{dl} ensemble in a volume $ V $ is bounded by surface $ S $. First, the traction field $ \sum_{\textrm{d}} \tns{\tilde{\sigma}}_{\textrm{d}} $ due to the \kwd{dl} ensemble is evaluated at the surface. Then, a traditional \kwd{fem} or \kwd{bem} calculates the image traction field $ \tns{\hat{\sigma}} \times \vec{n} $. Which is then fed back to the \kwd{ddd} problem to evolve the \kwd{dl} positions and repeat the cycle. Image edited from \cite{analytic_tractions}.}
+	\caption[Coupling Discrete Dislocation Dynamics to Finite Element Methods.]{The dislocation ensemble in a volume $ V $ is bounded by surface $ S $. First, the traction field $ \sum_{\textrm{d}} \tns{\tilde{\sigma}}_{\textrm{d}} $ due to the dislocation ensemble is evaluated at the surface. Then, a traditional finite element method or \kwd{bem} calculates the image traction field $ \tns{\hat{\sigma}} \times \vec{n} $. Which is then fed back to the discrete dislocation dynamics problem to evolve the dislocation positions and repeat the cycle. Image edited from \cite{analytic_tractions}.}
 	\label{f:fem_ddd}
 \end{figure}
 \section{Extracting Surface Nodes}
-The \kwd{fem} coupler arranges the nodes starting on the $ xz $-plane where $ y \in \{0 \to n~\mathrm{d}y\}$ and $n\in \mathbb{N} $. However in order to couple \kwd{ddd} to \kwd{fem} we only require the surface nodes where displacements are not calculated. Because we're working with rectangular prisms, we can easily pick out the surface nodes using a search algorithm with a logical mask. MATLAB and Fortran provide vector intrinsics that allow one to do so. \Cref{f:fem_surf_nodes} illustrates only the surface nodes according to our implementation's node arrangement---which is the $ xz $-plane whose domain is $[y_{\text{min}},~ y_{\text{max}}]$.
+The finite element method coupler arranges the nodes starting on the $ xz $-plane where $ y \in \{0 \to n~\mathrm{d}y\}$ and $n\in \mathbb{N} $. However in order to couple discrete dislocation dynamics to finite element method we only require the surface nodes where displacements are not calculated. Because we're working with rectangular prisms, we can easily pick out the surface nodes using a search algorithm with a logical mask. MATLAB and Fortran provide vector intrinsics that allow one to do so. \Cref{f:fem_surf_nodes} illustrates only the surface nodes according to our implementation's node arrangement---which is the $ xz $-plane whose domain is $[y_{\text{min}},~ y_{\text{max}}]$.
 \begin{figure}
 	\centering
 	\begin{subfigure}[b]{0.45\linewidth}
 		\centering
 		\includegraphics[width=\linewidth]{fem_surf_nodes.pdf}
-		\caption[Surface nodes of our \kwd{fe} model.]{Arrangement of the surface nodes of our \kwd{fe} model. \kwd{fe} nodes are arranged in chunks of $ \Delta x \Delta z $ nodes in our implementation, but we only want the surface nodes.}
+		\caption[Surface nodes of our finite element model.]{Arrangement of the surface nodes of our finite element model. finite element nodes are arranged in chunks of $ \Delta x \Delta z $ nodes in our implementation, but we only want the surface nodes.}
 		\label{f:fem_surf_nodes}
 	\end{subfigure}
 	~
 	\begin{subfigure}[b]{0.45\linewidth}
 		\centering
 		\includegraphics[width=\linewidth]{fe_numbering.pdf}
-		\caption[Single finite element node numbering.]{Single \kwd{fe} node numbering. It is necessary to know which \kwd{fe} plane corresponds to which node labels. This lets us design the auxiliary matrix that selects nodes according to the planes we want to extract.}
+		\caption[Single finite element node numbering.]{Single finite element node numbering. It is necessary to know which finite element plane corresponds to which node labels. This lets us design the auxiliary matrix that selects nodes according to the planes we want to extract.}
 		\label{f:fe_numbering}
 	\end{subfigure}
-	\caption[Finite Element node arrangement for coupling to Discrete Dislocation Dynamics.]{\kwd{fe} node arrangement for coupling to \kwd{ddd}.}
+	\caption[Finite Element node arrangement for coupling to Discrete Dislocation Dynamics.]{finite element node arrangement for coupling to discrete dislocation dynamics.}
 	\label{f:fem_node_arr}
 \end{figure}
-However, due to the nature of the analytical solutions in \cref{c:lin_rect}, we need all the surface nodes of the rectangular faces for which there are no displacements. This means that edge nodes are shared between 2 adjacent faces and corner nodes between 3 adjacent faces. In order to properly apply the logical mask to find \emph{only} the surface nodes need to know that each \kwdp{fe}' nodes are numbered according to \cref{f:fe_numbering}.
+However, due to the nature of the analytical solutions in \cref{c:lin_rect}, we need all the surface nodes of the rectangular faces for which there are no displacements. This means that edge nodes are shared between 2 adjacent faces and corner nodes between 3 adjacent faces. In order to properly apply the logical mask to find \emph{only} the surface nodes need to know that each finite element's nodes are numbered according to \cref{f:fe_numbering}.
 
 Using \cref{f:fem_node_arr} one can work out which nodes are of interest to whichever surface is being extracted. The ordering of the nodes in the final array will depend on the definition of the problems in \cref{c:lin_rect}.
 
-Node selection remains an expensive operation and minimising array indexing is of the utmost importance for the best perfomance. Selecting nodes in the traditional sense, i.e. with code branching such as \texttt{if statements} or \texttt{case selection} is unmantainable, verbose and very prone to mistakes. The issue was solved by introducing an auxiliary matrix which defines various parameters that aid node selection and greatly reduces code size, improves readability, and eliminates the need for code branching. The matrix can be constructed utilising \cref{f:fem_node_arr} in order to know which nodes correspond to which \kwd{fe} planes. The $ p\textsuperscript{th} $ column of the matrix\footnote{MATLAB uses column-major ordering, so this gives us the best performance for vectorised code.} corresponds to the $ p\textsuperscript{th} $ plane (according to an arbitrary plane numbering) and is defined as,
+Node selection remains an expensive operation and minimising array indexing is of the utmost importance for the best perfomance. Selecting nodes in the traditional sense, i.e. with code branching such as \texttt{if statements} or \texttt{case selection} is unmantainable, verbose and very prone to mistakes. The issue was solved by introducing an auxiliary matrix which defines various parameters that aid node selection and greatly reduces code size, improves readability, and eliminates the need for code branching. The matrix can be constructed utilising \cref{f:fem_node_arr} in order to know which nodes correspond to which finite element planes. The $ p\textsuperscript{th} $ column of the matrix\footnote{MATLAB uses column-major ordering, so this gives us the best performance for vectorised code.} corresponds to the $ p\textsuperscript{th} $ plane (according to an arbitrary plane numbering) and is defined as,
 \begin{align}\label{eq:surf_node_util_vec}
 	\vec{V_{p}}^{\mathsf{T}} =
 	\begin{bmatrix}
@@ -62,7 +62,7 @@ The information codified in \cref{eq:surf_node_util} lets us index and process o
 	\item $ \max(z),~ xy $-plane.
 \end{inparaenum}
 
-It is important to make sure the nodes are extracted in a self consistent manner because the problem definitions in \cref{c:lin_rect} assume a specific node ordering. In particular, the labelling chirality must remain the same. This is due to the fact that the problems in \cref{c:lin_rect} utilise internal coordinates derived from a set of basis vectors, and scalar projections onto them. If the relationship between the vectors is kept, but the chirality is different (opposite) the calculated quantities will have the wrong sign. If however the relationship between the vectors is different to the problem formulation, the program will crash due to division by 0. Self-consistency was achieved by placing an imaginary observer inside the \kwd{fe} model facing the $ \min(x),~ yz $-plane (face 1) and rotating it to view all 6 planes according to \cref{f:surf_node_plane}.
+It is important to make sure the nodes are extracted in a self consistent manner because the problem definitions in \cref{c:lin_rect} assume a specific node ordering. In particular, the labelling chirality must remain the same. This is due to the fact that the problems in \cref{c:lin_rect} utilise internal coordinates derived from a set of basis vectors, and scalar projections onto them. If the relationship between the vectors is kept, but the chirality is different (opposite) the calculated quantities will have the wrong sign. If however the relationship between the vectors is different to the problem formulation, the program will crash due to division by 0. Self-consistency was achieved by placing an imaginary observer inside the finite element model facing the $ \min(x),~ yz $-plane (face 1) and rotating it to view all 6 planes according to \cref{f:surf_node_plane}.
 \begin{figure}
 	\centering
 	\includegraphics[width=0.75\linewidth]{surf_node_plane.pdf}
@@ -77,7 +77,7 @@ It is important to make sure the nodes are extracted in a self consistent manner
 		\For{$ i = 0;\, i < \rvar{length}(\vec{\gamma_{t}});\, i++$}
 		\State\Comment{Save the global node label for the current iteration.}
 		\State $ n \gets \vec{\gamma_{t}}[i] $
-		\State\Comment{Use the node label to find a vector with the linearised index of all surface nodes whose labels correspond to the node whose forces we want to pass on to the \kwd{fem} coupler.}
+		\State\Comment{Use the node label to find a vector with the linearised index of all surface nodes whose labels correspond to the node whose forces we want to pass on to the finite element method coupler.}
 		\State $ \vec{L} \gets \rvar{find}(\mtx{N_{L}} == n) $
 		\State\Comment{Loop over coordinates.}
 		\For{$ k = 0;\, k < 3;\, k++ $}
@@ -96,7 +96,7 @@ It is important to make sure the nodes are extracted in a self consistent manner
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{lrse_thread_map.pdf}
-	\caption[Finite element nodes shared by multiple surface elements.]{\kwd{fe} nodes shared by multiple \kwdp{se}.}
+	\caption[Finite element nodes shared by multiple surface elements.]{finite element nodes shared by multiple surface elements.}
 	\label{f:fe_node_share}
 \end{figure}
 

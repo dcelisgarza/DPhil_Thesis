@@ -2,7 +2,7 @@
 \newglossaryentry{bv}
 {
 	name={Burgers vector},
-	description={Denoted as $\vec{b}$, it represents the lattice distortion caused by a \kwd{dl} in a crystal lattice. In \emph{edge} \kwdp{dl} the Burgers vector is perpendicular to the line direction ($ \vec{b} \perp t $); in \emph{screw} \kwdp{dl} it is parallel to the line direction ($ \vec{b} \parallel t $); in \emph{mixed} \kwdp{dl}, Burgers vector and line direction are neither perpendicular nor parallel to each other},
+	description={Denoted as $\vec{b}$, it represents the lattice distortion caused by a dislocation in a crystal lattice. In \emph{edge} dislocations, the Burgers vector is perpendicular to the line direction ($ \vec{b} \perp t $); in \emph{screw} dislocations it is parallel to the line direction ($ \vec{b} \parallel t $); in \emph{mixed} dislocations, Burgers vector and line direction are neither perpendicular nor parallel to each other},
 	symbol = {\ensuremath{\vec{b}}}
 }
 
@@ -67,31 +67,31 @@
 {sm}
 {SM}
 {Streaming Multiprocessor}
-{A differential equation which contains unkown multivariate functions and their partial derivatives. Solutions require knowledge of the boundary conditions the unkown functions are subject to. The types of PDEs and their boundary conditions can make it difficult or impossible to find well-behaved, analytical solutions. As a result, numerical methods such as \kwd{fem} are often used to solve them}
+{A differential equation which contains unkown multivariate functions and their partial derivatives. Solutions require knowledge of the boundary conditions the unkown functions are subject to. The types of PDEs and their boundary conditions can make it difficult or impossible to find well-behaved, analytical solutions. As a result, numerical methods such as finite element method are often used to solve them}
 
 \newdualentry
 {pde}
 {PDE}
 {Partial Differential Equation}
-{A differential equation which contains unkown multivariate functions and their partial derivatives. Solutions require knowledge of the boundary conditions the unkown functions are subject to. The types of PDEs and their boundary conditions can make it difficult or impossible to find well-behaved, analytical solutions. As a result, numerical methods such as \kwd{fem} are often used to solve them}
+{A differential equation which contains unkown multivariate functions and their partial derivatives. Solutions require knowledge of the boundary conditions the unkown functions are subject to. The types of PDEs and their boundary conditions can make it difficult or impossible to find well-behaved, analytical solutions. As a result, numerical methods such as finite element method are often used to solve them}
 
 \newdualentry
 {fem}
 {FEM}
 {Finite Element Method}
-{Also known as finite element analysis (FEA), they are a class of numerical methods for solving boundary value problems for \kwdp{pde} whose analytical solution might not meet the necessary uniqueness and existence requirements of a physical problem. These methods divide the domain of interest into smaller, simpler subdomains that can be described by a system of algebraic equations. These are then assembled into a larger system of coupled algebraic equations that approximately model the whole domain. Variational methods are then used to find an approximate solution by minimising an associated error function}
+{Also known as finite element analysis (FEA), they are a class of numerical methods for solving boundary value problems for partial differential equation whose analytical solution might not meet the necessary uniqueness and existence requirements of a physical problem. These methods divide the domain of interest into smaller, simpler subdomains that can be described by a system of algebraic equations. These are then assembled into a larger system of coupled algebraic equations that approximately model the whole domain. Variational methods are then used to find an approximate solution by minimising an associated error function}
 
 \newdualentry
 {bem}
 {BEM}
 {Boundary Element Method}
-{The 2D analogue of an \kwd{fem}, where only the domain boundaries are of interest}
+{The 2D analogue of an finite element method, where only the domain boundaries are of interest}
 
 \newdualentry
 {fe}
 {FE}
 {Finite Element}
-{One of the subdomains of a problem solved via \kwd{fem}}
+{One of the subdomains of a problem solved via finite element method}
 
 \newdualentry
 {be}
@@ -109,4 +109,4 @@
 {ddd}
 {DDD}
 {Discrete Dislocation Dynamics}
-{The study of the dynamics of \kwdp{dl} as discrete entities made up of discrete nodes connected by line segments. They assume an infinite medium in which dislocations exist, evolve and interact. Due to their intermediate nature between atomistic and continuum models, they can explore time and length scales which are either too big for more fundamental approaches, and too small for \kwd{fem}}
+{The study of the dynamics of dislocations as discrete entities made up of discrete nodes connected by line segments. They assume an infinite medium in which dislocations exist, evolve and interact. Due to their intermediate nature between atomistic and continuum models, they can explore time and length scales which are either too big for more fundamental approaches, and too small for finite element method}

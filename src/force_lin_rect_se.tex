@@ -4,7 +4,7 @@
 \section{Forces Exerted by a Dislocation Line Segment on Linear Rectangular Surface Elements}
 \label{s:f_lin_rect}
 %
-Coupling \kwd{ddd} to \kwd{fem} requires the traction field $ \tns{\sigma^{\infty}}(\vec{x}) \cdot \vec{n}(\vec{x}) $ to be distributed among the set of relevant discrete nodes of a \kwd{fe} or \kwd{be} model. This is usually achieved as follows,
+Coupling discrete dislocation dynamics to finite element method requires the traction field $ \tns{\sigma^{\infty}}(\vec{x}) \cdot \vec{n}(\vec{x}) $ to be distributed among the set of relevant discrete nodes of a finite element or \kwd{be} model. This is usually achieved as follows,
 \begin{align}\label{eq:ddd_fem_force}
 	\vec{F}^{(m)} = \int_{S^{e}} \left[\tns{\sigma^{\infty}}(\vec{x}) \cdot \vec{n}(\vec{x})\right] N_{m}(\vec{x})\; \rvar{d}S_{e}\,,
 \end{align}
@@ -14,7 +14,7 @@ The problematic singularity associated with the classical Volterra dislocation i
 \begin{align}\label{eq:field_stress}
 	\sigma_{ij}^{\infty}(\vec{x}) = C_{ijkl} \oint \epsilon_{lnh} C_{pqmn} \dfrac{\partial G_{kp}(\vec{x} - \vec{x'})}{\partial x_{q}} b_{m} \rvar{d}x'_{h}\,,
 \end{align}
-where $ C_{ijkl} $ is the elastic stiffness matrix, $ \epsilon_{lnh} $ the permutation operator, \kwds{bv} the \kwd{bv}, $ \vec{x'} $ the coordinate that spans the dislocation, and $ G_{kp}(\vec{x} - \vec{x'}) $ is Green's function of elasticity \cite{mura_t}. $ G_{kp}(\vec{x} - \vec{x'}) $ is defined as the displacement component in the $ x_{k} $ direction at point $ \vec{x} $ due to a force applied in the $ x_{p} $ direction at point $ \vec{x'} $. The traditional singularity comes from taking the \kwd{bv} distribution as a delta function. \citet{a_non-singular_continuum_theory_of_dislocations} proposed an alternative definition of $ G_{kp}(\vec{x} - \vec{x'}) $ which has a wider isotropic spread mainly localised in a radius $ a $ around the dislocation core,
+where $ C_{ijkl} $ is the elastic stiffness matrix, $ \epsilon_{lnh} $ the permutation operator, $\vec{b}$ the \kwd{bv}, $ \vec{x'} $ the coordinate that spans the dislocation, and $ G_{kp}(\vec{x} - \vec{x'}) $ is Green's function of elasticity \cite{mura_t}. $ G_{kp}(\vec{x} - \vec{x'}) $ is defined as the displacement component in the $ x_{k} $ direction at point $ \vec{x} $ due to a force applied in the $ x_{p} $ direction at point $ \vec{x'} $. The traditional singularity comes from taking the \kwd{bv} distribution as a delta function. \citet{a_non-singular_continuum_theory_of_dislocations} proposed an alternative definition of $ G_{kp}(\vec{x} - \vec{x'}) $ which has a wider isotropic spread mainly localised in a radius $ a $ around the dislocation core,
 \begin{align}\label{eq:elastic_green_func}
 	G_{ij}(\vec{x} - \vec{x'}) = \dfrac{1}{8\pi \mu}\left[ \delta_{ij} \partial_{pp} - \dfrac{1}{2(1-\nu)} \partial_{ij} \right] R_{a}\,,
 \end{align}
@@ -43,7 +43,7 @@ For two dislocation nodes (1, 2) connected by straight line segments \cref{eq:fi
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{force_calc_linear_rectangle.pdf}
-	\caption[Diagram of the analytical force calculation on linear rectangular surface elements.]{Diagram of the line integral method used to find analytical expressions for the forces exerted by \kwdp{dl} on linear rectangular \kwdp{se} \cite{analytic_tractions}.
+	\caption[Diagram of the analytical force calculation on linear rectangular surface elements.]{Diagram of the line integral method used to find analytical expressions for the forces exerted by dislocation lines on linear rectangular surface elements \cite{analytic_tractions}.
 		\textit{1}) For any given point $ \vec{x} $ on the \kwd{se} and any given point $ \vec{x'}$ on the \kwd{dls}, define distance $ R_{a} $.
 		\textit{2}) Integrate from $ x_{1} \to x_{2} $ along line direction $ \vec{t} $.
 		\textit{3}) Integrate from $ r_{1} \to r_{2} $ along vector $ \vec{p} $.
