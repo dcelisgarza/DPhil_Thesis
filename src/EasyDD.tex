@@ -19,7 +19,7 @@ The unacceptable slowness prompted a closer examination of the adaptive-time int
     \vec{r}_i(t + \Delta t)            & = \vec{r}_i + \dfrac{\vec{g}_i(\left\{\vec{r}_j(t)\right\}) + \vec{g}_i\left(\left\{\vec{r}_i^{\rvar{P}}(t + \Delta t)\right\}\right)}{2}\Delta t\,, \\
     \vec{v}_i                          & \coloneqq \dfrac{\rvar{d}\vec{r}_i}{\rvar{d}t} = \vec{g}_i\left(\left\{\vec{r}_j\right\}\right)\,,
 \end{align}
-where $\vec{r}_i$ are nodal coordinates, $\vec{v}_i$ are nodal velocities and the superscript $\rvar{P}$ denotes the predictor. This solver is fast and accurate for a small enough timestep $\Delta t$. Two free parameters $\Delta t_{\rvar{max}}$ and $\epsilon$ denote the maximum allowed timestep and accuracy.
+where $\vec{r}_i$ are nodal coordinates, $\vec{v}_i$ are nodal velocities, $\vec{g}_i$ is the function that uses the mobility model and nodal forces to compute the nodal velocities, and the superscript $\rvar{P}$ denotes the predictor. This solver is fast and accurate for a small enough timestep $\Delta t$. Two free parameters $\Delta t_{\rvar{max}}$ and $\epsilon$ denote the maximum allowed timestep and accuracy.
 \begin{algorithm}\label{alg:trapezoid}
     \caption{Adaptive Euler-trapezoid predictor-corrector algorithm.}
     \begin{enumerate}
@@ -80,4 +80,4 @@ The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a
 \subsection{Autocompilation and default values}
 \subsection{Optimisation}
 
-% 545 words
+% 561 words
