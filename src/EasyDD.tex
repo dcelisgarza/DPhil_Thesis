@@ -20,8 +20,9 @@ The unacceptable slowness prompted a closer examination of the adaptive-time int
     \vec{v}_i                          & \coloneqq \dfrac{\rvar{d}\vec{r}_i}{\rvar{d}t} = \vec{g}_i\left(\left\{\vec{r}_j\right\}\right)\,,
 \end{align}
 where $\vec{r}_i$ are nodal coordinates, $\vec{v}_i$ are nodal velocities, $\vec{g}_i$ is the function that uses the mobility model and nodal forces to compute the nodal velocities, and the superscript $\rvar{P}$ denotes the predictor. This solver is fast and accurate for a small enough timestep $\Delta t$. Two free parameters $\Delta t_{\rvar{max}}$ and $\epsilon$ denote the maximum allowed timestep and accuracy.
-\begin{algorithm}\label{alg:trapezoid}
+\begin{algorithm}
     \caption{Adaptive Euler-trapezoid predictor-corrector algorithm.}
+    \label{alg:trapezoid}
     \begin{enumerate}
         \item Initialise time step $\Delta t \coloneqq \Delta t_{\rvar{max}}$.
         \item $\Delta t_0 \coloneqq \Delta t$.
@@ -34,8 +35,9 @@ where $\vec{r}_i$ are nodal coordinates, $\vec{v}_i$ are nodal velocities, $\vec
 \end{algorithm}
 
 The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a different way of calculating the error but other than that they were the same. Unfortunately, this only increases the time step after converging to a satisfactory answer and advancing the time. So if anything caused the timestep to decrease, such as a collision or dislocation reaction, the time step would only increase very little every subsequent step, thus eading to unecessarily small time steps in most cases. The original implementation of this is found in commit \href{https://github.com/TarletonGroup/EasyDD/blob/780a6c41b35687b443d3241674af7393d2140639/int_trapezoid.m}{65907b0} under the name \texttt{int\_trapezoid.m}. An improved algorithm is described in \cref{alg:trapezoid_improved}. This algorithm takes close to the maximum allowed time step for the maximum allowable accuracy ($\epsilon_{\rvar{max}}$, $\upsilon_{\rvar{max}}$), maximum and minimum timestep ($\Delta t_{\rvar{max}}$, $\Delta t_{\rvar{min}}$) and number of iterations $\rvar{iter}_{\rvar{max}}$. It also uses a better error heuristic and more conservative timestep increase. It can be found in the most current commit of \href{https://github.com/TarletonGroup/EasyDD/blob/master/src/int_trapezoid.m}{\texttt{int\_trapezoid.m}}.
-\begin{algorithm}\label{alg:trapezoid_improved}
+\begin{algorithm}
     \caption{Improved adaptive timestep algorithm.}
+    \label{alg:trapezoid_improved}
     \begin{algorithmic}
         \State $\rvar{Convergent} \coloneqq \rvar{false}$, $\Delta t_{\rvar{valid}} \coloneqq 0$, $\rvar{iter} \coloneqq 0$, $\rvar{flag} \coloneqq \rvar{false}$
         \While{$\rvar{Convergent}$}
@@ -71,11 +73,111 @@ The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a
     \end{algorithmic}
 \end{algorithm}
 
-\Cref{alg:trapezoid_improved} is more computationally expensive per iteration, but can increase the timestep much more rapidly than \cref{alg:trapezoid} without going through the rest of the simulation, which involves computationally expensive procedures. This improvement by itself let the early version of the software move through the elastic regime of our simulations orders of magnitude times faster than before. Simulations that took hours to days to reach the plastic regime, started doing so in minutes to hours. It also narrowed the gap between using different loading conditions, as the simulations could now effectively adjust the timestep to match the error tolerances much more easily than before. Both of which were a great boon to the usability of the code and to the research group's output capacity. This was the first major improvement that cascaded in more improvements downstream.
+\Cref{alg:trapezoid_improved} is more computationally expensive per iteration, but can increase the timestep much more rapidly than \cref{alg:trapezoid} without going through the rest of the simulation, which involves computationally expensive procedures. This improvement by itself let the early version of the software move through the elastic regime of our simulations orders of magnitude times faster than before. Simulations that took hours to days to reach the plastic regime, started doing so in minutes to hours. It also narrowed the gap between using different loading conditions, as the simulations could now effectively adjust the timestep to match the error tolerances much more easily than before. Both of which were a great boon to the usability of the code and to the research group's output capacity. This was the first major bottleneck, which allowed us to identify and fix new previously unknown issues.
 
 \subsection{Matrix conditioning}
 
+A common problem with dislocation dynamics is the tendancy for some networks to have a large degree of variation in the speed of dislocation nodes \cite{bertin2019gpu,ddlab,arsenlis2007enabling}. This is a consequence of the fact that in discrete dislocation dynamics, nodes are simply the discretised representation of a dislocation line. As such, nodal motion must be constrained to the motion of dislocations, i.e. nodal movement must be consistent with how a dislocation glides, climbs and cross lips accounting for the dislocation character and orientation in the crystal. Moreover, dislocation motion can be assumed to follow a linear, anisotropic viscous drag model \cite{ddlab},
+\begin{align}\label{eq:dragCoef}
+    \vec{F}_\textrm{drag}(\vec{x}) & = -\mathcal{B}(\vec{\xi}(\vec{x})) \cdot \vec{v}(\vec{x})\,,
+\end{align}
+where $\mathcal{B}$ is a tensor constructed from the anisotropic drag that a dislocation node, $\vec{x}$, experiences as a result of its constrained velocity $\vec{v}(\vec{x})$ due to being part of a discritesed segment $\vec{\xi}(\vec{x})$. In simple terms, this means a node experiences very different resitances to moving along its allowed directions. Of particular note is the movement of a node along a line segment itself. Having a node move along a single line segment has no effect on the network, as seen in \cref{fig:lineMovement}, and therefore should not contribute to the total drag. However, in traditional mobility laws, it is important for nodes to be able to move along line directions because it allows the discretisation of the network to be accurately discretised as it evolves. On the other end of the spectrum we have climb, which is orders of magnitude less favourable than glide.
+\begin{figure}\label{fig:lineMovement}
+    \centering
+    \includegraphics[width=0.5\linewidth]{lineDirMov.pdf}
+    \caption{Node movement along dislocation line should have no drag contribution.}
+\end{figure}
 
+In the overdamped regime, $\dfrac{\rvar{d}\vec{v}}{\rvar{d}t}(\vec{x}) \to \vec{0}$, known driving forces (Peach-K\"{o}hler force + segment-segment forces + self-force) and the unkown drag force sum to give,
+\begin{align}\label{eq:drivePlusDrag}
+    \vec{F}_\rvar{drag}(\vec{x}) + \vec{F}_\rvar{drive}(\vec{x}) = \vec{0}\,.
+\end{align}
+Substituting \cref{eq:dragCoef} into \cref{eq:drivePlusDrag} and rearranging gives,
+\begin{align}\label{eq:nodeMob}
+    \mathcal{B}(\vec{\xi}(\vec{x})) \cdot \vec{v}(\vec{x}) & = \vec{F}_\rvar{drive}(\vec{x})\,.
+\end{align}
+Strictly speaking, solving \cref{eq:dragCoef} requires global knowledge of the network. The discretisation makes it possible to distribute $\mathcal{B}$ along a line segment $i-j$,
+\begin{align}\label{eq:dragMatrix}
+    \mtx{B}_{ij} & \coloneqq \oint_{C} N_i(\vec{x}) \mathcal{B}(\vec{\xi}(\vec{x})) N_j(\vec{x}) \rvar{d}L\,,
+\end{align}
+where $C$ is the whole network, $N_i$ and $N_j$ are simply shape functions that interpolate quantities given the relative position of a node to a segment, and $\rvar{d}L$ is the infinitesimal line segment. Thus giving individual expressions for node $i$ connected to node $j$. Using this discretisation and assuming the nodes connected to $i$ are subject to similar conditions, \cref{eq:nodeMob} can be broken up into local segments,
+\begin{align}\label{eq:nodeVel}
+    \vec{v}_i \approx \left(\sum\limits_j \mtx{B}_{ij}\right)^{-1} \cdot \vec{f}_i,\,
+\end{align}
+where $i$ is the node in question, $j$ are the nodes it shares a segment with, and $\vec{f}_i$ is the local force on the node. From now on, we will drop the einstein notation and refer to the local frame as $\vec{v} = \mtx{B}^{-1} \vec{f}$.
+
+The immediate implication of the orders of magnitude difference between the drag coefficients used to construct $\mathcal{B}$---and therefore $\mtx{B}$---means the condition number of $\sum_j \mtx{B}$ can be very large. As $\mtx{B}$ is symmetric and therefore normal, its condition number is given by,
+\begin{align}\label{eq:conditionNumb}
+    \kappa(\mtx{B}) = \dfrac{\lvert \lambda_\rvar{max} \rvert}{\lvert \lambda_\rvar{min} \rvert} \,,
+\end{align}
+where $\lambda_i$ is the $i$\textsuperscript{th} eigenvalue.
+
+The condition number of a matrix dictates how much collinearity exists in its basis. The larger the condition number, the larger the collinearity and the more sensitive the sytem is to small perturbations. Such systems are said to be ill-conditioned. As a general rule, a condition number $\kappa(\mtx{A}) = 10^k$ represents a loss of up to $k$ digits of precision on top of what is already lost from arithmetic methods under limited precision \cite{cheney2012numerical}.
+
+True to Murphy's law, $\mtx{B}$ is frequently ill-conditioned---even in the simplest simulations. The way these cases were handled relied on the integrator reducing the timestep enough to sidestep the issue. We call this ``strongly coupled'' behaviour. Strong coupling between functionally independent functions is a \emph{very} bad practice in software engineering.
+
+A function $\mathcal{X}$ with a set of $\mathbb{X}$ bugs with phase space $\chi(x)$ that is, $\forall x \in \mathbb{X}~ \chi(x)$. Bugs in production code are often either low impact with broad phase spaces, or high impact with narrow phase spaces. Both of which can be avoided with a combination of proper software design and testing protocols. All this goes out the window when functions are not properly decoupled. The multiplicative product of the corresponding phase spaces is often non-trivial, and can sometimes cancel out in some cases and blow up in others. Complicating the diagnosis and solution of errors.
+
+The way the mobility functions dealt with ill-conditioned $\mtx{B}$, relied on the integrator picking up the slack. There are several flaws with the approach found in \cref{alg:bTotalOld}.
+\begin{algorithm}
+    \caption{Avoiding singular matrix by making $\mtx{B}$ extremely wrong and hoping the integrator error bounds pick it up and the timestep is decreased.}
+    \label{alg:bTotalOld}
+    \begin{algorithmic}
+        \State Compute eigenvalue matrix, $\mtx{D} \coloneqq \mtx{P}^{-1} \mtx{B} \mtx{P}$
+        \State $\kappa(\mtx{B}) \coloneqq \lvert \lambda_{\rvar{max}} \rvert/ \lvert \lambda_{\rvar{min}} \rvert$
+        \If{$\kappa(\mtx{B}) < \kappa_{\rvar{min}}$}
+        \State $\mtx{D}_{\rvar{norm}} \coloneqq \mtx{D} / \lambda_{\rvar{max}}$
+        \State $\vec{f}_i \coloneqq \vec{f}_i / \lambda_{\rvar{max}}$
+        \State{\Comment{Invert $\mtx{D}_{\rvar{norm}}$.}}
+        \ForAll{$(\lambda_k \in \mtx{D}_{\rvar{norm}}) \neq \lambda_{\rvar{max}}$}
+        \If{$\lambda_k > \lambda_{\rvar{crit}}$}
+        \State $\lambda_k \coloneqq 1/\lambda_k$
+        \Else
+        \State{\Comment{The inverse of 0 is not 0!}}
+        \State $\lambda_k \coloneqq 0$
+        \EndIf
+        \EndFor
+        \State $\vec{v} = \mtx{P} \mtx{D} \mtx{P}^{-1} \vec{f}$
+        \Else
+        \State $\vec{v} = \mtx{B}^{-1} \vec{f}$
+        \EndIf
+    \end{algorithmic}
+\end{algorithm}
+
+The first is assuming that an ill-conditioned matrix can be fixed by diagonalising. This is simply not true, perturbing the smallest eigenvalue in a direction such that $\kappa$ improves is a good way of doing so without adding much error. However, perturbations of this type are often not enough when the condition number is too large. Furthermore, one wants to keep the overall behaviour of the system, i.e. maintain the relative sizes of the eigenvalues with respect to one another. If the multiple eigenvalues are close in magnitude to the smallest eigenvalue, one can change the dynamics of the system if the perturbation is too large. Not to mention the fact that $\kappa$ may still be too large. In a system as stiff and dynamic as discrete dislocation dynamics, this approach is not enough for some cases.
+
+The second flaw is the assumption that the case where $\lambda_k < \lambda_{\rvar{crit}}$ for non-maximal eigenvalues, is so rare, it won't have much of an effect. Unfortunately, it's common in junctions where nodal mobility is limited, and volumes with large stress gradients. Although to be fair, these are also consequence of the assumption of locality, yielding \cref{eq:nodeVel}. Moreover, when every non-maximal eigenvalue is smaller than $\lambda_{\rvar{crit}}$, the error much greater. For a every eigenvalue under the threshold of of $\lambda_{\rvar{crit}} = 10^{-k}$, the error is $k$ digits in the corresponding mobility component.
+
+The third is the assumption that the integrator will not allow obviously wrong solutions because it will fail the error check and reduce the time step. This assumption breaks down whenever dislocation velocities are calculated outside the context of time integration, such as every topological operation where a new node is spawned.
+
+The regularisation of ill-conditioned systems in an active field of research \cite{regularisation1,regularisation2,regularisation3}. However, they require some knowledge of the matrix structure low rank matrices often need special methods due to how sensitive low rank ill-conditioned systems tend to be. In this case, $\mtx{B}$ is of rank equal to the number of orthogonal crystallographic directions, so it is always of low rank.
+
+One of the most effective regularisations for low rank matrices is dampening the inversion by adding a small value, $c$, named the Marquardt-Levenberg coefficient to the diagonal of the matrix, which is roughly equivalent to perturbing the small eigenvalue as previously mentioned. however, if this factor is added to every entry of the diagonal, the inversion can be dampened sufficiently whilst keeping the main contributions from each basis roughly equal in relation to each other. This amounts to adding a multiple of the identity matrix to an ill-conditioned matrix. One can iteratively refine $c$ to find the smallest value that keeps the matrix inversion from blowing up. A good heuristic is to use,
+\begin{align}\label{eq:marquardt}
+    c = \max\left(\lvert\mtx{A}\rvert\right) \sqrt(\epsilon)\,,
+\end{align}
+where $\epsilon$ is machine precision. This ensures the perturbation will be in scaled to a number that will not underflow when squared and added to the square of the largest value of the matrix. Simply put, it ensures the perturbation is small but does not disappear during matrix inversion.
+
+It is worth noting that doing this and inverting is still a source of error, adding noise even if small and along the diagonal, does move the system away from its true behaviour. However, the degree to which it is wrong is many orders of magnitude smaller than what is done in \cref{alg:bTotalOld}. Indeed, the new \cref{alg:bTotalNew} uses $\pm c $ and the two solutions are averaged to give a much more accurate and simpler solution even under traditionally problematic scenarios as discussed above.
+\begin{algorithm}
+    \caption{Improved regularisation of $\mtx{B}$ by way of perturbing the diagonal.}
+    \label{alg:bTotalNew}
+    \begin{algorithmic}
+        \If{$\lVert \mtx{B} \rVert < \epsilon$}
+        \State $\vec{v} \coloneqq \vec{0}$
+        \ElsIf{$\lvert \lambda_{\rvar{max}} \rvert/ \lvert \lambda_{\rvar{min}} \rvert < \epsilon$}
+        \State $\mtx{B}_+ \coloneqq \mtx{B} + \sqrt{\epsilon} \max(\mtx{B})$
+        \State $\mtx{B}_- \coloneqq \mtx{B} - \sqrt{\epsilon} \max(\mtx{B})$
+        \State $\vec{v}_+ \coloneqq \mtx{B}_+^{-1} \vec{f}$
+        \State $\vec{v}_- \coloneqq \mtx{B}_-^{-1} \vec{f}$
+        \State $\vec{v} \coloneqq (\vec{v}_- + \vec{v}_+)/2$
+        \Else
+        \State $\vec{v} \coloneqq \mtx{B}^{-1} \vec{f}$
+        \EndIf
+    \end{algorithmic}
+\end{algorithm}
+
+This change enabled other team members, mainly Haiyang Yu and Fengxian Liu to get further with their simulations. Haiyang's nanoindentation simulations have particularly complex dislocation structures with a substantial amount of junction formation; while Fengxian's have large localised stress gradients as a result of inclusions. Both require nodal velocieties to be accurately calculated, else the dislocations move erratically, cross slip incorrectly, and cause massive slowdowns as the simulations advance.
 
 \section{Research software engineering}
 \subsection{Organisation}
@@ -84,4 +186,4 @@ The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a
 \subsection{Autocompilation and default values}
 \subsection{Optimisation}
 
-% 564 words
+% 1892 words
