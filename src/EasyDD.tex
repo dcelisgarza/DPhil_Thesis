@@ -34,7 +34,7 @@ where $\vec{r}_i$ are nodal coordinates, $\vec{v}_i$ are nodal velocities, $\vec
     \end{enumerate}
 \end{algorithm}
 
-The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a different way of calculating the error but other than that they were the same. Unfortunately, this only increases the time step after converging to a satisfactory answer and advancing the time. So if anything caused the timestep to decrease, such as a collision or dislocation reaction, the time step would only increase very little every subsequent step, thus eading to unecessarily small time steps in most cases. The original implementation of this is found in commit \href{https://github.com/TarletonGroup/EasyDD/blob/780a6c41b35687b443d3241674af7393d2140639/int_trapezoid.m}{65907b0} under the name \texttt{int\_trapezoid.m}. An improved algorithm is described in \cref{alg:trapezoid_improved}. This algorithm takes close to the maximum allowed time step for the maximum allowable accuracy ($\epsilon_{\rvar{max}}$, $\upsilon_{\rvar{max}}$), maximum and minimum timestep ($\Delta t_{\rvar{max}}$, $\Delta t_{\rvar{min}}$) and number of iterations $\rvar{iter}_{\rvar{max}}$. It also uses a better error heuristic and more conservative timestep increase. It can be found in the most current commit of \href{https://github.com/TarletonGroup/EasyDD/blob/master/src/int_trapezoid.m}{\texttt{int\_trapezoid.m}}.
+The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a different way of calculating the error but other than that they were the same. Unfortunately, this only increases the time step after converging to a satisfactory answer and advancing the time. So if anything caused the timestep to decrease, such as a collision or dislocation reaction, the time step would only increase very little every subsequent step, thus eading to unecessarily small time steps in most cases. The original implementation of this is found in commit \href{https://github.com/TarletonGroup/EasyDD/blob/780a6c41b35687b443d3241674af7393d2140639/int_trapezoid.m}{\texttt{65907b0}} under the name \texttt{int\_trapezoid.m}. An improved algorithm is described in \cref{alg:trapezoid_improved}. This algorithm takes close to the maximum allowed time step for the maximum allowable accuracy ($\epsilon_{\rvar{max}}$, $\upsilon_{\rvar{max}}$), maximum and minimum timestep ($\Delta t_{\rvar{max}}$, $\Delta t_{\rvar{min}}$) and number of iterations $\rvar{iter}_{\rvar{max}}$. It also uses a better error heuristic and more conservative timestep increase. It can be found in the most current commit of \href{https://github.com/TarletonGroup/EasyDD/blob/master/src/int_trapezoid.m}{\texttt{int\_trapezoid.m}}.
 \begin{algorithm}
     \caption{Improved adaptive timestep algorithm.}
     \label{alg:trapezoid_improved}
@@ -127,13 +127,13 @@ The way the mobility functions dealt with ill-conditioned $\mtx{B}$, relied on t
         \State $\kappa(\mtx{B}) \coloneqq \lvert \lambda_{\rvar{max}} \rvert/ \lvert \lambda_{\rvar{min}} \rvert$
         \If{$\kappa(\mtx{B}) < \kappa_{\rvar{min}}$}
         \State $\mtx{D}_{\rvar{norm}} \coloneqq \mtx{D} / \lambda_{\rvar{max}}$
-        \State $\vec{f}_i \coloneqq \vec{f}_i / \lambda_{\rvar{max}}$
+        \State $\vec{f} \coloneqq \vec{f} / \lambda_{\rvar{max}}$
         \State{\Comment{Invert $\mtx{D}_{\rvar{norm}}$.}}
         \ForAll{$(\lambda_k \in \mtx{D}_{\rvar{norm}}) \neq \lambda_{\rvar{max}}$}
         \If{$\lambda_k > \lambda_{\rvar{crit}}$}
         \State $\lambda_k \coloneqq 1/\lambda_k$
         \Else
-        \State{\Comment{The inverse of 0 is not 0!}}
+        \State{\Comment{The inverse of 0 is not 0.}}
         \State $\lambda_k \coloneqq 0$
         \EndIf
         \EndFor
@@ -146,19 +146,19 @@ The way the mobility functions dealt with ill-conditioned $\mtx{B}$, relied on t
 
 The first is assuming that an ill-conditioned matrix can be fixed by diagonalising. This is simply not true, perturbing the smallest eigenvalue in a direction such that $\kappa$ improves is a good way of doing so without adding much error. However, perturbations of this type are often not enough when the condition number is too large. Furthermore, one wants to keep the overall behaviour of the system, i.e. maintain the relative sizes of the eigenvalues with respect to one another. If the multiple eigenvalues are close in magnitude to the smallest eigenvalue, one can change the dynamics of the system if the perturbation is too large. Not to mention the fact that $\kappa$ may still be too large. In a system as stiff and dynamic as discrete dislocation dynamics, this approach is not enough for some cases.
 
-The second flaw is the assumption that the case where $\lambda_k < \lambda_{\rvar{crit}}$ for non-maximal eigenvalues, is so rare, it won't have much of an effect. Unfortunately, it's common in junctions where nodal mobility is limited, and volumes with large stress gradients. Although to be fair, these are also consequence of the assumption of locality, yielding \cref{eq:nodeVel}. Moreover, when every non-maximal eigenvalue is smaller than $\lambda_{\rvar{crit}}$, the error much greater. For a every eigenvalue under the threshold of of $\lambda_{\rvar{crit}} = 10^{-k}$, the error is $k$ digits in the corresponding mobility component.
+The second flaw is the assumption that the case where $\lambda_k < \lambda_{\rvar{crit}}$ for non-maximal eigenvalues, is so rare, it won't have much of an effect. Unfortunately, it's common in junctions where nodal mobility is limited, as well as in volumes with large stress gradients. Although to be fair, these are also consequence of the assumption of locality, yielding \cref{eq:nodeVel}. Moreover, when every non-maximal eigenvalue is smaller than $\lambda_{\rvar{crit}}$, the error much greater. For a every eigenvalue under the threshold of of $\lambda_{\rvar{crit}} = 10^{-k}$, the upper bound of the error is $k$ digits in the corresponding mobility component.
 
 The third is the assumption that the integrator will not allow obviously wrong solutions because it will fail the error check and reduce the time step. This assumption breaks down whenever dislocation velocities are calculated outside the context of time integration, such as every topological operation where a new node is spawned.
 
-The regularisation of ill-conditioned systems in an active field of research \cite{regularisation1,regularisation2,regularisation3}. However, they require some knowledge of the matrix structure low rank matrices often need special methods due to how sensitive low rank ill-conditioned systems tend to be. In this case, $\mtx{B}$ is of rank equal to the number of orthogonal crystallographic directions, so it is always of low rank.
+The regularisation of ill-conditioned systems in an active field of research \cite{regularisation1,regularisation2,regularisation3}. However, they require some knowledge of the matrix structure or follow a well-known statistical distribution to thier values/eigenvalues. Regularlisation is most often applied to high rank matrices because poorly conditioned low rank matrices ones are often very sensitive to perturbations, thus requiring specialised methods. In this case, $\mtx{B}$ is of rank equal to the number of orthogonal crystallographic directions, so it is always of low rank.
 
-One of the most effective regularisations for low rank matrices is dampening the inversion by adding a small value, $c$, named the Marquardt-Levenberg coefficient to the diagonal of the matrix, which is roughly equivalent to perturbing the small eigenvalue as previously mentioned. however, if this factor is added to every entry of the diagonal, the inversion can be dampened sufficiently whilst keeping the main contributions from each basis roughly equal in relation to each other. This amounts to adding a multiple of the identity matrix to an ill-conditioned matrix. One can iteratively refine $c$ to find the smallest value that keeps the matrix inversion from blowing up. A good heuristic is to use,
+One of the most effective regularisations for low rank matrices is dampening the inversion by adding a small value, $c$---called the Marquardt-Levenberg coefficient---to the diagonal of the matrix. This is roughly equivalent to perturbing the smallest eigenvalue as previously mentioned. Luckily, if this factor is added the whole diagonal, the inversion can be dampened sufficiently whilst keeping the main contributions from each basis roughly equal in relation to each other. This amounts to adding a multiple of the identity matrix to an ill-conditioned matrix. For a more accurate solution, one can iteratively refine $c$ to find the smallest value that keeps the matrix inversion from blowing up. A good heuristic for the value of the Marquardt-Levenberg coefficient is,
 \begin{align}\label{eq:marquardt}
     c = \max\left(\lvert\mtx{A}\rvert\right) \sqrt(\epsilon)\,,
 \end{align}
-where $\epsilon$ is machine precision. This ensures the perturbation will be in scaled to a number that will not underflow when squared and added to the square of the largest value of the matrix. Simply put, it ensures the perturbation is small but does not disappear during matrix inversion.
+where $\epsilon$ is machine precision. This ensures the perturbation is scaled to a number that will not underflow during arithmetic operations. Simply put, it ensures the perturbation is small but does not disappear during matrix inversion.
 
-It is worth noting that doing this and inverting is still a source of error, adding noise even if small and along the diagonal, does move the system away from its true behaviour. However, the degree to which it is wrong is many orders of magnitude smaller than what is done in \cref{alg:bTotalOld}. Indeed, the new \cref{alg:bTotalNew} uses $\pm c $ and the two solutions are averaged to give a much more accurate and simpler solution even under traditionally problematic scenarios as discussed above.
+It is worth noting that doing this and inverting is still a source of error, adding noise even if small and along the diagonal, does move the system away from its true behaviour. However, the degree to which it is wrong is many orders of magnitude smaller than what is done in \cref{alg:bTotalOld}. Indeed, \cref{alg:bTotalNew} uses $\pm c $ and both perturbed solutions are averaged to give a much more accurate and simpler solution even under the traditionally problematic scenarios discussed above.
 \begin{algorithm}
     \caption{Improved regularisation of $\mtx{B}$ by way of perturbing the diagonal.}
     \label{alg:bTotalNew}
@@ -177,7 +177,7 @@ It is worth noting that doing this and inverting is still a source of error, add
     \end{algorithmic}
 \end{algorithm}
 
-This change enabled other team members, mainly Haiyang Yu and Fengxian Liu to get further with their simulations. Haiyang's nanoindentation simulations have particularly complex dislocation structures with a substantial amount of junction formation; while Fengxian's have large localised stress gradients as a result of inclusions. Both require nodal velocieties to be accurately calculated, else the dislocations move erratically, cross slip incorrectly, and cause massive slowdowns as the simulations advance.
+This change enabled other team members, namely Haiyang Yu and Fengxian Liu to get further with their simulations. Haiyang's nanoindentation simulations have particularly complex dislocation structures with a substantial amount of junction formation; while Fengxian's have large localised stress gradients as a result of inclusions. Both require nodal velocieties to be accurately calculated, else the dislocations move erratically, readily cross slip, and cause massive slowdowns as simulations advance.
 
 \section{Research software engineering}
 \subsection{Organisation}
@@ -186,4 +186,4 @@ This change enabled other team members, mainly Haiyang Yu and Fengxian Liu to ge
 \subsection{Autocompilation and default values}
 \subsection{Optimisation}
 
-% 1892 words
+% 1908 words
