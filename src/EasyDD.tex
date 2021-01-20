@@ -1,14 +1,14 @@
-\chapter{EasyDD 2.0}
+\chapter{EasyDD v2.0}
 \label{c:easydd}
 
 EasyDD can be found in \href{https://github.com/TarletonGroup/EasyDD}{https://github.com/TarletonGroup/EasyDD}.
 
-As mentioned in \cref{s:objectives}, this project aims to integrate multidisciplinary skills for creating increasingly faithful recreations of reality in a user friendly way. This chapter details the software engineering that moved us closer to this goal and yielded a new version of EasyDD incompatible with the last.
+As mentioned in \cref{s:objectives}, this project aims to integrate multidisciplinary skills for creating increasingly faithful recreations of reality in a user friendly way. This chapter details the software engineering that moved us closer to this goal and yielded a much improved version of EasyDD.
 
 \section{Bug fixes}
 \label{s:bugs}
 
-\subsection{Integrator}
+\subsection{Correct time-adaptive integrator}
 \label{ss:integrator}
 
 The first obvious hurdle to overcome when making more complex simulations possible was the tremendously long computational time taken for a dislocation plasticity simulation to sufficiently advance past the elastic regime. A simple microcantilever bending simulation with a few frank reed sources would take a whole night to reach the plastic regime, some early simulations took days.
@@ -34,7 +34,7 @@ where $\vec{r}_i$ are nodal coordinates, $\vec{v}_i$ are nodal velocities, $\vec
     \end{enumerate}
 \end{algorithm}
 
-The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a different way of calculating the error but other than that they were the same. Unfortunately, this only increases the time step after converging to a satisfactory answer and advancing the time. So if anything caused the timestep to decrease, such as a collision or dislocation reaction, the time step would only increase very little every subsequent step, thus eading to unecessarily small time steps in most cases. The original implementation of this is found in commit \href{https://github.com/TarletonGroup/EasyDD/blob/780a6c41b35687b443d3241674af7393d2140639/int_trapezoid.m}{\texttt{65907b0}} under the name \texttt{int\_trapezoid.m}. An improved algorithm is described in \cref{alg:trapezoid_improved}. This algorithm takes close to the maximum allowed time step for the maximum allowable accuracy ($\epsilon_{\rvar{max}}$, $\upsilon_{\rvar{max}}$), maximum and minimum timestep ($\Delta t_{\rvar{max}}$, $\Delta t_{\rvar{min}}$) and number of iterations $\rvar{iter}_{\rvar{max}}$. It also uses a better error heuristic and more conservative timestep increase. It can be found in the most current commit of \href{https://github.com/TarletonGroup/EasyDD/blob/master/src/int_trapezoid.m}{\texttt{int\_trapezoid.m}}.
+The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a different way of calculating the error but other than that they were the same. Unfortunately, this only increases the time step after converging to a satisfactory answer and advancing the time. So if anything caused the timestep to decrease, such as a collision or dislocation reaction, the time step would only increase very little every subsequent step, thus eading to unecessarily small time steps in most cases. The original implementation of this is found in commit \href{https://github.com/TarletonGroup/EasyDD/blob/780a6c41b35687b443d3241674af7393d2140639/int_trapezoid.m}{\texttt{65907b0}} under the name \texttt{int\_trapezoid.m}. An improved algorithm is described in \cref{alg:trapezoid_improved}. This algorithm takes close to the maximum allowed time step for the maximum allowable accuracy, ($\epsilon_{\rvar{max}}$, $\upsilon_{\rvar{max}}$), maximum and minimum timestep, ($\Delta t_{\rvar{max}}$, $\Delta t_{\rvar{min}}$) and number of iterations, $\rvar{iter}_{\rvar{max}}$. It also uses a better error heuristic and more conservative timestep increase. It can be found in the most current version of \href{https://github.com/TarletonGroup/EasyDD/blob/master/src/int_trapezoid.m}{\texttt{int\_trapezoid.m}}.
 \begin{algorithm}
     \caption{Improved adaptive timestep algorithm.}
     \label{alg:trapezoid_improved}
@@ -73,9 +73,10 @@ The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a
     \end{algorithmic}
 \end{algorithm}
 
-\Cref{alg:trapezoid_improved} is more computationally expensive per iteration, but can increase the timestep much more rapidly than \cref{alg:trapezoid} without going through the rest of the simulation, which involves computationally expensive procedures. This improvement by itself let the early version of the software move through the elastic regime of our simulations orders of magnitude times faster than before. Simulations that took hours to days to reach the plastic regime, started doing so in minutes to hours. It also narrowed the gap between using different loading conditions, as the simulations could now effectively adjust the timestep to match the error tolerances much more easily than before. Both of which were a great boon to the usability of the code and to the research group's output capacity. This was the first major bottleneck, which allowed us to identify and fix new previously unknown issues.
+\Cref{alg:trapezoid_improved} is more computationally expensive per iteration, but can increase the timestep much more rapidly than \cref{alg:trapezoid} without going through the rest of the simulation, which involves computationally expensive procedures. This improvement by itself let the early version of the software move through the elastic regime of our simulations orders of magnitude times faster than before. Simulations that took hours to days to reach the plastic regime, started doing so in minutes to hours. It also narrowed the gap between using different loading conditions, as the simulations could now effectively adjust the timestep to match the error tolerances much more easily than before. Both of which were a great boon to the usability of the code and to the research group's output capacity. This was the first major bottleneck to be fixed, which allowed us to identify and resolve previously unknown issues downstream.
 
 \subsection{Matrix conditioning}
+\label{ss:matrix}
 
 A common problem with dislocation dynamics is the tendancy for some networks to have a large degree of variation in the speed of dislocation nodes \cite{bertin2019gpu,ddlab,arsenlis2007enabling}. This is a consequence of the fact that in discrete dislocation dynamics, nodes are simply the discretised representation of a dislocation line. As such, nodal motion must be constrained to the motion of dislocations, i.e. nodal movement must be consistent with how a dislocation glides, climbs and cross lips accounting for the dislocation character and orientation in the crystal. Moreover, dislocation motion can be assumed to follow a linear, anisotropic viscous drag model \cite{ddlab},
 \begin{align}\label{eq:dragCoef}
@@ -104,7 +105,7 @@ where $C$ is the whole network, $N_i$ and $N_j$ are simply shape functions that 
 \begin{align}\label{eq:nodeVel}
     \vec{v}_i \approx \left(\sum\limits_j \mtx{B}_{ij}\right)^{-1} \cdot \vec{f}_i,\,
 \end{align}
-where $i$ is the node in question, $j$ are the nodes it shares a segment with, and $\vec{f}_i$ is the local force on the node. From now on, we will drop the einstein notation and refer to the local frame as $\vec{v} = \mtx{B}^{-1} \vec{f}$.
+where $i$ is the node in question, $j$ are the nodes it shares a segment with, and $\vec{f}_i$ is the local force on the node. From now on, we will drop the Einstein notation and refer to the local frame as $\vec{v} = \mtx{B}^{-1} \vec{f}$.
 
 The immediate implication of the orders of magnitude difference between the drag coefficients used to construct $\mathcal{B}$---and therefore $\mtx{B}$---means the condition number of $\sum_j \mtx{B}$ can be very large. As $\mtx{B}$ is symmetric and therefore normal, its condition number is given by,
 \begin{align}\label{eq:conditionNumb}
@@ -118,7 +119,7 @@ True to Murphy's law, $\mtx{B}$ is frequently ill-conditioned---even in the simp
 
 A function $\mathcal{X}$ with a set of $\mathbb{X}$ bugs with phase space $\chi(x)$ that is, $\forall x \in \mathbb{X}~ \chi(x)$. Bugs in production code are often either low impact with broad phase spaces, or high impact with narrow phase spaces. Both of which can be avoided with a combination of proper software design and testing protocols. All this goes out the window when functions are not properly decoupled. The multiplicative product of the corresponding phase spaces is often non-trivial, and can sometimes cancel out in some cases and blow up in others. Complicating the diagnosis and solution of errors.
 
-The way the mobility functions dealt with ill-conditioned $\mtx{B}$, relied on the integrator picking up the slack. There are several flaws with the approach found in \cref{alg:bTotalOld}.
+The way the mobility functions dealt with ill-conditioned $\mtx{B}$, relied on the integrator picking up the slack. There are several flaws with the approach found in \cref{alg:bTotalOld}, the actual mobility function can also be found under commit \href{https://github.com/TarletonGroup/EasyDD/blob/65907b022d1fe408fc1b2e5c5ca2bd1797ccae04/mobbcc1.m#L68}{\texttt{65907b0}} under the name \texttt{mobbcc1.m}\footnote{There are different mobility laws, all of them have this issue.}.
 \begin{algorithm}
     \caption{Avoiding singular matrix by making $\mtx{B}$ extremely wrong and hoping the integrator error bounds pick it up and the timestep is decreased.}
     \label{alg:bTotalOld}
@@ -158,7 +159,7 @@ One of the most effective regularisations for low rank matrices is dampening the
 \end{align}
 where $\epsilon$ is machine precision. This ensures the perturbation is scaled to a number that will not underflow during arithmetic operations. Simply put, it ensures the perturbation is small but does not disappear during matrix inversion.
 
-It is worth noting that doing this and inverting is still a source of error, adding noise even if small and along the diagonal, does move the system away from its true behaviour. However, the degree to which it is wrong is many orders of magnitude smaller than what is done in \cref{alg:bTotalOld}. Indeed, \cref{alg:bTotalNew} uses $\pm c $ and both perturbed solutions are averaged to give a much more accurate and simpler solution even under the traditionally problematic scenarios discussed above.
+It is worth noting that doing this and inverting is still a source of error, adding noise even if small and along the diagonal, does move the system away from its true behaviour. However, the degree to which it is wrong is many orders of magnitude smaller than what is done in \cref{alg:bTotalOld}. Indeed, \cref{alg:bTotalNew} uses $\pm c $ and both perturbed solutions are averaged to give a much more accurate and simpler solution even under the traditionally problematic scenarios discussed above. This new algorithm is now present in the mobility laws we now use, such as the most current version of \href{https://github.com/TarletonGroup/EasyDD/blob/372984499dd60136fc7badabd6cee192058d55d9/src/mobbcc_bb1b.m#L199}{\texttt{mobbcc\_bb.m}}.
 \begin{algorithm}
     \caption{Improved regularisation of $\mtx{B}$ by way of perturbing the diagonal.}
     \label{alg:bTotalNew}
@@ -180,10 +181,93 @@ It is worth noting that doing this and inverting is still a source of error, add
 This change enabled other team members, namely Haiyang Yu and Fengxian Liu to get further with their simulations. Haiyang's nanoindentation simulations have particularly complex dislocation structures with a substantial amount of junction formation; while Fengxian's have large localised stress gradients as a result of inclusions. Both require nodal velocieties to be accurately calculated, else the dislocations move erratically, readily cross slip, and cause massive slowdowns as simulations advance.
 
 \section{Research software engineering}
+\label{s:rse}
+
+Many scientists and researchers spare no thought for good software. However, with the presently on-going SARS-CoV 2 pandemic, the importance of research software has been made clear. Modelling has played a large role in informing government policy in the UK and the world \cite{covidScotland,covidUK1,covidUK2}. With modelling thrust into the spotlight and the public release of the Imperial College modelling code used to inform so much policy \cite{covidUK2}, \href{https://github.com/mrc-ide/covid-sim}{\texttt{https://github.com/mrc-ide/covid-sim}}, criticism was levied at the lack of care taken to ensure the correctness of the code \cite{natureModelCritique}. In experimental research, a lot of care is take to ensure a methodoogy used is reproducible, robust and sound. There are standards, both external and internal, which ensure the quality of the results. But even with these measures in place, there is already a common issue with irreproducibility in science \cite{mede2020replication,randall2018irreproducibility,bolli2015reflections}. In obtaining results and analysing them, software is ubiquitous. It should be good, \emph{especially} if the science is modelling-based.
+
+Along this vein, one of the primary goals of this project was to develop a competent codebase that non-experts can take advantage of with minimal preparation. There were multiple sub-objectives that help us achieve this.
+\begin{enumerate}
+    \item Provide a generic framework upon which the software can be modularly expanded with minimal change to the source: prevents increasingly divergent and incompatible source code between researchers.
+    \item Provide an easy way to autocomplete inputs with sensible default parameters: prevents the software from crashing when---inevitably---one of the required arguments for a function is undefined.
+    \item Improve readability and organisation: makes it easy to identify, fix bugs and know what the code does.
+    \item Compartmentalise variables: makes the code more generic and increases usability and readability by reducing the number of function arguments.
+    \item Optimise memory and computation: improves computational speed and reduces resource use.
+\end{enumerate}
+
+Akin to the Ship of Theseus, it is hard to tell whether the new version of the code is the same code as when this project began. While \href{https://github.com/TarletonGroup/EasyDD}{\texttt{EasyDD v2.0}} is ``complete'', the process of improving the code is on-going. The amount of initial technical debt since its inception as the infinite-domain discrete dislocation dynamics code, \href{http://micro.stanford.edu/wiki/Main_Page}{\texttt{DDLab}} \cite{ddlab}, plus what it accrued as the Tarleton Group expanded its functionality and turned it into \href{https://github.com/TarletonGroup/EasyDD/tree/65907b022d1fe408fc1b2e5c5ca2bd1797ccae04}{\texttt{EasyDD}}, is quite large and needs to be carefully chipped away so as not to introduce regressions. However, while the quality and capabilities of the code can be greatly improved, there is only so much that can be done without fundamentally redesigning it completely. This is in part the subject of \cref{c:future}.
+
+Other team members have made significant contributions to the release of \href{https://github.com/TarletonGroup/EasyDD}{\texttt{EasyDD v2.0}}. Some of which remain to be added, but should slowly make their way in. Given the code is the amalgam of the research group's work, we will credit other members' contributions where relevant but will leave the details for them to explain. It is worth noting this work will continue past the end of this particular project, for there still many aspects that can be improved.
+
 \subsection{Organisation}
-\subsection{Encapsulation}
+
+An oft-overlooked aspect of code useability is the organisational aspect. However as a codebase grows, it becomes more important for both a code be properly organised and source controlled. This makes it easier to browse, understand, is less overwhelming for users and developers and crucially provides a safey blanket against things going wrong.
+
+\subsubsection{Source control}
+
+Source control is a crucial aspect of industrial software development. It is an industry standard and the first thing to set up when starting a software development project. Academia is very far behind in this regard. Not only does it provide a history of restore points in case things break; but keeps a history of changes, who and when they made them; can perform automated checks such as testing or conflict detection; lets developers and users (if the repository is open-sourced) make changes independently and request their changes be added to the main code; among many other tasks.
+
+In regards to reproducibility, source control is a crucial tool. In both \cref{ss:integrator,ss:matrix} we took advantage of this to provide a specific commit and a file name, which lets anyone view every particular snapshot of code. In the digital version of this document, those link directly to the file, and even specific lines. The advantage of such a system is that when submitting a manuscript for publication one can also submit a link to the specific version of the software used to obtain the results. This is a gigantic stride towards open, reproducible science.
+
+\subsubsection{Folder structure}
+
+An on-going task is improving the folder structure. Which in the past was almost non-existant. Having a default place to place inputs, outputs and source code is of great import if a code is to be used by non-experts. It is trivial to do and a boon to the quality of life of developers and users.
+
+\subsection{Modulirisation}
+
+Modern software practices usually make heavy use of some form of variable encapsulation and code modulirisation to make code safer, simpler to expand and easier to use. This enables users and developers to take advantage of a set of toolboxes that can be chosen according to their needs without having to directly modify the source code, this concept is called ``moduliration''.
+
+\subsubsection{Encapsulation}
+
+The act of keeping variables neatly stored in a way that fits a purpose is called encapsulation. By encapsulating variableswe greatly improve the usability of software by increasing readability, reducingthe risk of human error by reducing the number of things to keep track of, and if done properly can even improve performance. This concept is tightly bound to the design philosophy of software as described in the following list.
+\begin{itemize}
+    \item Object-Oriented Programming (OOP): where variables are viewed as objects upon which the logic acts. Functions can take these objects and operate on them. This type of design keeps related variables in a single entity and reduces the number of things users and developers have to keep track of, thus reducing the chance of implementation and user error. There are many advanced concepts and pitfalls in OOP that unecessarily increase complexity, so it is best to apply the KISS (keep it simple, stupid) approach for best results.
+    \item Data-Oriven Programming (DDP): where the data dictates the structure of the programme. It is essentially a modified version of OOP where the object is made to fit the data, not the data made to fit the object. It often leads to more performant code and avoids many of the issues that arise from OOP because it forces developers to really think about how to manage the data.
+    \item Functional programming: where everything is a function. There is no state, but also no side effects. This is the strongest form of encapsulation but also the most inflexible.
+    \item Procedural programming: this is the most ancient form of programming where there are only functions and variables. It is the form most scientific software packages take and it is the most difficult to work with both, as a developer, user. Even modern computers which can make use of branch prediction and deletion, cache pre-fetching, and compiler optimisations can be hindered by this approach.
+\end{itemize}
+
+Procedural programming is what gives us so-called spagghetti code\footnote{Code with many branches and disparate procedures without a clear purpose. It is difficult to work with as a user and developer and often ruins branch prediction and compiler optimisation.} and how most legacy scientific software is written. Thus we strive to separate ourselves from it as much as possible.
+
+Functional programming is impractical for most use cases so it is seldom used outside of computer science and very specific industrial and academic applications \cite{haskell,functionalProg}.
+
+\mintinline{matlab}{MATLAB} does not truly have object-oriented capabilities, \mintinline{matlab}{struct}, is more of a dictionary (Hash table) than a true object but this is sufficient for our use-case. Encapsulating variables using a data-driven approach has allowed us to make use of generic functions for different mobility functions and loading conditions as well as finite element meshes and the dislocation network itself, greatly simplifying the code without sacrifing performance.
+
 \subsection{Generic functions}
-\subsection{Autocompilation and default values}
+
+Generic functions are implementation-agnostic functions that can be given by the user as any other variable. Only the variable in this case is a function. \mintinline{matlab}{MATLAB} has an old method of doing so using \mintinline{matlab}{feval()}, where the first argument is the name of the file whose function is being called, and subsequent arguments are passed on to the function. However this has some limitations, mainly their performance, and function handles are now preferred, e.g.
+\begin{minted}[
+    frame=lines,
+    linenos
+    ]{matlab}
+    % myFunction is defined in 'myFunction.m' and is called 
+    % like so myFunction(foo, bar)
+    genericFunction = 'myFunction.m'; 
+    foo = 1;
+    bar = 2;
+    feval('genericFunction', foo, bar);
+\end{minted}
+as opposed to,
+\begin{minted}[
+    frame=lines,
+    linenos
+    ]{matlab}
+    % myFunction is defined in 'myFunction.m' and is called 
+    % like so myFunction(foo, bar)
+    genericFunction = @myFunction; 
+    foo = 1;
+    bar = 2;
+    genericFunction(foo, bar);
+\end{minted}
+which are not dissimilar, but the latter is more performant and easier to follow. Generic functions were already in use for dislocation mobility but there are now ones for calculating numeric and analytic tractions (see \cref{c:tractions}), loading conditions (multi-stage loading, constant loading, cyclic loading), various post-processing functions, boundary conditions and various miscelaneous functions that support different simulation types.
+
+The main advantage of generic functions is reducing the need for direct source code modification. Changing source code, especially when there are no automated tests to speak of, is a dangerous proposition. It greatly increases the probability of introducing regressions (new bugs) and code divergeance between researchers. Regressions are always problematic, but code divergeance is a big issue that still affects the Tarleton Group. If experts within the same research group find it difficult to incorporate each others' additions to our work, there is little hope for the general user.
+
+The introduction of regressions makes it so code must be thoroughly and exhaustively tested before merging two people's work. The use of generic functions makes it so if there is a problem with a new addition, the problem is localised and can be quickly identified and fixed because it is isolated. We can be sure the changes are only found in the new piece of code. And since it is generic, we can chose whether or not to use it by changing an input file rather than messing with the source code.
+
+If on the other hand, one were to add a new branch to an if statement (or a brand new if statement) with new computations, likely the function needs new arguments to cover this new case, we may or may not need to make up- or downstream modifications so the function can accommodate the additions. Then very quickly we will find ourselves procedurally programming and fixing the innevitable problems that come with hard to understand spaghetti code---which is most likely also less performant now than it used to be. The problem worsens as we add more functionality. Which can all be avoided by intelligently designing a generic approach, that can be easily expanded if the need arises.
+
 \subsection{Optimisation}
 
-% 1908 words
+\subsection{Misc quality of life improvements}
+
+% 3745 words
