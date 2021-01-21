@@ -212,7 +212,7 @@ In regards to reproducibility, source control is a crucial tool. In both \cref{s
 
 An on-going task is improving the folder structure. Which in the past was almost non-existant. Having a default place to place inputs, outputs and source code is of great import if a code is to be used by non-experts. It is trivial to do and a boon to the quality of life of developers and users.
 
-\subsection{Modulirisation}
+\subsection{Modularisation}
 
 Modern software practices usually make heavy use of some form of variable encapsulation and code modulirisation to make code safer, simpler to expand and easier to use. This enables users and developers to take advantage of a set of toolboxes that can be chosen according to their needs without having to directly modify the source code, this concept is called ``moduliration''.
 
@@ -220,7 +220,7 @@ Modern software practices usually make heavy use of some form of variable encaps
 
 The act of keeping variables neatly stored in a way that fits a purpose is called encapsulation. By encapsulating variableswe greatly improve the usability of software by increasing readability, reducingthe risk of human error by reducing the number of things to keep track of, and if done properly can even improve performance. This concept is tightly bound to the design philosophy of software as described in the following list.
 \begin{itemize}
-    \item Object-Oriented Programming (OOP): where variables are viewed as objects upon which the logic acts. Functions can take these objects and operate on them. This type of design keeps related variables in a single entity and reduces the number of things users and developers have to keep track of, thus reducing the chance of implementation and user error. There are many advanced concepts and pitfalls in OOP that unecessarily increase complexity, so it is best to apply the KISS (keep it simple, stupid) approach for best results.
+    \item Object-Oriented Programming (OOP): where variables are viewed as objects upon which the logic acts. Functions can take these objects and operate on them. This design pattern keeps related variables as part of a single entity and reduces the number of things users and developers have to keep track of, thus reducing the chance of implementation and user error. There are many advanced concepts and pitfalls in OOP that unecessarily increase complexity, so it is best to apply the KISS (keep it simple, stupid) approach for best results.
     \item Data-Oriven Programming (DDP): where the data dictates the structure of the programme. It is essentially a modified version of OOP where the object is made to fit the data, not the data made to fit the object. It often leads to more performant code and avoids many of the issues that arise from OOP because it forces developers to really think about how to manage the data.
     \item Functional programming: where everything is a function. There is no state, but also no side effects. This is the strongest form of encapsulation but also the most inflexible.
     \item Procedural programming: this is the most ancient form of programming where there are only functions and variables. It is the form most scientific software packages take and it is the most difficult to work with both, as a developer, user. Even modern computers which can make use of branch prediction and deletion, cache pre-fetching, and compiler optimisations can be hindered by this approach.
@@ -232,7 +232,7 @@ Functional programming is impractical for most use cases so it is seldom used ou
 
 \mintinline{matlab}{MATLAB} does not truly have object-oriented capabilities, \mintinline{matlab}{struct}, is more of a dictionary (Hash table) than a true object but this is sufficient for our use-case. Encapsulating variables using a data-driven approach has allowed us to make use of generic functions for different mobility functions and loading conditions as well as finite element meshes and the dislocation network itself, greatly simplifying the code without sacrifing performance.
 
-\subsection{Generic functions}
+\subsubsection{Generic functions}
 
 Generic functions are implementation-agnostic functions that can be given by the user as any other variable. Only the variable in this case is a function. \mintinline{matlab}{MATLAB} has an old method of doing so using \mintinline{matlab}{feval()}, where the first argument is the name of the file whose function is being called, and subsequent arguments are passed on to the function. However this has some limitations, mainly their performance, and function handles are now preferred, e.g.
 \begin{minted}[
@@ -264,10 +264,10 @@ The main advantage of generic functions is reducing the need for direct source c
 
 The introduction of regressions makes it so code must be thoroughly and exhaustively tested before merging two people's work. The use of generic functions makes it so if there is a problem with a new addition, the problem is localised and can be quickly identified and fixed because it is isolated. We can be sure the changes are only found in the new piece of code. And since it is generic, we can chose whether or not to use it by changing an input file rather than messing with the source code.
 
-If on the other hand, one were to add a new branch to an if statement (or a brand new if statement) with new computations, likely the function needs new arguments to cover this new case, we may or may not need to make up- or downstream modifications so the function can accommodate the additions. Then very quickly we will find ourselves procedurally programming and fixing the innevitable problems that come with hard to understand spaghetti code---which is most likely also less performant now than it used to be. The problem worsens as we add more functionality. Which can all be avoided by intelligently designing a generic approach, that can be easily expanded if the need arises.
+If on the other hand, one were to add a new branch to an \texttt{if} statement (or a brand new \texttt{if} statement) with new computations, likely the function needs new arguments to cover this new case, we may or may not need to make up- or downstream modifications so the function can accommodate the additions. Then very quickly we will find ourselves procedurally programming and fixing the innevitable problems that come with hard to understand spaghetti code---which is most likely also less performant now than it used to be. The problem worsens as we add more functionality. Which can all be avoided by intelligently designing a generic approach, that can be easily expanded if the need arises.
 
 \subsection{Optimisation}
 
 \subsection{Misc quality of life improvements}
 
-% 3745 words
+% 3746 words
