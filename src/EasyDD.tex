@@ -24,12 +24,12 @@ where $\vec{r}_i$ are nodal coordinates, $\vec{v}_i$ are nodal velocities, $\vec
     \caption{Adaptive Euler-trapezoid predictor-corrector algorithm.}
     \label{alg:trapezoid}
     \begin{enumerate}
-        \item Initialise time step $\Delta t \coloneqq \Delta t_{\rvar{max}}$.
-        \item $\Delta t_0 \coloneqq \Delta t$.
+        \item Initialise time step $\Delta t \gets \Delta t_{\rvar{max}}$.
+        \item $\Delta t_0 \gets \Delta t$.
         \item Compute $\vec{r}_i^{\rvar{P}}(t + \Delta t)$ and corrector $\vec{r}_i(t + \Delta t)$ from \cref{eq:trapezoid}.
-        \item If $\max_i\left(\lVert \vec{r}_i^{\rvar{P}}(t + \Delta t) - \vec{r}_i(t + \Delta t)\rVert\right) > \epsilon$, reduce time step $\Delta t \coloneqq \Delta t / 2$ and go to 3.
-        \item $t \coloneqq t + \Delta t$.
-        \item If $\Delta t = \Delta t_0$, increase time step to $\Delta t \coloneqq \min(1.2 \Delta t, \Delta t_{\rvar{max}})$.
+        \item If $\max_i\left(\lVert \vec{r}_i^{\rvar{P}}(t + \Delta t) - \vec{r}_i(t + \Delta t)\rVert\right) > \epsilon$, reduce time step $\Delta t \gets \Delta t / 2$ and go to 3.
+        \item $t \gets t + \Delta t$.
+        \item If $\Delta t = \Delta t_0$, increase time step to $\Delta t \gets \min(1.2 \Delta t, \Delta t_{\rvar{max}})$.
         \item Return to 2, unless total number of cycles is reached.
     \end{enumerate}
 \end{algorithm}
@@ -39,36 +39,36 @@ The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a
     \caption{Improved adaptive timestep algorithm.}
     \label{alg:trapezoid_improved}
     \begin{algorithmic}
-        \State $\rvar{Convergent} \coloneqq \rvar{false}$, $\Delta t_{\rvar{valid}} \coloneqq 0$, $\rvar{iter} \coloneqq 0$, $\rvar{flag} \coloneqq \rvar{false}$
+        \State $\rvar{Convergent} \gets \rvar{false}$, $\Delta t_{\rvar{valid}} \gets 0$, $\rvar{iter} \gets 0$, $\rvar{flag} \gets \rvar{false}$
         \While{$\rvar{Convergent}$}
         \State Compute $\vec{r}_i^{\rvar{P}}(t + \Delta t)$ and corrector $\vec{r}_i(t + \Delta t)$ from \cref{eq:trapezoid}.
-        \State $\Delta \vec{r}_i \coloneqq \vec{r}_i(t + \Delta t) - \vec{r}_i^{\rvar{P}}(t + \Delta t)$
-        \State $\vec{\overline{r}}_i \coloneqq \dfrac{\vec{g}_i(\left\{\vec{r}_j(t)\right\}) + \vec{g}_i\left(\left\{\vec{r}_i^{\rvar{P}}(t + \Delta t)\right\}\right)}{2}\Delta t$
-        \State $\epsilon \coloneqq \max_i\left(\lVert \Delta \vec{r}_i \rVert \right)$
-        \State $\upsilon \coloneqq \max_i\left(\lVert \Delta \vec{r}_i - \vec{\overline{r}}_i \rVert\right)$
+        \State $\Delta \vec{r}_i \gets \vec{r}_i(t + \Delta t) - \vec{r}_i^{\rvar{P}}(t + \Delta t)$
+        \State $\vec{\overline{r}}_i \gets \dfrac{\vec{g}_i(\left\{\vec{r}_j(t)\right\}) + \vec{g}_i\left(\left\{\vec{r}_i^{\rvar{P}}(t + \Delta t)\right\}\right)}{2}\Delta t$
+        \State $\epsilon \gets \max_i\left(\lVert \Delta \vec{r}_i \rVert \right)$
+        \State $\upsilon \gets \max_i\left(\lVert \Delta \vec{r}_i - \vec{\overline{r}}_i \rVert\right)$
         \If{$\epsilon > \epsilon_{\rvar{max}} $ and $\upsilon > \upsilon_{\rvar{max}}$}
         \State $\Delta t_{\textrm{valid}} = \Delta t$
-        \State $\gamma \coloneqq 1.2\left(\dfrac{1}{\left[1 + (1.2^{20} - 1) (\epsilon / \epsilon_{\textrm{max}})\right]}\right)^{1/20}$
-        \State $\rvar{flag} \coloneqq \rvar{true}$
-        \State $\rvar{iter} \coloneqq \rvar{iter} + 1$
-        \State $\Delta t \coloneqq \max\left(\gamma \Delta t,\, \Delta t_\rvar{max}\right)$
+        \State $\gamma \gets 1.2\left(\dfrac{1}{\left[1 + (1.2^{20} - 1) (\epsilon / \epsilon_{\textrm{max}})\right]}\right)^{1/20}$
+        \State $\rvar{flag} \gets \rvar{true}$
+        \State $\rvar{iter} \gets \rvar{iter} + 1$
+        \State $\Delta t \gets \max\left(\gamma \Delta t,\, \Delta t_\rvar{max}\right)$
         \Else
         \If{$\rvar{flag} == \rvar{true}$}
-        \State $\Delta t \coloneqq \Delta t_{\rvar{valid}}$
-        \State $\rvar{iter} \coloneqq \rvar{iter}_\rvar{max}$
+        \State $\Delta t \gets \Delta t_{\rvar{valid}}$
+        \State $\rvar{iter} \gets \rvar{iter}_\rvar{max}$
         \Else
-        \State $\Delta t \coloneqq \Delta t / 2$
+        \State $\Delta t \gets \Delta t / 2$
         \EndIf
         \EndIf
         \If{$\rvar{iter} > \rvar{iter}_{\rvar{max}}$ or $\Delta t == \Delta t_{\rvar{max}}$}
         \State $\rvar{Convergent} = \rvar{true}$
         \EndIf
         \If{$\Delta t < \Delta t_\rvar{min}$}
-        \State $\Delta t \coloneqq \Delta t_{min}$
-        \State $\rvar{iter} \coloneqq \rvar{iter}_{\rvar{max}} + 1$
+        \State $\Delta t \gets \Delta t_{min}$
+        \State $\rvar{iter} \gets \rvar{iter}_{\rvar{max}} + 1$
         \EndIf
         \EndWhile
-        \State $t \coloneqq t + \Delta t$
+        \State $t \gets t + \Delta t$
         \State Proceed with the rest of the simulation.
     \end{algorithmic}
 \end{algorithm}
@@ -101,7 +101,7 @@ Substituting \cref{eq:dragCoef} into \cref{eq:drivePlusDrag} and rearranging giv
 \end{align}
 Strictly speaking, solving \cref{eq:dragCoef} requires global knowledge of the network. The discretisation makes it possible to distribute $\mathcal{B}$ along a line segment $i-j$,
 \begin{align}\label{eq:dragMatrix}
-    \mtx{B}_{ij} & \coloneqq \oint_{C} N_i(\vec{x}) \mathcal{B}(\vec{\xi}(\vec{x})) N_j(\vec{x}) \rvar{d}L\,,
+    \mtx{B}_{ij} & \gets \oint_{C} N_i(\vec{x}) \mathcal{B}(\vec{\xi}(\vec{x})) N_j(\vec{x}) \rvar{d}L\,,
 \end{align}
 where $C$ is the whole network, $N_i$ and $N_j$ are simply shape functions that interpolate quantities given the relative position of a node to a segment, and $\rvar{d}L$ is the infinitesimal line segment. Thus giving individual expressions for node $i$ connected to node $j$. Using this discretisation and assuming the nodes connected to $i$ are subject to similar conditions, \cref{eq:nodeMob} can be broken up into local segments,
 \begin{align}\label{eq:nodeVel}
@@ -123,21 +123,21 @@ A function $\mathcal{X}$ with a set of $\mathbb{X}$ bugs with phase space $\chi(
 
 The way the mobility functions dealt with ill-conditioned $\mtx{B}$, relied on the integrator picking up the slack. There are several flaws with the approach found in \cref{alg:bTotalOld}, the actual mobility function can also be found under commit \href{https://github.com/TarletonGroup/EasyDD/blob/65907b022d1fe408fc1b2e5c5ca2bd1797ccae04/mobbcc1.m#L68}{\texttt{65907b0}} under the name \texttt{mobbcc1.m}. Every mobility law in that commit has this issue.
 \begin{algorithm}
-    \caption{Avoiding singular matrix by making $\mtx{B}$ extremely wrong and hoping the integrator error bounds pick it up and the timestep is decreased.}
+    \caption[Bad way of avoiding drag matrix inversion singularity.]{Avoiding singular matrix by making $\mtx{B}$ extremely wrong and hoping the integrator error bounds pick it up and the timestep is decreased.}
     \label{alg:bTotalOld}
     \begin{algorithmic}
-        \State Compute eigenvalue matrix, $\mtx{D} \coloneqq \mtx{P}^{-1} \mtx{B} \mtx{P}$
-        \State $\kappa(\mtx{B}) \coloneqq \lvert \lambda_{\rvar{max}} \rvert/ \lvert \lambda_{\rvar{min}} \rvert$
+        \State Compute eigenvalue matrix, $\mtx{D} \gets \mtx{P}^{-1} \mtx{B} \mtx{P}$
+        \State $\kappa(\mtx{B}) \gets \lvert \lambda_{\rvar{max}} \rvert/ \lvert \lambda_{\rvar{min}} \rvert$
         \If{$\kappa(\mtx{B}) < \kappa_{\rvar{min}}$}
-        \State $\mtx{D}_{\rvar{norm}} \coloneqq \mtx{D} / \lambda_{\rvar{max}}$
-        \State $\vec{f} \coloneqq \vec{f} / \lambda_{\rvar{max}}$
+        \State $\mtx{D}_{\rvar{norm}} \gets \mtx{D} / \lambda_{\rvar{max}}$
+        \State $\vec{f} \gets \vec{f} / \lambda_{\rvar{max}}$
         \State{\Comment{Invert $\mtx{D}_{\rvar{norm}}$.}}
         \ForAll{$(\lambda_k \in \mtx{D}_{\rvar{norm}}) \neq \lambda_{\rvar{max}}$}
         \If{$\lambda_k > \lambda_{\rvar{crit}}$}
-        \State $\lambda_k \coloneqq 1/\lambda_k$
+        \State $\lambda_k \gets 1/\lambda_k$
         \Else
         \State{\Comment{The inverse of 0 is not 0.}}
-        \State $\lambda_k \coloneqq 0$
+        \State $\lambda_k \gets 0$
         \EndIf
         \EndFor
         \State $\vec{v} = \mtx{P} \mtx{D} \mtx{P}^{-1} \vec{f}$
@@ -163,19 +163,19 @@ where $\epsilon$ is machine precision. This ensures the perturbation is scaled t
 
 It is worth noting that doing this and inverting is still a source of error, adding noise even if small and along the diagonal, does move the system away from its true behaviour. However, the degree to which it is wrong is many orders of magnitude smaller than what is done in \cref{alg:bTotalOld}. Indeed, \cref{alg:bTotalNew} uses $\pm c $ and both perturbed solutions are averaged to give a much more accurate and simpler solution even under the traditionally problematic scenarios discussed above. This new algorithm is now present in the mobility laws we now use, such as the most current version of \href{https://github.com/TarletonGroup/EasyDD/blob/372984499dd60136fc7badabd6cee192058d55d9/src/mobbcc_bb1b.m#L199}{\texttt{mobbcc\_bb.m}}.
 \begin{algorithm}
-    \caption{Improved regularisation of $\mtx{B}$ by way of perturbing the diagonal.}
+    \caption[Dampening the drag matrix inversion singularity.]{Improved regularisation of $\mtx{B}$ by way of perturbing the diagonal.}
     \label{alg:bTotalNew}
     \begin{algorithmic}
         \If{$\lVert \mtx{B} \rVert < \epsilon$}
-        \State $\vec{v} \coloneqq \vec{0}$
+        \State $\vec{v} \gets \vec{0}$
         \ElsIf{$\lvert \lambda_{\rvar{max}} \rvert/ \lvert \lambda_{\rvar{min}} \rvert < \epsilon$}
-        \State $\mtx{B}_+ \coloneqq \mtx{B} + \sqrt{\epsilon} \max(\mtx{B})$
-        \State $\mtx{B}_- \coloneqq \mtx{B} - \sqrt{\epsilon} \max(\mtx{B})$
-        \State $\vec{v}_+ \coloneqq \mtx{B}_+^{-1} \vec{f}$
-        \State $\vec{v}_- \coloneqq \mtx{B}_-^{-1} \vec{f}$
-        \State $\vec{v} \coloneqq (\vec{v}_- + \vec{v}_+)/2$
+        \State $\mtx{B}_+ \gets \mtx{B} + \sqrt{\epsilon} \max(\mtx{B})$
+        \State $\mtx{B}_- \gets \mtx{B} - \sqrt{\epsilon} \max(\mtx{B})$
+        \State $\vec{v}_+ \gets \mtx{B}_+^{-1} \vec{f}$
+        \State $\vec{v}_- \gets \mtx{B}_-^{-1} \vec{f}$
+        \State $\vec{v} \gets (\vec{v}_- + \vec{v}_+)/2$
         \Else
-        \State $\vec{v} \coloneqq \mtx{B}^{-1} \vec{f}$
+        \State $\vec{v} \gets \mtx{B}^{-1} \vec{f}$
         \EndIf
     \end{algorithmic}
 \end{algorithm}
@@ -312,4 +312,4 @@ There was also a recurring problem with simulations suddenly failing when a func
 \subsection{Summary}
 
 Scientific modelling is inherently an interdisciplinary skill. EasyDD is now faster, more efficient and more capable than ever before, in large part thanks to the work---ongoing or otherwise---described within this chapter. Subsequent chapters explore aspects more specific to discrete dislocation dynamics. However, it is important not to overlook the work that enables the obtention of results. Modern academia deems the final result to be paramount. But what is a result if it cannot be scrutinised because nobody can understand how it came about? Moreover, by developing good software, we allow others to partake in the obtention of results. We deem this to be one of the main contributions of the present project. We feel safe our ability to claim that we now have the capacity for providing more faithful recreations of reality in a less user-unfriendly way. And without so much as a glancing touch on dislocation dynamics.
-% 4748 words
+% 4764 words
