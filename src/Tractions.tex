@@ -246,7 +246,7 @@ One serious disadvantage of the analytic tractions is that the implementation of
     ~
     \subfloat[]{\includegraphics[width=0.45\linewidth]{ftot_rotation_lin_rect_zoom.pdf}}
     % \includegraphics[width=0.8\linewidth]{ftot_rotation_lin_rect_inlaid.pdf}
-    \caption{(a) Example of the components of the total force on a surface element (the force summed over all four FE nodes) as a dislocation segment parallel to the surface element ($\theta = 0$) is rotated about its midpoint around the axis defined by $\vec{l}\times\vec{n}$. (b) is zomms into $\pm 10 \deg$, the force is smooth but not necessarily antisymmetric about the neighbourhood of $\theta=0$.}
+    \caption[Sample analytical forces on an element as a function of angle between surface and segment.]{(a) Example of the components of the total force on a surface element (the force summed over all four FE nodes) as a dislocation segment parallel to the surface element ($\theta = 0$) is rotated about its midpoint around the axis defined by $\vec{l}\times\vec{n}$. (b) is zomms into $\pm 10 \deg$, the force is smooth but not necessarily antisymmetric about the neighbourhood of $\theta=0$.}
     \label{f:rotate}
 \end{figure}
 The specific shape of the curves will vary depending on the element-segment configuration, but is smooth and well-behaved about singularity. For our purposes, we use a total of 8 perturbations of $1\deg$ each (4 clockwise and 4 anti-clockwise). We found this worked well, but can be changed if desired.
@@ -273,7 +273,7 @@ The total force on a given node must include the force contributions from every 
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{lrse_thread_map.pdf}
-    \caption{FE nodes are shared by either 4 element faces or 3 if it is a corner node. The total force on a given node is the summation of the force contributions from each element it belongs to.}
+    \caption[FE nodes are shared between surface elements.]{FE nodes are shared by either 4 element faces or 3 if it is a corner node. The total force on a given node is the summation of the force contributions from each element it belongs to.}
     \label{f:shared_node}
 \end{figure}
 The specifics of the mapping depend on the global FE node numbering. Using \cref{f:shared_node} as our reference labels for elements and nodes, $e$ and $n$ respectively, we can give a concrete example of how this is done by defining,
@@ -345,7 +345,7 @@ The units in all our examples are normalised to lattice parameter, $a$ is the di
 \begin{figure}
     \centering
     \includegraphics[width=0.8\linewidth]{head_vs_fe_tractions_setup_diagram.pdf}
-    \caption{Dislocation parallel to a surface described by the line $x = 0$, where the $(x,\,y)$ dislocation coordinates are $(a,\,c)$ and the dislocation line going in the positive $z$-direction. (a) describes the box we used for our comparison, a  $40 \times 40 \times 40$ element cubic box with side lengths equal to $2000$ with $\vec{T} = \bm{0}$, traction boundary conditions only on the nodes along $x = 0$, and $\vec{U} = \bm{0}$, displacement conditions everywhere else. (b) is the 2D view with the dislocation coordinates $(a,~c)$, as well as the two edge Burgers vectors in \cite{head1953edge}, $\vec{b}_\textrm{e1} \equiv \vec{b} = [1\, 0\, 0]$, $\vec{b}_\textrm{e2} \equiv \vec{b} = [0\, 1\, 0]$ and the screw Burgers vector $\vec{b}_\textrm{s} \equiv \vec{b} = \vec{l} = [0\, 0\, 1] $ in \cite[p.~59,~64]{hirth1983theory}.}
+    \caption[Set up comparing infinite-domain, singular solutions of stress fields to those obtained via a non-singular formulation with analytic and numeric tractions coupled to FEM.]{Dislocation parallel to a surface described by the line $x = 0$, where the $(x,\,y)$ dislocation coordinates are $(a,\,c)$ and the dislocation line going in the positive $z$-direction. (a) describes the box we used for our comparison, a  $40 \times 40 \times 40$ element cubic box with side lengths equal to $2000$ with $\vec{T} = \bm{0}$, traction boundary conditions only on the nodes along $x = 0$, and $\vec{U} = \bm{0}$, displacement conditions everywhere else. (b) is the 2D view with the dislocation coordinates $(a,~c)$, as well as the two edge Burgers vectors in \cite{head1953edge}, $\vec{b}_\textrm{e1} \equiv \vec{b} = [1\, 0\, 0]$, $\vec{b}_\textrm{e2} \equiv \vec{b} = [0\, 1\, 0]$ and the screw Burgers vector $\vec{b}_\textrm{s} \equiv \vec{b} = \vec{l} = [0\, 0\, 1] $ in \cite[p.~59,~64]{hirth1983theory}.}
     \label{f:headvstractionfem}
 \end{figure}
 
@@ -403,7 +403,7 @@ However, we found a simple and realistic configuration that is close to the setu
     {
         {\includegraphics[trim={0.5cm 0.55cm 0.65cm 0.1cm},clip,width=0.47\linewidth]{perp_e_xz=100005_leg.pdf}}
     }
-    \caption{Log-log plot of the relative error as a function of dislocation segment length for a perpendicular edge dislocation (\cref{f:gauss_quad_test}a). $x^{1}_{z}$ is the $z$-coordinate of node $\mathbf{x_1}$. $\vec{b} = [1\, 0\, 0]$, line direction, $\vec{l} = [0\, 0\, 1]$, and dislocation core radius, $a = 5$, the surface element's normal and size are, $\vec{n} = [0\, 0\, 1]$, $L = 1000$, respectively. $Q$ is the number of quadrature points per dimension.}
+    \caption[Relative error for an edge dislocation perpendicular to a surface element.]{Log-log plot of the relative error as a function of dislocation segment length for a perpendicular edge dislocation (\cref{f:gauss_quad_test}a). $x^{1}_{z}$ is the $z$-coordinate of node $\mathbf{x_1}$. $\vec{b} = [1\, 0\, 0]$, line direction, $\vec{l} = [0\, 0\, 1]$, and dislocation core radius, $a = 5$, the surface element's normal and size are, $\vec{n} = [0\, 0\, 1]$, $L = 1000$, respectively. $Q$ is the number of quadrature points per dimension.}
     \label{f:rel_err_perp_edge}
 \end{figure}
 It is worth noting however that the relative errors for small numbers of quadrature points don't really start decreasing until relatively large distances. And when close to a surface, these can be quite large even under highly symmetric circumstances.
@@ -412,7 +412,7 @@ The limitations become even more evident when the dislocation line segment is pa
 \begin{figure}
     \centering
     \includegraphics[width=0.8\linewidth]{par_e_z.pdf}
-    \caption{Log-log plot of the relative error as a function of distance from the surface element for a parallel edge dislocation (\cref{f:gauss_quad_test}b). Burgers vector, $\vec{b} = [0\, 1\, 0]$, line direction, $\vec{l} = [1\, 0\, 0]$, dislocation core and surface element parameters are the same as \cref{f:rel_err_perp_edge}. The dislocation length is fixed to $10^{6},\, x\in\left[-0.5\times10^{6},\, 0.5\times10^{6} \right]$ and bisects the surface element along the $[1\, 0\, 0]$ direction. The whole dislocation was segmented into $10^4$ pieces of length $100$ to prevent the dislocation from intersecting the surface element when they were rotated to avoid the singularity. The relative error at large distances ($>10^6\, $) converges to one due to loss of significance.}
+    \caption[Relative error for an edge dislocation parallel to a surface element.]{Log-log plot of the relative error as a function of distance from the surface element for a parallel edge dislocation (\cref{f:gauss_quad_test}b). Burgers vector, $\vec{b} = [0\, 1\, 0]$, line direction, $\vec{l} = [1\, 0\, 0]$, dislocation core and surface element parameters are the same as \cref{f:rel_err_perp_edge}. The dislocation length is fixed to $10^{6},\, x\in\left[-0.5\times10^{6},\, 0.5\times10^{6} \right]$ and bisects the surface element along the $[1\, 0\, 0]$ direction. The whole dislocation was segmented into $10^4$ pieces of length $100$ to prevent the dislocation from intersecting the surface element when they were rotated to avoid the singularity. The relative error at large distances ($>10^6\, $) converges to one due to loss of significance.}
     \label{f:rel_err_par_edge}
 \end{figure}
 
@@ -450,7 +450,7 @@ We also plot the relevant stresses for the arrangement described by \cref{f:gaus
     {
         {\includegraphics[trim={0.5cm 0cm 0cm 0cm},clip,width=0.3\linewidth]{szzparEdgeFiveb.pdf}}
     }
-    \caption{(a) to (c) show the real stress fields from a dislocation in the same configuration that yields the plots found in \cref{f:rel_err_perp_edge} as shown in \cref{f:gauss_quad_test}(a), where the closest node is a dislocation core radius away from the surface, $a = 5$. (e) to (f) does the same for the configuration that yields \cref{f:rel_err_par_edge} as shown in \cref{f:gauss_quad_test}(b), where the whole dislocation is a core radius away from the surface, $a = 5$. The white line or dot is the dislocation. Units are in terms of lattice parameters.}
+    \caption[Symmetry in stress fields leads more accurate numeric tractions.]{(a) to (c) show the real stress fields from a dislocation in the same configuration that yields the plots found in \cref{f:rel_err_perp_edge} as shown in \cref{f:gauss_quad_test}(a), where the closest node is a dislocation core radius away from the surface, $a = 5$. (e) to (f) does the same for the configuration that yields \cref{f:rel_err_par_edge} as shown in \cref{f:gauss_quad_test}(b), where the whole dislocation is a core radius away from the surface, $a = 5$. The white line or dot is the dislocation. Units are in terms of lattice parameters.}
     \label{f:sigma_edge_test_config}
 \end{figure}
 
@@ -511,7 +511,7 @@ Despite these being artificially idealised examples that illustrate the failings
         \includegraphics[height = 0.22\linewidth]{sxyNAEperp_leg.pdf}
     }
 
-    \caption{Image stresses for an edge dislocation with $\vec{l} = [0 0 1]$, $\vec{b} = [1 0 0]$, where $a = 5$, with coordinates $(26,\, 1000)$, i.e. the centre of the first FE from the surface at $x=0$, and in the centre of the simulation box along the $y$-direction. (a), (e) and (i) are the stress fields for the infinite-domain solution, $\tns{\hat{\sigma}}$; (b), (f) and (j) are those obtaine from analytic tractions + FEM, $\tns{\hat{\sigma}}^{\textrm{A}}$; (c), (g) and (k) are those obtained using numeric tractions ($Q = 1$) + FEM, $\tns{\hat{\sigma}}^{\textrm{N}}$. (a) to (c) represent the $xx$; (e) to (g) the $yy$; and (i) to (k) the $xy$ components of the stress tensor.}
+    \caption[Image stresses for an edge dislocation running parallel to a free surface with a Burgers vector perpendicular to the surface.]{Image stresses for an edge dislocation with $\vec{l} = [0 0 1]$, $\vec{b} = [1 0 0]$, where $a = 5$, with coordinates $(26,\, 1000)$, i.e. the centre of the first FE from the surface at $x=0$, and in the centre of the simulation box along the $y$-direction. (a), (e) and (i) are the stress fields for the infinite-domain solution, $\tns{\hat{\sigma}}$; (b), (f) and (j) are those obtaine from analytic tractions + FEM, $\tns{\hat{\sigma}}^{\textrm{A}}$; (c), (g) and (k) are those obtained using numeric tractions ($Q = 1$) + FEM, $\tns{\hat{\sigma}}^{\textrm{N}}$. (a) to (c) represent the $xx$; (e) to (g) the $yy$; and (i) to (k) the $xy$ components of the stress tensor.}
     \label{f:head_vs_ana_vs_num_eperp}
 \end{figure}
 As stated in \cref{s:paperMethod}, tractions are used to calculate the image stresses resulting from the boundary conditions. We therefore compare the differences in image stresses resulting from numeric ($Q = 1$) and analytic traction calculations of both our implementations and how they compare to the infinite-domain, singular expressions in \cref{eq:imageStressAnalyticEdge1,eq:imageStressAnalyticEdge2,eq:imageStressAnalyticScrew}\footnote{Since the first term in each equation corresponds to the real stresses, we omit them to view the image stresses.}. The stress field comparisons for all three cases are found in \cref{f:head_vs_ana_vs_num_eperp,f:head_vs_ana_vs_num_epar,f:head_vs_ana_vs_num_screw}, where the dislocation is denoted by a white dot.
@@ -575,7 +575,7 @@ As stated in \cref{s:paperMethod}, tractions are used to calculate the image str
         \includegraphics[height = 0.227\linewidth]{sxyNAEpar_leg.pdf}
     }
 
-    \caption{Image stresses for an edge dislocation with $\vec{l} = [0\, 0\, 1]$, $\vec{b} = [0\, 1\, 0]$, where $a = 5$, with coordinates $(26,\, 1000)\, $, i.e. the centre of the first FE from the surface at $x=0$, and in the centre of the simulation box from top to bottom. (a), (e) and (i) are the stress fields for the infinite-domain solution, $\tns{\hat{\sigma}}$; (b), (f) and (j) are those obtaine from analytic tractions + FEM, $\tns{\hat{\sigma}}^{\textrm{A}}$; (c), (g) and (k) are those obtained using numeric tractions ($Q = 1$) + FEM, $\tns{\hat{\sigma}}^{\textrm{N}}$. (a) to (c) represent the $xx$; (e) to (g) the $yy$; and (i) to (k) the $xy$ components of the stress tensor.}
+    \caption[Image stresses for an edge dislocation running parallel to a free surface with a Burgers vector parallel to the surface.]{Image stresses for an edge dislocation with $\vec{l} = [0\, 0\, 1]$, $\vec{b} = [0\, 1\, 0]$, where $a = 5$, with coordinates $(26,\, 1000)\, $, i.e. the centre of the first FE from the surface at $x=0$, and in the centre of the simulation box from top to bottom. (a), (e) and (i) are the stress fields for the infinite-domain solution, $\tns{\hat{\sigma}}$; (b), (f) and (j) are those obtaine from analytic tractions + FEM, $\tns{\hat{\sigma}}^{\textrm{A}}$; (c), (g) and (k) are those obtained using numeric tractions ($Q = 1$) + FEM, $\tns{\hat{\sigma}}^{\textrm{N}}$. (a) to (c) represent the $xx$; (e) to (g) the $yy$; and (i) to (k) the $xy$ components of the stress tensor.}
     \label{f:head_vs_ana_vs_num_epar}
 \end{figure}
 \Cref{f:head_vs_ana_vs_num_eperp} shows the stress fields corresponding to analytic expressions for image stress components, $\hat{\sigma}_{ij}$ in \cref{eq:imageStressAnalyticEdge1} where no superscript denotes the infinite-domain singular expressions, the $\textrm{A}$ superscript are the stresses calculated from analytic tractions and the $\textrm{N}$ superscript are those coming from numeric tractions where $Q = 1$ (same nomenclature in \cref{f:head_vs_ana_vs_num_epar,f:head_vs_ana_vs_num_screw}). The setup corresponds to the one described in \cref{f:headvstractionfem} where $\vec{b} = \vec{b}_{\textrm{e1}} = [1\, 0\, 0]$ and the dislocation is found at $(26, 1000)$.
@@ -621,7 +621,7 @@ It is clear edge effects play a role in the generated stresses. All three compon
     \subfloat{
         \includegraphics[height = 0.227\linewidth]{syzNAscrew_leg.pdf}
     }
-    \caption{Image stresses for a screw dislocation with $\vec{l} = [0\, 0\, 1]$, $\vec{b} = [0\, 0\, 1]$, where $a = 5$, with coordinates $(26,\, 1000)\, $, i.e. the centre of the first FE from the surface at $x=0$, and in the centre of the simulation box from top to bottom.  (a) and (e) are the stress fields for the infinite-domain solution, $\tns{\hat{\sigma}}$; (b) and (f) are those obtaine from analytic tractions + FEM, $\tns{\hat{\sigma}}^{\textrm{A}}$; (c) and (g) are those obtained using numeric tractions ($Q = 1$) + FEM, $\tns{\hat{\sigma}}^{\textrm{N}}$. (a) to (c) represent the $xz$; (e) to (g) the $yz$.}
+    \caption[Image stresses for a screw dislocation running parallel to a free surface.]{Image stresses for a screw dislocation with $\vec{l} = [0\, 0\, 1]$, $\vec{b} = [0\, 0\, 1]$, where $a = 5$, with coordinates $(26,\, 1000)\, $, i.e. the centre of the first FE from the surface at $x=0$, and in the centre of the simulation box from top to bottom.  (a) and (e) are the stress fields for the infinite-domain solution, $\tns{\hat{\sigma}}$; (b) and (f) are those obtaine from analytic tractions + FEM, $\tns{\hat{\sigma}}^{\textrm{A}}$; (c) and (g) are those obtained using numeric tractions ($Q = 1$) + FEM, $\tns{\hat{\sigma}}^{\textrm{N}}$. (a) to (c) represent the $xz$; (e) to (g) the $yz$.}
     \label{f:head_vs_ana_vs_num_screw}
 \end{figure}
 Things get markedly more interesting when looking at $\vec{b} = \vec{b}_{\textrm{e2}} = [0\, 1\, 0]$ in \cref{f:head_vs_ana_vs_num_epar} for a dislocation in the same place, $(26, 1000)$. Of particular note is $\hat{\sigma}_{xx}$, where a comparison between \cref{sf:sxxepar,sf:sxxAepar} and \cref{sf:sxxNepar} reveals one of the major issues with numeric tractions. If we look at the neighbourhood of the dislocation (just to the right), we will find a sign inversion i.e. yellow and green contours as opposed to purple and blue. As well as a drastically different isosurface shape. Image stresses like those can lead dislocations to behave quite differently than they should, particularly if the sign inversion also has a significantly different magnitude than the correct solution. Specifically, there is a region in the positive $x$-direction away from the dislocation where $\hat{\sigma}_{xx}$ is tensile rather than compressive. It is as absurd as a ship that floats by lowering the water level.
@@ -664,7 +664,7 @@ Perhaps the most evident deformation resulting from the displacement boundaries 
     {
         {\includegraphics[width=0.3\linewidth]{line_syzscrew_leg.pdf}}
     }
-    \caption{Line plots of the image stresses of a dislocation at $(26, 1000)$ for a line going through $x = 103$ (start of the third element) for the analytic image stresses, as well as those calculated with numeric and analytic tractions. (a) to (c) correspond to $\vec{b} = \vec{b}_{\textrm{e1}}$, (d) to (f) $\vec{b} = \vec{b}_{\textrm{e2}}$ and (g) to (h) to $\vec{b} = \vec{b}_{\textrm{s}}$.}
+    \caption[Line plots of the infinite domain, analytic and traction image stresses.]{Line plots of the image stresses of a dislocation at $(26, 1000)$ for a line going through $x = 103$ (start of the third element) for the analytic image stresses, as well as those calculated with numeric and analytic tractions. (a) to (c) correspond to $\vec{b} = \vec{b}_{\textrm{e1}}$, (d) to (f) $\vec{b} = \vec{b}_{\textrm{e2}}$ and (g) to (h) to $\vec{b} = \vec{b}_{\textrm{s}}$.}
     \label{f:line_head_vs_ana_vs_num}
 \end{figure}
 From \cref{f:head_vs_ana_vs_num_eperp,f:head_vs_ana_vs_num_epar,f:head_vs_ana_vs_num_screw} it seems like both analytic and numeric tractions are appropriate in most cases. At least at these scales, there is only one instance where numeric tractions yield very incorrect results. That said, these can have a significant impact on simulations, particularly those where multiple dislocations interact with surfaces in close proximity with one another.
@@ -737,7 +737,7 @@ From \cref{f:head_vs_ana_vs_num_eperp,f:head_vs_ana_vs_num_epar,f:head_vs_ana_vs
     {
     {\includegraphics[height=0.227\linewidth]{sxxNAEparTot11_leg.pdf}}
     }
-    \caption{Stresses for an edge dislocation with $\vec{l} = [0\, 0\, 1]$, $\vec{b} = [0\, 1\, 0]$. Subfigures (a) to (g) show image stresses; (h) to (m) show total stresses. In subfigures (a) to (c) and (h) to (j) the dislocation is found at $(77,\, 1000)$; in (e) to (g) and (k) to (m) the dislocation is at $(487,\, 1000)$.}
+    \caption[Convergence of the image and total stresses as a function of distance from the free surface.]{Stresses for an edge dislocation with $\vec{l} = [0\, 0\, 1]$, $\vec{b} = [0\, 1\, 0]$. Subfigures (a) to (g) show image stresses; (h) to (m) show total stresses. In subfigures (a) to (c) and (h) to (j) the dislocation is found at $(77,\, 1000)$; in (e) to (g) and (k) to (m) the dislocation is at $(487,\, 1000)$.}
     \label{f:head_vs_ana_vs_num_epar2to11}
 \end{figure}
 We also produced line plots to better show how the stress fields deviate from one another. \Cref{f:line_head_vs_ana_vs_num} shows line plots through the line $x = 103$ for a dislocation at $(26, 1000)$. \Cref{sf:line_sxxperp,sf:line_syyeperp,sf:line_sxyeperp} correspond to $\vec{b} = \vec{b}_{\textrm{e1}}$, \cref{sf:line_sxxepar,sf:line_syyepar,sf:line_sxyepar} to $\vec{b} = \vec{b}_{\textrm{e2}}$ and \cref{sf:line_sxzscrew,sf:line_syzscrew} to $\vec{b} = \vec{b}_{\textrm{s}}$. Here, the singular nature of the infinite-domain solutions is evidenced by the sharp spikes in its stresses. In general, the non-singular formulation smoothes out the stress line plots. However, there are a few instances where the numeric tractions lead to larger spikes than even the infinite-domain solutions such as in \cref{sf:line_sxxepar}. Again, the general shape of the line plots is the same but the tendancy for numerical tractions to spike under specific circumstances is evident in almost every case.
@@ -762,7 +762,7 @@ We also produced line plots to better show how the stress fields deviate from on
         {\includegraphics[width=0.3\linewidth]{line_sxxEparTot11_leg.pdf}}
     }
 
-    \caption{Line plots corresponding to \cref{f:head_vs_ana_vs_num_epar2to11}. (a) and (c) are of the image stresses; (b) and (d) are of total stresses. (a) and (b) are of a dislocation at $(77,\, 1000)$, taken along the line $x = 103$. (b) and (d) are of a dislocation at $(487,\, 1000)$, taken along the line $x = 513$.}
+    \caption[Line plots showing the convergeance of the image and total stresses as a function of distance from the free surface.]{Line plots corresponding to \cref{f:head_vs_ana_vs_num_epar2to11}. (a) and (c) are of the image stresses; (b) and (d) are of total stresses. (a) and (b) are of a dislocation at $(77,\, 1000)$, taken along the line $x = 103$. (b) and (d) are of a dislocation at $(487,\, 1000)$, taken along the line $x = 513$.}
     \label{f:line_head_vs_ana_vs_num_epar2to11}
 \end{figure}
 To show the convergence in methods we also show stress fields in \cref{f:line_head_vs_ana_vs_num_epar2to11} and line plots \cref{f:line_head_vs_ana_vs_num_epar2to11} of the image and total stress fields as an edge dislocation with $\vec{b} = \vec{b}_{\textrm{e2}}$ moves from $(77,\, 1000)$ to  $(487,\, 1000)$. The line plots are taken from the second closest set of nodes in the positive $x$-direction i.e. at $x = 103,\, 513$.
@@ -798,7 +798,7 @@ Lastly, to show how much numeric tractions can affect a result, \cref{f:simulati
     {
         {\includegraphics[width=0.3\linewidth]{numeric_156.pdf}}
     }
-    \caption{Progression of simulations using both traction calculation methods.}
+    \caption[Unloaded simulations using analytic and numeric tractions.]{Progression of simulations using both traction calculation methods.}
     \label{f:simulation}
 \end{figure}
 
