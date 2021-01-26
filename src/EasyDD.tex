@@ -46,7 +46,7 @@ The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a
         \State $\vec{\overline{r}}_i \gets \dfrac{\vec{g}_i(\left\{\vec{r}_j(t)\right\}) + \vec{g}_i\left(\left\{\vec{r}_i^{\rvar{P}}(t + \Delta t)\right\}\right)}{2}\Delta t$
         \State $\epsilon \gets \max_i\left(\lVert \Delta \vec{r}_i \rVert \right)$
         \State $\upsilon \gets \max_i\left(\lVert \Delta \vec{r}_i - \vec{\overline{r}}_i \rVert\right)$
-        \If{$\epsilon > \epsilon_{\rvar{max}} $ and $\upsilon > \upsilon_{\rvar{max}}$}
+        \If{$\epsilon < \epsilon_{\rvar{max}} $ and $\upsilon < \upsilon_{\rvar{max}}$}
         \State $\Delta t_{\textrm{valid}} = \Delta t$
         \State $\gamma \gets 1.2\left(\dfrac{1}{\left[1 + (1.2^{20} - 1) (\epsilon / \epsilon_{\textrm{max}})\right]}\right)^{1/20}$
         \State $\rvar{flag} \gets \rvar{true}$
@@ -60,12 +60,8 @@ The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a
         \State $\Delta t \gets \Delta t / 2$
         \EndIf
         \EndIf
-        \If{$\rvar{iter} > \rvar{iter}_{\rvar{max}}$ or $\Delta t == \Delta t_{\rvar{max}}$}
-        \State $\rvar{Convergent} = \rvar{true}$
-        \EndIf
-        \If{$\Delta t < \Delta t_\rvar{min}$}
-        \State $\Delta t \gets \Delta t_{min}$
-        \State $\rvar{iter} \gets \rvar{iter}_{\rvar{max}} + 1$
+        \If{$\rvar{iter} > \rvar{iter}_{\rvar{max}}$ or $\Delta t == \Delta t_{\rvar{max}}$ or $\Delta t < \Delta t_\rvar{min}$}
+        \State $\rvar{Convergent} \gets \rvar{true}$
         \EndIf
         \EndWhile
         \State $t \gets t + \Delta t$
