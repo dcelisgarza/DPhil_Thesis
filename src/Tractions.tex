@@ -859,11 +859,11 @@ Both first order parallelisations have similar performances, but parallelising o
 The algorithm for mapping from the objects to be parallelised over from host (CPU) to device (GPU) memory is the same in either case. The only thing that changes is that surface elements have 4 nodes and dislocation segments have 2. If parallelising over dislocation segments, the Burgers vector also needs to be mapped in the same manner, but it is equivalent to having a single `node'. The mapping is as follows,
 \begin{subequations}\label{eq:hostDeviceElementMap}
     \begin{align}
-        \vec{X}_{en}         & \coloneqq	\left[x_{en},\, y_{en},\, z_{en}\right]                                                     \\
-        \vec{X}_{(1\to E)n}  & \mapsto 	\vec{X}_{n} \nn
-        \vec{X}_{n}          & \coloneqq	\left[x_{1n},\, y_{1n},\, z_{1n},\ldots,x_{En},\, y_{En},\, z_{En}\right]\label{seq:xn_arr} \\
-        \vec{X}_{1\to N}     & \mapsto	\vec{X}^{\textrm{E}}\nn
-        \vec{X}^{\textrm{E}} & \coloneqq
+        \vec{X}_{en}        & \coloneqq	\left[x_{en},\, y_{en},\, z_{en}\right]                                                     \\
+        \vec{X}_{(1\to E)n} & \mapsto 	\vec{X}_{n} \nn
+        \vec{X}_{n}         & \coloneqq	\left[x_{1n},\, y_{1n},\, z_{1n},\ldots,x_{En},\, y_{En},\, z_{En}\right]\label{seq:xn_arr} \\
+        \vec{X}_{1\to N}    & \mapsto	\vec{X}\nn
+        \vec{X}             & \coloneqq
         \begin{aligned}
              & \left[x_{11},\, \ldots,\, x_{E1},\, x_{12},\, \ldots,\, x_{E2},\, \ldots,\, x_{1N},\, \ldots,\, x_{EN}, \right.      \\
              & \left.\,y_{11},\, \ldots,\, y_{E1},\, y_{12},\, \ldots,\, y_{E2},\, \ldots,\, y_{1N},\, \ldots,\, y_{EN}, \right.    \\
@@ -881,7 +881,7 @@ where $ e $ is the element to be mapped, $ n $ the node number, $ E $ the total 
 \end{figure}
 For a set up like \cref{f:paraLabel}, parallelising over the surface elements with node labels corresponding to \cref{f:force_lin_rect}, $\vec{x_1}$, $\vec{x_2}$, $\vec{x_3}$ and $\vec{x_4}$ yields,
 \begin{align}\label{eq:fcne_eg}
-    \vec{X}^{\textrm{SE}} & = \begin{aligned}
+    \vec{X} & = \begin{aligned}
         \left[\underbrace{h_{x},\, i_{x},\, f_{x},\, g_{x}}_{\vec{x_{1}}},\,
         \underbrace{a_{x},\, b_{x},\, i_{x},\, h_{x}}_{\vec{x_{2}}},\,
         \right.  & \underbrace{i_{x},\, d_{x},\, e_{x},\, f_{x}}_{\vec{x_{3}}},\,
@@ -894,11 +894,11 @@ For a set up like \cref{f:paraLabel}, parallelising over the surface elements wi
 Whether the parallelisation is done over dislocation line segments or surface elements, the item that wasn't parallelised over must also be mapped such that it can be contiguously accessed by the GPU. However this just means merging arrays in a very simple manner,
 \begin{subequations}\label{eq:fnce}
     \begin{align}
-        \vec{X}_{en}          & \coloneqq \left[x_{en},\, y_{en},\, z_{en}\right]                                                    \\
-        \vec{X}_{(1\to E)n}   & \mapsto \vec{X}_{n} \nn
-        \vec{X}_{n}           & \coloneqq \left[x_{1n},\ldots,\, x_{En},\, y_{1n},\ldots,\, y_{En},\, z_{1n},\ldots,\, z_{En}\right] \\
-        \vec{X}_{1\to N}      & \mapsto \vec{X}^{\textrm{SE}}\nn
-        \vec{X}^{\textrm{SE}} & \coloneqq
+        \vec{X}_{en}        & \coloneqq \left[x_{en},\, y_{en},\, z_{en}\right]                                                    \\
+        \vec{X}_{(1\to E)n} & \mapsto \vec{X}_{n} \nn
+        \vec{X}_{n}         & \coloneqq \left[x_{1n},\ldots,\, x_{En},\, y_{1n},\ldots,\, y_{En},\, z_{1n},\ldots,\, z_{En}\right] \\
+        \vec{X}_{1\to N}    & \mapsto \vec{X}\nn
+        \vec{X}             & \coloneqq
         \begin{aligned}
             \left[x_{11},\ldots,\, x_{E1},\, y_{11},\right. & \ldots,\, y_{E1},\, z_{11},\ldots,\, z_{E1}              \\
             ,                                               & \ldots,                                                  \\
@@ -908,7 +908,7 @@ Whether the parallelisation is done over dislocation line segments or surface el
 \end{subequations}
 In a similar vein to \cref{eq:fcne_eg}, using \cref{eq:fnce} to map the data yields,
 \begin{align}\label{eq:fnce_eg}
-    \vec{X}^{\textrm{SE}} & = \begin{aligned}
+    \vec{X} & = \begin{aligned}
          & \left[\underbrace{h_{x},\, i_{x},\, f_{x},\, g_{x},\,
             h_{y},\, i_{y},\, f_{y},\, g_{y},\,
         h_{z},\, i_{z},\, f_{z},\, g_{z}}_{\mathbf{x_{0}}}\right.,  \\
