@@ -925,9 +925,9 @@ In order to maximise performance after properly mapping memory to the GPU we hav
     \label{eq:opt_cache_len_bcne}
     l =
     \begin{cases}
-        a \times N \times E\,,                & \quad a > 0 \in \mathbb{N}                                                \\
-        \textrm{or}                                                                                                       \\
-        \dfrac{1}{2^{a}} \times N \times E\,, & \quad a \geq 0 \in \mathbb{N},\, N \times E \equiv 0\; (\bmod\; 2^{a})\,,
+        a \times N \times E\,,                & \quad a > 0 \in \mathbb{N}                                          \\
+        \textrm{or}                                                                                                 \\
+        \dfrac{1}{2^{a}} \times N \times E\,, & \quad a \geq 0 \in \mathbb{N},\, N \times E \equiv 0 \mod{2^{a}}\,,
     \end{cases}
 \end{align}
 where $a$ is the number of entries, $N$ the number of nodes and $E$ the number of elements. This can be achieved by making use of the flexibility afforded by the NVidida architecture. Every GPU has various collections of warps called Streaming Microprocessors (SMs). Each SM is independent of other SMs, however, warps within an SM all share certain resources such as various levels of caches and schedulers. Each SM can be split into blocks of threads, all of which share some resources. The optimal usage entails finding the best block size (preferably a multiple of 32 to maximise thread usage, as the smallest unit of processing is a warp) for a particular problem. Each block as a dimension (the number of threads inside it), an index (there can be multiple blocks in a single SM), and each thread has an index that identifies it within its block. These values are used to index the global device memory. \Cref{f:parallel_exec} has an example of how this works for a block of two threads and a set up as described by \cref{f:paraLabel} and mapping by \cref{eq:hostDeviceElementMap}.
@@ -940,7 +940,7 @@ where $a$ is the number of entries, $N$ the number of nodes and $E$ the number o
 
 Realistically, this is extremely difficult to achieve, particularly in dynamic, non-conservative simulations such as discrete dislocation dynamics. So we also came up with two heuristics that aim to utilise as many computational resources as possible.
 \begin{align}\label{eq:numThreads}
-    T & = 32 \left\lceil\mod(n,\, T_{\rvar{max}} )/32 \right\rceil \\
+    T & = 32 \left\lceil (n \mod{T_{\rvar{max}}})/32 \right\rceil \\
     G & = \left\lceil (n + T - 1) / T \right\rceil\,,
 \end{align}
 where $n$ is the number of items to be parallelised (either surface elements or dislocation line segments), $T$ is the number of threads per block, $T_{\rvar{max}}$ is the maximum number of threads allowed in a block (GPU dependent) and $G$ is the total number of blocks. $G$ ensures the load gets distributed evenly across as many blocks as possible, and $T$ ensures each thread block is busy for the longest time possible between memory fetches.
