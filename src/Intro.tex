@@ -1,6 +1,6 @@
 \chapter{Introduction}
 \label{c:intro}
-\section{Materials Science and History}
+\section{Materials science and history}
 \label{s:matsci_history}
 Metals and alloys are of such importance to humankind that entire eras of our history have been defined by and named after discoveries and advances in metallurgy \cite{metals_prehistory1, metals_prehistory2}. A civilisation's ability to gain mastery of the properties and usage of materials is often strongly correlated with its success in history \cite{metals_success1}. The historical influence of metals and alloys has touched all areas of human existence, from fashion to warfare \cite{metals_social}.
 
@@ -12,7 +12,7 @@ However, understanding the underlying mechanisms behind empirical results throug
 
 The need for a more detailed picture of material properties is especially relevant in highly engineered alloys subjected to extreme conditions, such as those found in fusion reactors. The time-dependent shift in material properties and composition is of the utmost concern such extreme environments; radiation damage, large temperature gradients, gas diffusion and plasma instabilities provide the means for properties to change drastically over a components' lifetime \cite{fusmat1, mats_fusion1, mats_fusion2}. It is therefore imperative that we find ways of predicting and accounting for these changes. This requires a deeper understanding of the process driving the mechanical behaviour. Virtual experiments allow analysis and interpretation of micromechanical tests and can help provide new fundamental insight.
 
-\section{Fusion Energy Production}
+\section{Fusion energy production}
 \label{s:fusion}
 There currently exist two major branches of research for fusion energy production \cite{icfvsmcf}:
 \begin{inparaenum}[\itshape1\upshape)]
@@ -69,7 +69,7 @@ Operating environments change vastly between ICF and MCF as described by \cref{t
 
 Overall, the table is unrepresentative of potential operating environments in large-scale power stations, but sets lower limits on the demands of the materials involved in both ``mainstream'' proposals for fusion energy production.
 
-\subsection{Effects of Radiation on Reactor Materials}
+\subsection{Effects of radiation on reactor materials}
 \label{ss:rad_effect_mat}
 \subsubsection{Radiation Damage}
 \label{sss:rad_damage}
@@ -89,7 +89,7 @@ The way we go about addressing the time-dependent compositional change of a mate
 
 Transmutation products will always be problematic, but they are a fact of working with fusion-relevant materials. Fortunately there are ways in which inclusions may be modelled via DD (\cref{sss:inclusions}). DD may also be used to model dislocation movement and interaction within heterogenous media (\cref{ss:multiphase}) as is the case for oxide-dispersion-strengthened (ODS) steels; and transmutation alloys of Tungsten divertors, where Osmium, Rhenium and Tantalum clusters which prove highly problematic for its temperature conductivity and structural integrity \cite{w_cluster1, nirrprop, nirpropmic, nirrmic, ionirrmic, ionirrprop, ionirrprop2}.
 
-\section{Parallel Computing}
+\section{Parallel computing}
 \label{s:parallel_comp}
 Processing chips are made up of millions or even billions of transistors acting as switches in logic gates. Each time a logic gate fires, the capacitors inside them charge and discharge at the chip's frequency or clock speed \cite{cpu_trnstor}. Consider the power of any electronic component,
 \begin{align}
@@ -129,7 +129,7 @@ Furthermore, higher voltages and frequencies result in higher temperatures, whic
 
 This set of optimum conditions is the reason behind the multicore and multithreaded design of modern Central Processing Units (CPUs) and Graphics Processing Units (GPUs). It is also why in recent years there has been such a massive push for parallelism in all computing markets. It is simply not feasable to continually increase clock speeds and voltages because cooling solutions would struggle to remove heat fast enough, and power consumption would skyrocket.
 
-\section{Computation on Graphics Processing Units}
+\subsection{Computation on graphics processing units}
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=\linewidth]{gpu_parallel.png}
@@ -153,7 +153,7 @@ OpenACC is similar to OpenMP in that they both use pragmas\footnote{Pragmas are 
 
 Recently however, a third option has become increasingly viable. NVidia's Computer Unified Device Architecture (CUDA) framework provides the best aspects of both OpenCL and OpenACC. The tradeoff is that it only works on NVidia GPUs and is a closed source product. However, the accessibility and flexibility of CUDA provides anyone familiar with C/C++ the means to develop a GPU application with little issue. NVidia is also strongly backing scientific research by adding double precision support on their GPUs. They have also worked to provide parallel equivalents of well known serial libraries---such as cuBLAS \& cuFFT---for scientific computing. They have additionally developed a wide range of specialist graphics cards tailor-made for scientific purposes. As such, they are the leaders in GPU computing in scientific communities \cite{nvidia}.
 
-\subsection{Hurdles for Parallelisation}
+\subsubsection{Hurdles for parallelisation}
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=\linewidth]{mem_access.pdf}
@@ -222,7 +222,7 @@ p: x = a*b;
 
 Dislocation Dynamics (DD)---in particular 3D Discrete Dislocation Dynamics (3D DDD)---can greatly benefit from parallelisation, especially when coupling to Finite Element Methods (FEM). It is worth noting that there are potential issues arising from the very computationally expensive functions and special cases that often arise from analytical solutions in 3D DDD. There are also potential issues with data redundancy---which are non-limiting in the short term---that may eventually require a more data-efficient approach as the computational capabilities and data capabilities of GPUs converge. \Cref{ss:parallel_ddd} expands on these issues in the context of DD.
 
-\section{3D Dislocation Dynamics Modelling}
+\section{3D dislocation dynamics modelling}
 \label{s:3d_ddd}
 The plastic deformation of materials is generally governed by the generation and motion of line defects known as dislocations through the crystal lattice. Microstructural features such as grain boundaries, precipitates and inclusions impede dislocation motion causing strengthening but often limiting ductility \cite{init_fail_dln}. Understanding the behaviour of the dislocation ensemble is highly complicated even when ignoring dislocation-microstructure interactions. However, if we want to truly comprehend their real-world behaviour, we cannot limit ourselves to idealised scenarios.
 
@@ -232,11 +232,11 @@ Crystal Plasticity Finite Element Methods (CPFEM) use constitutive equations to 
 
 Furthermore, dislocations often accumulate in the vicinity of microstructural features. The interaction of dislocations with microstructure can lead to further increased hardening and local hot spots in stress that can lead to failure initiation \cite{size_effects, dln_ind_hard}. Hardware accleration, i.e. using Graphics Processing Units (GPUs), has been shown to be very effective in DDD \cite{gpu_ddd}, and has the potential to enable the simulation of much larger numbers of dislocations for longer timescales. In order to study these phenomena we must find a way of coupling DDD and FEM into a single multiscale model that can simulate micromechanical tests more accurately than CPFEM. With a model such as this we may potentially be able to predict and observe emergent phenomena/properties, explain michromechanical behaviours, and even predict and explain experimental results based on underlying dislocation mechanisms.
 
-\subsection{Coupling Dislocation Dynamics to Finite Element Methods}
+\subsection{Coupling dislocation dynamics to finite element methods}
 \label{ss:ddd_fem}
 Coupling dislocation dynamics (DD) to FEM is important to properly simulate micromechanical tests because DD provides us with a more precise set of inputs and greater granularity for solving the FE problem. There are at present two methods with which to do so, the \nameref{sss:superposition} and the \nameref{sss:discrete_continuum}. The most accurate implementation of dislocation dynamics is discrete dislocation dynamics, where the dislocation is broken into nodes and connecting segments. This is compuationally efficient and allows for analytical solutions. However, as discussed in \cref{sss:lvl_set} explicit discretisation is not the only way to tackle the problem.
 
-\subsubsection{Superposition Model}
+\subsubsection{Superposition model}
 \label{sss:superposition}
 \begin{figure}
 	\centering
@@ -264,7 +264,7 @@ where $ \vec{n} $ is the outer unit normal vector to $ S $. As a dislocation seg
 
 The relative simplicity of the superposition method has made it a popular choice \cite{analytic_tractions, ddd_fem_sm, ddd_fem_sm2} for coupling DDD and FEM because all it requires is the calculation of forces and displacements on the boundaries (see \cref{ss:analytic_forces}).
 
-\subsubsection{Discrete Continuum Model}
+\subsubsection{Discrete continuum model}
 \label{sss:discrete_continuum}
 The Discrete Continuum Model (DCM) takes an alternative approach to solving the same problem. The DCM only treats short-range dislocation-dislocation interactions analytically while all other interactions are numerically calculated via FEM \cite{dcm}. It is based on the regularisation of the atomic displacement jump across the slip plane into a plastic strain inclusion according to eigenstrain theory \cite{eigenstrain}. Like the Superposition Model, the DCM also assumes the simulated volume to be linear-elastic.
 
@@ -297,7 +297,7 @@ At time $ t $, $ \{A\} $ denotes the area swept by the dislocation loops since t
 It is worth noting that the DCM is substantially more complicated than the SM. By requiring the finite elements be small enough for the eigenstate formalism to work, it strongly couples DDD to the FE model and software. It shifts the brunt of the computational workload from DDD to FEM. Essentially trading computationally intensive long range interactions which scale on the order of $ \mathcal{O}(N^{2}) $, where $ N $ is the number of dislocation line segments; for computationally intensive tasks scaling on the order of $ \mathcal{O}(M^{3}) $ where $ M $ is the number of finite elements in a cubic mesh with $ N $ elements per side. Furthermore, it cannot be used with BE methods as the eigenstrain formalism demands the use of internal elements rather than simply requiring a surface mesh.
 
 That said, the DCM allows for reductions in the computational complexity of certain parts of the problem which would otherwise have to be done via DDD \cite{dcm}; namely long-range dislocation-dislocation or dislocation-surface interactions via an interaction distance cutoff that is only possible with the eigenstrain formulation. Compared to the SM, gains in computational efficiency grow as dislocation density increases with respect to the number of finite elements. Since dislocation-dislocation and dislocation-surface interactions are among the most computationally expensive aspects of DDD, the DCM can reduce the overall computational cost of simulations with large enough dislocation densities.
-\subsubsection{Level Set Method}
+\subsubsection{Level set method}
 \label{sss:lvl_set}
 %
 Even though the level set method has not strictly been used to couple DD to FEM, it has been used to model inclusions \cite{ddd_inclusion_as_force} as described in \cref{sss:inclusions}. This type of dislocation dynamics is fundamentally distinct from DDD because Level Set DD uses arbitrary functions rather than a discretisation approach to represent dislocations lines. The idea is that in 3D, a dislocation $ \gamma(t) $ can be represented by the intersection of two zero levels of two level set functions (see \cref{fig:lvl_set_dd}),
@@ -324,7 +324,7 @@ The level set method is significantly more computationally more expensive than D
 \end{inparaenum}
 The former would be very computationally expensive. Furthermore, no one has found a way to compute the forces or displacements exerted by generally shaped, non-discretised dislocations, numerical solutions are possible as they are needed to find self-interaction energies and dislocation-dislocation forces \cite{lvl_set_dd} but general, closed-form analytical ones are most likely impossible to find. The latter defeats the purpose of the level set method by abandoning the continuum framework. As a result of this, the level set method is not nearly as popular as DDD utilising either the SM or DCM.
 
-\subsection{Non-Singular Continuum Theory of Dislocations}
+\subsection{Non-singular continuum theory of dislocations}
 \label{ss:non-singular_dln}
 The Peach-Koehler formula describes the fundamental interactions of dislocations \cite{pk_force} according to the force, $ \vec{f} $, that a local stress $ \tns{\sigma} $ exerts on a dislocation line with Burgers vector, $ \vec{b} $, and line direction, $ \vec{\xi} $,
 \begin{align}
@@ -401,7 +401,7 @@ but may be physically ``justified'' by pretending $ \nabla^{2}\left[R^{-1}\right
 \end{align}
 Nevertheless, the non-singular formulation by \citet{a_non-singular_continuum_theory_of_dislocations} fixes the physically and mathematically problematic assumption that Burgers vectors follow 3D Dirac delta distributions, and proves useful in producing analytical expressions (see \cref{ss:analytic_forces}) that are not much more complex than the singular case.
 
-\subsection{Analytical Forces Exerted by a Dislocation Line Segment on Surface Elements}
+\subsection{Analytical forces exerted by a dislocation line segment on surface elements}
 \label{ss:analytic_forces}
 Whether using the SM or DCM, coupling DDD to FEM requires the traction field $ \tns{\sigma^{\infty}}(\vec{x}) \cdot \vec{n}(\vec{x}) $ to be distributed among the set of relevant discrete nodes of a FE or BE model. In the DCM model this applies to dislocations that are sufficiently close to the boundary; while in the SM, it applies to all dislocations.
 Regardless of the coupling model, the force exerted by a dislocation ensemble on a node $ n $ on element $ e $ is given by,
@@ -454,7 +454,7 @@ It is worth noting that over 40 triple integrals arise from \cref{eq:two_node_st
 
 Quadratic triangular surface elements pose a much more challenging problem due to the fact that $ \vec{p} \not\perp \vec{q} $. This property is not the only addition that significantly complicates the integrals, the interpolation functions are quadratic which increase the number of integrals. The non-orthogonality of $ \vec{q},~ \vec{p} $ means the integration limits in the $ r,~s $ coordinates must be parametrised appropriately and the integrations should be carried out in an order suitable for the chosen parametrisation. Aside from these technical considerations, the techniques for solving the problem for quadratic rectangular surface elements are the same as the linear rectangular case \cite{analytic_tractions}. It is worth noting however, that the implementation of such a procedure may require quadruple precision arithmetic.
 
-\subsection{Multiphase Simulations}
+\subsection{Multiphase simulations}
 \label{ss:multiphase}
 %
 Modelling heterogeneity in DDD remains challenging. The core assumption of DDD is that we have a homogenous linear elastic space with invariant properties. However, modelling multiphase systems such as multicrystals and inclusions necessitates a weakening of such assumptions, particularly the space's homogeneity. Multiphase models are also necessary to apply DDD to more realistic scenarios.
@@ -463,7 +463,7 @@ Fusion in particular is riddled with examples of highly heterogenous materials. 
 
 Furthermore, many potential candidates for structural and even first wall materials of fusion reactors are designed with complex microstructures in order to resist thermal creep and radiation damage. Understanding dislocation behaviours near the crystal boundaries of these microstructurally complex materials is another niche where DDD simulations can shed light into the mechanisms that give rise to these materials' desirable properties.
 
-\subsubsection{Polycrystalline Materials}
+\subsubsection{Polycrystalline materials}
 \label{ss:polycrystal}
 Polycrystalline materials have been studied using DDD, however most of these are in 2D. One of the easiest phenomena to investigate with 2D DDD are grain size effects \cite{2d_pcm, 2d_pcm2}.
 
@@ -568,7 +568,7 @@ The level set method has also been successfully used to model inclusions. In con
 
 Though mathematically appealing, the level set method is far from representing the reality of dislocation-inclusion interactions. More realistic scenarios require use of more commonplace DDD-FEM coupling methods. Implementing arbitrarily shaped particles is not impossible in DDD---particularly if they can be discretised. Aside from the significantly lower computational requirements, one of the biggest advantages of DDD is that one can find tractions and displacements natively through either the DCM or SM, whereas the level set method requires the force to be user-defined and displacements on the inclusion are completely ignored. Furthermore, if the inclusion is a different crystal or a twin of the same material as in \cite{twinning}, it is possible to use the DCM or SM to study the transmission of dislocations from one phase to the other; something that is not yet possible to do with the level set method.
 
-\subsection{Parallelising Discrete Dislocation Dynamics}
+\subsection{Parallelising discrete dislocation dynamics}
 \label{ss:parallel_ddd}
 It has been shown that DDD lends itself well to parallelisation. \Citet{gpu_ddd} investigated some of the more computationally intensive parts of DDD in DDLab \cite{ddlab}, a freely available DD code for Matlab. The algorithms whose parallel performance was studied in \cite{gpu_ddd} were
 \begin{inparaenum}
@@ -597,7 +597,7 @@ The parallisation strategies for the other two problems, (b) and (c) in \cref{fi
 
 Their findings showed very promising results for parallelising DDD simulations. Compared to C, their findings showed that depending on the specific problem and parameters used, the parallel implementation reduced computational time by a factor of $ \sim 110 $ at best and $ \sim 3 $ at worst for sufficiently large problems. This is of course, provided one uses a card designed for high performance computing, as these are tailored towards double precision arithmetic and computationally intensive procedures. However, gaming graphics cards are increasingly capable of double precision arithmetic and though not as drastic, speed ups are still substantial.
 
-\section{Project Outline and New Science}
+\section{Project outline and new science}
 \label{s:objectives}
 
 If anything should be clear from this work is that materials science is far from being solved. Even within the small niche of dislocation dynamics modelling, there are a huge number of open problems and an equally large number of solutions; each with its particular sets of advantages, disadvantages, ideosyncrasies and challenges.

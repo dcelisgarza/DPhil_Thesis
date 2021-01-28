@@ -381,7 +381,7 @@ However, we found a simple and realistic configuration that is close to the setu
     \end{tabular}
 \end{table}
 
-\subsection{Results and Discussion}\label{ss:paperResults}
+\subsection{Results and discussion}\label{ss:paperResults}
 
 \Cref{f:rel_err_perp_edge} shows that even for dislocations only one dislocation core radius ($5$) away from the surface element, the force can be obtained, up to numerical precision, with 1000 Gauss quadrature points $Q$ for all segment lengths tested. It also shows a very peculiar issue Gauss quadrature has when computing integrals of rational functions when the Gauss nodes are close poles/maximal values. This undesirable behaviour is observed in the case where $Q = 11$. Where the highest weighted Gauss node is closest to the point where $1/R_{a}$ is maximal, resulting in lower accuracy when compared to $Q = 2, 10$ in \cref{f:rel_err_perp_edge} (a) and (b).
 \begin{figure}
@@ -804,7 +804,7 @@ Lastly, to show how much numeric tractions can affect a result, \cref{f:simulati
     \label{f:simulation}
 \end{figure}
 
-\subsection{Conclusion}\label{ss:paperConclusion}
+\subsection{Conclusions}\label{ss:paperConclusion}
 
 Often the effects of tractions on a simulation can be quite subtle if things do not go catastrophically wrong, but a quick and easy way of seeing how the numeric tractions have a tendancy to spike and invert sign (as in \cref{sf:line_sxxepar}) is to pause a simulation while its running and scatter plot the numeric tractions v.s. analytic ones. The plot will show a positive correlation---as the sign inversions in numeric tractions are relatively rare events---but whichever axis corresponds to the numeric tractions will have the largest range. Using proportional axes makes the differences quite evident even at a quick glance as the aspect ratio will be far from 1:1.
 
@@ -817,6 +817,7 @@ There is a case however, for combining both approaches in larger scale simulatio
 \section{GPU parallelisation of analytic tractions}\label{s:parallel}
 % add this figure https://www.researchgate.net/figure/Typical-NVIDIA-GPU-architecture-The-GPU-is-comprised-of-a-set-of-Streaming_fig1_236666656
 
+\subsection{Introduction}
 Graphics Processing Units (GPUs) have been leveraged by digital art, animation studios and gaming companies since the 1990s to offload repetitive, grid-based mathematical computations away from the Central Processing Units (CPUs). These operations are usually very computationally cheap, require minimal logic, and do not need more than single precision (32-bit) arithmetic \cite{gpu1,gpu2,gpu3}, in fact, increases in accuracy would get lost in the RGB channel regardless. As such, GPUs evolved primarily to efficiently perform lightweight operations on vast amounts of 32-bit data. As such, their memory buses are extremely fast and and their processors very minimalistic.
 
 It wasn't until much later that engineers and scientists picked up on the potential of GPUs \cite{gpu_comp,mixedPrecFEM,jia2014gpu}. Fields where lower precision is advantageous---because it increases the signal to noise ratio, or real-world tolerances exceed the in-silico precision---such as data science, civil engineering and image/signal processing, first leveraged this technology. In fact, many big data applications operate on half and some even go as low as quarter precision simply due to the low sensitivity, large amount of noise and vast quantities of data \cite{pagerank}.
@@ -831,7 +832,9 @@ NVidia has spearheaded the development and adoption of scientific-computing and 
 
 For all their advantages, parallel algorithms are fundamentally different to serial ones. In particular the way GPUs differ from CPUs makes it a non-trivial task to properly parallelise an algorithm. Doing so poorly can result in decreased performance, particularly when using high performace/scientific computing cards. There is also the issue of scaling, whereby the cost of utilising the GPU may not be worth paying until a certain computation size. In this section, we detail the work, results and conclusions of parallelising the analytic traction calculation.
 
-\subsection{Data Mapping}
+\subsection{Methodology}
+
+\subsubsection{Data mapping}
 
 A cache is a store of memory used to reduce the cost of accessing data from the main memory. CPUs and GPUs have cache heirarchies designed to progressively get smaller and faster the closer they are to the processor. This reduces the average cost of accessing data because the missing data can be looked for in progressively higher cache levels. It is important to know that caches operate as single units, meaning that every time a processor needs data that is not found in a cache (cache miss), the whole cache needs to be updated. This means that every time there is a cache miss, any operations dependent on the missing data have to wait until the new data arrives. As processors have gotten faster, memory speeds have not kept up. As a result, minimising the ratio of cache misses to cache hits has become an important aspect of optimising software applications \cite{cpuMemDiv,gpuMemDiv}. Optimising cache use is of particular importance in GPUs.
 
@@ -849,7 +852,7 @@ Since threads in a warp behave as a single unit, they hang until every other thr
 
 As a result, we have to be extremely careful when mapping CPU (host) memory, arranged to be advantageous for serial access (and therefore human intuition), to device (GPU) memory, arranged for parallel access.
 
-\subsection{Parallelisation schemes}
+\subsubsection{Parallelisation schemes}
 
 The traction calculation is $\mathcal{O}(MN)$, where $M$ is the number of surface elements and $N$
 the number of segments. As such, there are two first order parallelisation strategies. Parallelising over elements and looping over segments; parallelising over segments and looping over elements. And two second order parallelisation strategies. Parallelising over elements and subparallelising over segments and vice-versa. However, higher order parallelisations are usually disadvantageous unless the problem is very computationally cheap because there is more competition for parallel resource use. We only implemented both first order parallelisations. There cannot be a parallelisation over nodes as the unit problem is a single surface element and dislocation segment.
@@ -918,7 +921,7 @@ In a similar vein to \cref{eq:fcne_eg}, using \cref{eq:fnce} to map the data yie
     \end{aligned}
 \end{align}
 
-\subsection{Maximising performance}
+\subsubsection{Maximising performance}
 
 In order to maximise performance after properly mapping memory to the GPU we have to minimise hang time. A good rule of thumb is to try optimising cache use. Full cache line utilisation (coalesced memory access) is achieved if cache lines can accomodate $ l $ entries given by \cref{eq:opt_cache_len_bcne},
 \begin{align}
@@ -945,7 +948,7 @@ Realistically, this is extremely difficult to achieve, particularly in dynamic, 
 \end{align}
 where $n$ is the number of items to be parallelised (either surface elements or dislocation line segments), $T$ is the number of threads per block, $T_{\rvar{max}}$ is the maximum number of threads allowed in a block (GPU dependent) and $G$ is the total number of blocks. $G$ ensures the load gets distributed evenly across as many blocks as possible, and $T$ ensures each thread block is busy for the longest time possible between memory fetches.
 
-\subsection{Solving parallelisation problems}
+\subsubsection{Solving parallelisation problems}
 
 One of the things that can be missed during parallelisation is the fact that writing to global memory is asyncronous. This means that threads can race each other to write to global memory. Fortunately we avoided some of the more egregious issues because each unit problem is independent of the rest. However, the forces calculated independently accross threads have to be sequentially added to the overall force on each node. This is done with atomic operations, that force the threads to sequentially write their contributions to the global memory.
 
@@ -953,7 +956,7 @@ The second issue is that of the singularity when a dislocation segment is parall
 
 The reason this is such an issue is because GPUs cannot branch. That is to say, every case of an if or case statement is executed regardless of whether a condition is met or not. The only difference is that the values are only stored if a condition is met. This means that cases as rare yet costly as these, disproportionatley impact performance. Parallelising over special cases is not worth the time because they are not common enough, so the best solution use the fact that GPUs and CPUs work asyncronously and have the GPU only store the data for non-special cases, while the CPU only calculated the contributions from the special cases. Both contributions are added back at the end.
 
-\subsection{Results and conclusion}
+\subsection{Results, discussion and conclusions}
 
 \begin{figure}
     \centering

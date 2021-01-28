@@ -1,4 +1,4 @@
-\chapter{Implementation of the Standard C Descriptors for C-Fortran interoperability}\label{c:isocbinding}
+\chapter{Implementation of the standard C descriptors for C-Fortran interoperability}\label{c:isocbinding}
 
 Code hosted on \href{https://github.comhttps://github.com/}{\texttt{https://github.com/}}.
 
@@ -24,7 +24,7 @@ C-Fortran interoperability has existed in a rudimentary fashion since the Fortra
 
 The Fortran 2018 standard did so with the C-descriptors of Fortran variables as well as basic functions to query and utilise them. They expand and homogenise the capabilities of various compiler-specific expansions, increasing software portability and interoperability.
 
-\section{C Descriptor Structure}
+\section{C descriptor structure}
 
 The C descriptors are C structures which act as non-generic containers for Fortran variables. The C descriptor structure contains various member variables that allow one to fully explore and use Fortran objects within C. The C descriptor structure makes use of a few custom types, among which is another structure \texttt{CFI\_dim\_t};
 \begin{itemize}
@@ -51,7 +51,7 @@ C is a weak, statically typed language; \emph{statically typed} means that types
 \end{figure}
 As a result, developers are \emph{strongly} advised to use the standard functions and---if need be---create their own, more complex ones if they want to manipulate the C object.
 
-\section{C Descriptor Functions}
+\section{C descriptor functions}
 
 As aforementioned, the functions defined by the standard \cite{fortran} allow the user to use and explore Fortran objects from within C;
 \begin{itemize}
@@ -96,7 +96,7 @@ These functions were originally defined by the standard as if they would be used
 
 It is important to note that the C descriptor functions do no data copying as that would severely impact performance. Instead, what they do is update the information in the C descriptor such that the programme may find the relevant C addresses via pointer arithmetic.
 
-\section{Results and Conclusion}
+\section{Results and conclusions}
 
 The standard C descriptors and associated functions were successfully implemented and fully tested. They passed all the tests during development. They fail to build with \texttt{clang} because they utilise a \texttt{GCC} expansion that allows one to define structures with variable length arrays (arrays with no explicit length within structures). However, this is being solved by the Sourcery Institute \cite{sourcery} and is merely a case of ``unrolling'' the structure with the variable length array into explicit structures for specific ranks.
 
