@@ -16,8 +16,8 @@ The need for a more detailed picture of material properties is especially releva
 \label{s:fusion}
 There currently exist two major branches of research for fusion energy production \cite{icfvsmcf}:
 \begin{inparaenum}[\itshape1\upshape)]
-	\item magnetic confinement fusion (MCF) \cite{mcf} which confines the plasma using magnetic fields and
-	\item inertial confinement fusion (ICF) \cite{icf} which uses a frozen fuel pellet which is either directly or indirectly compressed by arrays of powerful lasers.
+    \item magnetic confinement fusion (MCF) \cite{mcf} which confines the plasma using magnetic fields and
+    \item inertial confinement fusion (ICF) \cite{icf} which uses a frozen fuel pellet which is either directly or indirectly compressed by arrays of powerful lasers.
 \end{inparaenum}
 The physics and engineering challenges vary greatly between both approaches but the fundamental materials problems remain largely the same, with few a exceptions such as divertors \cite{icf_mcf1, icf_mcf2}.
 
@@ -28,43 +28,43 @@ One constant feature of nuclear energy production is ionising and non-ionising r
 Operating environments change vastly between ICF and MCF as described by \cref{tab:rad} \cite{openv}. The table should be read with a measure of skepticism as the numbers and conditions are approximate because they are not yet fully known, especially for ICF. However it is still, a fairly reasonable first approximation into the materials requirements for both ``mainstream'' types of fusion energy production. That said, the components needed for energy harvesting---a divertor in the case of MCF, and an open problem for ICF---are conspicuous by their absence.
 
 \begin{table}
-	\centering
-	\resizebox{\textwidth}{!}{
-		\begin{tabular}{llrr}
-			\toprule
-			Location                         & Radiation Type          & MCF (ITER)                   & ICF (LMJ)                                                                               \\
-			\midrule
-			1\textsuperscript{st} Wall       & Neutron flux            & \SI{3e18}{m^{-2}.s^{-1}}     & \SI{1.5e25}{m^{-2}.s^{-1}}                                                              \\
-			                                 & Neutron fluence*        & \SI{3e25}{m^{-2}}            & \SI{3e18}{m^{-2}}                                                                       \\
-			                                 & $\gamma$-ray dose rate  & \SI{2e3}{\gray.s^{-1}}       & $\sim$ \SI{1e10}{\gray.s^{-1}}                                                          \\
-			                                 & Energetic ion/atom flux & \SI{5e19}{m^{-2}.s^{1}}      & \ldots                                                                                  \\
-			\midrule
-			1\textsuperscript{st} Diagnostic & Neutron flux            & \SI{1e17}{m^{-2}.s^{-1}}     & \SI{1e26}{m^{-2}.s^{-1}}                                                                \\
-			                                 & Neutron damage rate     & \SI{6e-9}{dpa.s^{-1}}        & negligible                                                                              \\
-			                                 & Neutron fluence*        & \SI{2e24}{m^{-2}}            & $\sim$\SI{1e19}{m^{-2}}                                                                 \\
-			                                 & Neutron damage          & \SI{1e-1}{dpa}               & negligible                                                                              \\
-			                                 & $\gamma$-ray dose rate  & $\sim$\SI{1e2}{\gray.s^{-1}} & $\sim$\SI{1e10}{\gray.s^{-1}}                                                           \\
-			                                 & Energetic ion/atom flux & $\sim$\SI{1e18}{m^{-2}}      & \ldots                                                                                  \\
-			                                 & Nuclear heating         & \SI{1}{\mega\watt.m^{-3}}    & 0                                                                                       \\
-			                                 & Operating temperature   & \SI{520}{\kelvin}            & \SI{293}{\kelvin}                                                                       \\
-			                                 & Atomosphere             & Vacuum                       & Air                                                                                     \\
-			\midrule
-			Other                            & EM pulse                & \ldots                       & \SIrange[range-units = single]{10}{500}{\kilo\volt.m^{-1}} @ \SI{1}{\giga\hertz}        \\
-			                                 & Shrapnel                & \ldots                       & \SIrange[range-units = single]{1}{10}{\kilo\metre.s^{-1}} @ $\sim$\SI{30}{\micro\metre} \\
-			\bottomrule
-		\end{tabular}
-	}
-	\caption[Estimated operating conditions of MCF and ICF fusion reactors.]{Estimated operating environment comparison between MCF (ITER) and ICF (LMJ). Reproduced from \cite{openv}. Note these numbers are unrepresentative of actual fusion power plants as both ITER and the LMJ are experiments---it is likely power plants will require much harsher operating conditions.\\ * End of life.}
-	\label{tab:rad}
+    \centering
+    \resizebox{\textwidth}{!}{
+        \begin{tabular}{llrr}
+            \toprule
+            Location                         & Radiation Type          & MCF (ITER)                   & ICF (LMJ)                                                                               \\
+            \midrule
+            1\textsuperscript{st} Wall       & Neutron flux            & \SI{3e18}{m^{-2}.s^{-1}}     & \SI{1.5e25}{m^{-2}.s^{-1}}                                                              \\
+                                             & Neutron fluence*        & \SI{3e25}{m^{-2}}            & \SI{3e18}{m^{-2}}                                                                       \\
+                                             & $\gamma$-ray dose rate  & \SI{2e3}{\gray.s^{-1}}       & $\sim$ \SI{1e10}{\gray.s^{-1}}                                                          \\
+                                             & Energetic ion/atom flux & \SI{5e19}{m^{-2}.s^{1}}      & \ldots                                                                                  \\
+            \midrule
+            1\textsuperscript{st} Diagnostic & Neutron flux            & \SI{1e17}{m^{-2}.s^{-1}}     & \SI{1e26}{m^{-2}.s^{-1}}                                                                \\
+                                             & Neutron damage rate     & \SI{6e-9}{dpa.s^{-1}}        & negligible                                                                              \\
+                                             & Neutron fluence*        & \SI{2e24}{m^{-2}}            & $\sim$\SI{1e19}{m^{-2}}                                                                 \\
+                                             & Neutron damage          & \SI{1e-1}{dpa}               & negligible                                                                              \\
+                                             & $\gamma$-ray dose rate  & $\sim$\SI{1e2}{\gray.s^{-1}} & $\sim$\SI{1e10}{\gray.s^{-1}}                                                           \\
+                                             & Energetic ion/atom flux & $\sim$\SI{1e18}{m^{-2}}      & \ldots                                                                                  \\
+                                             & Nuclear heating         & \SI{1}{\mega\watt.m^{-3}}    & 0                                                                                       \\
+                                             & Operating temperature   & \SI{520}{\kelvin}            & \SI{293}{\kelvin}                                                                       \\
+                                             & Atomosphere             & Vacuum                       & Air                                                                                     \\
+            \midrule
+            Other                            & EM pulse                & \ldots                       & \SIrange[range-units = single]{10}{500}{\kilo\volt.m^{-1}} @ \SI{1}{\giga\hertz}        \\
+                                             & Shrapnel                & \ldots                       & \SIrange[range-units = single]{1}{10}{\kilo\metre.s^{-1}} @ $\sim$\SI{30}{\micro\metre} \\
+            \bottomrule
+        \end{tabular}
+    }
+    \caption[Estimated operating conditions of MCF and ICF fusion reactors.]{Estimated operating environment comparison between MCF (ITER) and ICF (LMJ). Reproduced from \cite{openv}. Note these numbers are unrepresentative of actual fusion power plants as both ITER and the LMJ are experiments---it is likely power plants will require much harsher operating conditions.\\ * End of life.}
+    \label{tab:rad}
 \end{table}
 
-\Cref{tab:rad} shows that dosages and dosage rates vary wildly between approaches. For the most part, MCF receives higher doses of neutrons and ions in both the first wall and diagnostic equipment. This seems to indicate that the material requirements for MCF are stricter than for ICF. However, shrapnel production is a strong possibility in ICF, especially in indirect drive reactors; where a specially made container called a ``hohlraum'' holds the fuel pellet and is subsequently obliterated when the pellet undergoes fusion (see \cref{fig:hohlraum} \cite{hohlraum}). This is a huge challenge as such high energy shrapnel would be capable of destroying diagnostic equipment and damaging the first wall \cite{icfpwr1,icfpwr2,icfpwr3}.
+\Cref{tab:rad} shows that dosages and dosage rates vary wildly between approaches. For the most part, MCF receives higher doses of neutrons and ions in both the first wall and diagnostic equipment. This seems to indicate that the material requirements for MCF are stricter than for ICF. However, shrapnel production is a strong possibility in ICF, especially in indirect drive reactors; where a specially made container called a ``hohlraum'' holds the fuel pellet and is subsequently obliterated when the pellet undergoes fusion (see \cref{f:hohlraum} \cite{hohlraum}). This is a huge challenge as such high energy shrapnel would be capable of destroying diagnostic equipment and damaging the first wall \cite{icfpwr1,icfpwr2,icfpwr3}.
 
 \begin{figure}[t]
-	\centering
-	\includegraphics[width=\linewidth]{hohlraum.jpg}
-	\caption[Hohlraum design for indirect drive in Inertial Confinement Fusion.]{\textbf{a}, Cross section of the National Ignition Facility's ICF target design showing the gold hohlraum and plastic capsule, fuel pellet, and incident laser bundles. \textbf{b}, X-ray image of the actual capsule for N130927 with DT fuel layer and surrounding CH (carbon–hydrogen) plastic ablator. \textbf{c}, X-ray radiation drive temperature as a function of time for the National Ignition Campaign (NIC) low-foot implosion and the post-NIC high-foot implosion. Image taken from \cite{hohlraum}.}
-	\label{fig:hohlraum}
+    \centering
+    \includegraphics[width=\linewidth]{hohlraum.jpg}
+    \caption[Hohlraum design for indirect drive in Inertial Confinement Fusion.]{\textbf{a}, Cross section of the National Ignition Facility's ICF target design showing the gold hohlraum and plastic capsule, fuel pellet, and incident laser bundles. \textbf{b}, X-ray image of the actual capsule for N130927 with DT fuel layer and surrounding CH (carbon–hydrogen) plastic ablator. \textbf{c}, X-ray radiation drive temperature as a function of time for the National Ignition Campaign (NIC) low-foot implosion and the post-NIC high-foot implosion. Image taken from \cite{hohlraum}.}
+    \label{f:hohlraum}
 \end{figure}
 
 Overall, the table is unrepresentative of potential operating environments in large-scale power stations, but sets lower limits on the demands of the materials involved in both ``mainstream'' proposals for fusion energy production.
@@ -75,7 +75,7 @@ Overall, the table is unrepresentative of potential operating environments in la
 \label{sss:rad_damage}
 One of the bigger problems in radiation damage research is the lack of a truly standardised way of measuring damage on materials \cite{srimisbad}. The most common unit is displacements per atom (dpa) \cite{dpa}. It is defined as the average number of displacements undergone by each atom in a material as a result of being irradiated. The ``fundamental'' unit of measurement for this is the number of displacements per unit volume per unit time, $R$
 \begin{align}
-	R & = N\int _{E_{\rvar{min}}}^{E_{\rvar{max}}}\int _{T_{\rvar{min}}}^{T_{\rvar{max}}}\phi (E)\,\sigma (E,T)\,\upsilon (T)\;\rvar{d}T\;\rvar{d}E\;,
+    R & = N\int _{E_{\rvar{min}}}^{E_{\rvar{max}}}\int _{T_{\rvar{min}}}^{T_{\rvar{max}}}\phi (E)\,\sigma (E,T)\,\upsilon (T)\;\rvar{d}T\;\rvar{d}E\;,
 \end{align}
 where $ N $ is the atom number density (no. of atoms per unit volume); $ E $ the incoming particle's energy; $ T $ the energy transferred in a collision of a particle of energy $E$ and a lattice atom; $ \phi(E) $ the energy dependent particle flux; $ \sigma(E,T) $ the cross section for the collision of a particle with energy $ E $ resulting in a transfer of energy $ T $ to the struck atom; and $ \upsilon(T) $ the number of displacements per primary knock on atom as a function of transferred energy $ T $. DPA can be calculated by na\"{i}vely multiplying $ R $ by the sample volume and total exposure time (or we could use fluence rather than flux). This ignores the fact that $\sigma (E,T)$ and $\upsilon (T)$ will be locally perturbed in the neighbourhood of damage cascades, since the bulk volume is much greater than that of the damage cascades', we assume the functions remain globally unchanged.
 
@@ -93,48 +93,48 @@ Transmutation products will always be problematic, but they are a fact of workin
 \label{s:parallel_comp}
 Processing chips are made up of millions or even billions of transistors acting as switches in logic gates. Each time a logic gate fires, the capacitors inside them charge and discharge at the chip's frequency or clock speed \cite{cpu_trnstor}. Consider the power of any electronic component,
 \begin{align}
-	P(t) & = I(t) V(t) \label{eq:pow_ec} \,,
+    P(t) & = I(t) V(t) \label{eq:pow_ec} \,,
 \end{align}
 where $ I $ is current and $ V $ is voltage both as a function of time. The current, $ I $, of a capacitor and the definition of power, $ P $, as functions of time, $ t $, are given by,
 \begin{align}
-	I(t) = C \dfrac{\mathrm{d}V(t)}{\rvar{d}t} \label{eq:cap_cur_pow_dt}\,, \qquad
-	P(t) = \dfrac{\rvar{d}E(t)}{\rvar{d}t}\,,
+    I(t) = C \dfrac{\mathrm{d}V(t)}{\rvar{d}t} \label{eq:cap_cur_pow_dt}\,, \qquad
+    P(t) = \dfrac{\rvar{d}E(t)}{\rvar{d}t}\,,
 \end{align}
 where $ C $ is capacitance and $ E $ the energy stored in the capacitor. Substituting \cref{eq:cap_cur_pow_dt} into \cref{eq:pow_ec} and integrating twice, we obtain the expression for the energy stored in a capacitor,
 \begin{align}
-	%		\int\limits_{0}^{E_{c}}\int\limits_{0}^{\infty} \dfrac{\rvar{d}E(t)}{\rvar{d}t}\; \rvar{d}t &= C \int\limits_{0}^{V_{c}}\int\limits_{0}^{\infty} V(t) \dfrac{\mathrm{d}V(t)}{\rvar{d}t}\; \rvar{d}t\\
-	E_{\rvar{c}} & = \dfrac{C V_{\rvar{c}}^{2}}{2} \label{eq:e_cap}\,,
+    %		\int\limits_{0}^{E_{c}}\int\limits_{0}^{\infty} \dfrac{\rvar{d}E(t)}{\rvar{d}t}\; \rvar{d}t &= C \int\limits_{0}^{V_{c}}\int\limits_{0}^{\infty} V(t) \dfrac{\mathrm{d}V(t)}{\rvar{d}t}\; \rvar{d}t\\
+    E_{\rvar{c}} & = \dfrac{C V_{\rvar{c}}^{2}}{2} \label{eq:e_cap}\,,
 \end{align}
 where $ V_{\rvar{c}} $ and $ E_{\rvar{c}} $ are the voltage and energy stored in the capacitor. Recalling that in a processing chip, the capacitors are charged and discharged at the chip's clock speed $ f $, we arrive at the expression for power consumption, $ P_{\rvar{c}} $, of a capacitor charging and discharging at frequency $ f $ \cite{microelec},
 \begin{align}
-	P_{\rvar{c}} & = E_{\rvar{c}} f \propto C V_{\rvar{c}}^{2} f \label{eq:p_cap}\,.
+    P_{\rvar{c}} & = E_{\rvar{c}} f \propto C V_{\rvar{c}}^{2} f \label{eq:p_cap}\,.
 \end{align}
 
 Computer chips are rather more complicated, but their power consumption (also known as power dissipation) is described by a simple addition of terms \cite{cpu_pow},
 \begin{align}
-	P = P_{\rvar{dyn}} + P_{\rvar{sc}} + P_{\rvar{leak}}\,,
+    P = P_{\rvar{dyn}} + P_{\rvar{sc}} + P_{\rvar{leak}}\,,
 \end{align}
 where $ P_{\rvar{dyn}} $ is the dynamic power dissipation given by \cref{eq:p_cap}. The two other dissipation mechanisms are:
 \begin{inparaenum}[\itshape 1\upshape)]
-	\item short-circuit, sc, which depends on frequency and occurs when a direct path from transistor to ground is made as a result of multiple transistors conducting simultaneously; and
-	\item leakage, leak, which depends on the voltage and is due to micro-currents between doped parts a transistor.
+    \item short-circuit, sc, which depends on frequency and occurs when a direct path from transistor to ground is made as a result of multiple transistors conducting simultaneously; and
+    \item leakage, leak, which depends on the voltage and is due to micro-currents between doped parts a transistor.
 \end{inparaenum}
-Furthermore, higher voltages and frequencies result in higher temperatures, which in turn mean decreased transistor performance and increased capacitance. The overall result is an energy expenditure curve similar to \cref{fig:cpu_en_cnvx} \cite{cpu_en_cnvx} for every processor unit.
+Furthermore, higher voltages and frequencies result in higher temperatures, which in turn mean decreased transistor performance and increased capacitance. The overall result is an energy expenditure curve similar to \cref{f:cpu_en_cnvx} \cite{cpu_en_cnvx} for every processor unit.
 \begin{figure}[t]
-	\centering
-	\includegraphics[width=\linewidth]{cpu_en_cnvx.png}
-	\caption[Energy expenditure of CPU vs Voltage.]{Energy required by a Samsung Galaxy S2 CPU at \SI{37}{\degreeCelsius} to complete the Gold-Rader implementation of the \emph{bit-reverse} algorithm. The dashed lines denote a theoretical model, image and model found in \cite{cpu_en_cnvx}.}
-	\label{fig:cpu_en_cnvx}
+    \centering
+    \includegraphics[width=\linewidth]{cpu_en_cnvx.png}
+    \caption[Energy expenditure of CPU vs Voltage.]{Energy required by a Samsung Galaxy S2 CPU at \SI{37}{\degreeCelsius} to complete the Gold-Rader implementation of the \emph{bit-reverse} algorithm. The dashed lines denote a theoretical model, image and model found in \cite{cpu_en_cnvx}.}
+    \label{f:cpu_en_cnvx}
 \end{figure}
 
 This set of optimum conditions is the reason behind the multicore and multithreaded design of modern Central Processing Units (CPUs) and Graphics Processing Units (GPUs). It is also why in recent years there has been such a massive push for parallelism in all computing markets. It is simply not feasable to continually increase clock speeds and voltages because cooling solutions would struggle to remove heat fast enough, and power consumption would skyrocket.
 
 \subsection{Computation on graphics processing units}
 \begin{figure}[t]
-	\centering
-	\includegraphics[width=\linewidth]{gpu_parallel.png}
-	\caption[CUDA runtime schematic.]{CUDA runtime schematic. Repetitive but computationally intensive tasks can be offloaded to the GPU. Both GPU and CPU are completely independent from each other and can work on different parts of the code at the same time, care must be taken to ensure proper syncronisation. Image taken from \cite{nvidia}.}
-	\label{fig:cuda}
+    \centering
+    \includegraphics[width=\linewidth]{gpu_parallel.png}
+    \caption[CUDA runtime schematic.]{CUDA runtime schematic. Repetitive but computationally intensive tasks can be offloaded to the GPU. Both GPU and CPU are completely independent from each other and can work on different parts of the code at the same time, care must be taken to ensure proper syncronisation. Image taken from \cite{nvidia}.}
+    \label{f:cuda}
 \end{figure}
 
 Central Processing Units (CPUs) are designed not only to perform mathematical operations but logical ones that control program flow. They are tailored to perform the wide variety of operations required by an operating system. These include program scheduling (load balancing), instantiation (program loading, unloading, loops, recusion instances) \& branching (if/case statements, go to's), memory operations (fetching, storing, allocation), input/output (IO), and program monitoring (program counters, recursion counters). Modern CPUs have a degree of parallelism that allows them to increase their total throughput while keeping their operation within near optimum conditions as previously mentioned. They are commonly divided into cores and threads, though certain high-end chips have an additional layer named hyperthreading \cite{cpu_arch}.
@@ -155,39 +155,39 @@ Recently however, a third option has become increasingly viable. NVidia's Comput
 
 \subsubsection{Hurdles for parallelisation}
 \begin{figure}[t]
-	\centering
-	\includegraphics[width=\linewidth]{mem_access.pdf}
-	\caption[Memory access pattern example.]{Arrows represent fetch requests by single threads in a GPU. Data should be arranged in such a way that all threads in a warp (collections of 32 threads) access contiguous memory locations to reduce time-consuming memory fetch operations. This is often unintuitive but extremely important, especially on scientific computing cards which are optimised for long computational times and low memory fetch frequency.}
-	\label{fig:mem_access}
+    \centering
+    \includegraphics[width=\linewidth]{mem_access.pdf}
+    \caption[Memory access pattern example.]{Arrows represent fetch requests by single threads in a GPU. Data should be arranged in such a way that all threads in a warp (collections of 32 threads) access contiguous memory locations to reduce time-consuming memory fetch operations. This is often unintuitive but extremely important, especially on scientific computing cards which are optimised for long computational times and low memory fetch frequency.}
+    \label{f:mem_access}
 \end{figure}
 
 The difficulty in parallelisation varies tremendously from problem to problem. Problems where data is uncorrelated and independent---such as sampling well-behaved probability distributions---are almost trivially parallelisable. Problems where data is correlated or strongly dependent on its neighbours---such as Dislocation Dynamics---require a more careful approach \cite{parallel_algs}.
 
 The largest hurdle when implementing parallel algorithms is often the efficient use of data. In order to obtain good parallel performance, a lot of thought has to be placed on data access patterns, data read/write conflicts, and memory allocation and transfer \cite{nvidia}. For best performance, all this must be analysed on a case by case basis. If done incorrectly, the performance of a parallel application may be lower than the serial version. One must consider a wide range of parameters to successfully parallelise a problem. Among these are GPU architecture, problem size, computational and memory complexity, code branching, required arithmetic precision, and error tolerances \cite{nvidia, gpu_rev}.
 
-Efficient parallelisation of many problems requires ``coalesced memory access'' as shown in \cref{fig:mem_access}, which means we have to be extremely careful when mapping CPU memory to global GPU (device) memory. The fact that threads work ``simultaneously''\footnote{Not quite but essentially simultaneously. See \cite{nvidia} for details.} means that in order to obtain good performance, data which is to be ``simultaneously'' loaded into each thread must be contiguous. This maximises cache memory use and therefore reduces slow memory fetch operations to global or shared memory.
+Efficient parallelisation of many problems requires ``coalesced memory access'' as shown in \cref{f:mem_access}, which means we have to be extremely careful when mapping CPU memory to global GPU (device) memory. The fact that threads work ``simultaneously''\footnote{Not quite but essentially simultaneously. See \cite{nvidia} for details.} means that in order to obtain good performance, data which is to be ``simultaneously'' loaded into each thread must be contiguous. This maximises cache memory use and therefore reduces slow memory fetch operations to global or shared memory.
 
 Special cases, such as having a parallel dislocation line segment to a surface as discussed in \cref{ss:analytic_forces}, must be treated carefully due to the way code branching works in GPUs. There are various ways of doing so:
 \begin{inparaenum}[\itshape 1\upshape)]
-	\item if the special case is inexpensive, it can be treated within the same GPU function;
-	\item if the special case is expensive and always known (certain boundary conditions in FEM), it can be placed in its own GPU function that treats it separately;
-	\item if the special case is expesive and found at runtime it may be asynchronously treated by the CPU or buffered into its own GPU function to be executed at a later time.
+    \item if the special case is inexpensive, it can be treated within the same GPU function;
+    \item if the special case is expensive and always known (certain boundary conditions in FEM), it can be placed in its own GPU function that treats it separately;
+    \item if the special case is expesive and found at runtime it may be asynchronously treated by the CPU or buffered into its own GPU function to be executed at a later time.
 \end{inparaenum}
 
 \begin{figure}[t]
-	\centering
-	\includegraphics[width=\textwidth]{async.pdf}
-	\caption[GPU and CPU asynchronous execution.]{GPU and CPU code run independent of each other. Leads to state ambiguities if both sides need to talk to each other \cite{nvidia}.}
-	\label{fig:async_gpu_cpu}
+    \centering
+    \includegraphics[width=\textwidth]{async.pdf}
+    \caption[GPU and CPU asynchronous execution.]{GPU and CPU code run independent of each other. Leads to state ambiguities if both sides need to talk to each other \cite{nvidia}.}
+    \label{f:async_gpu_cpu}
 \end{figure}
-One of the advantages of GPU-CPU independence is that both can work concurrently on the problem. If both systems have to talk to each other, then one must tread carefully, ensuring proper syncronisation and data mapping before moving (see \cref{fig:async_gpu_cpu}).
+One of the advantages of GPU-CPU independence is that both can work concurrently on the problem. If both systems have to talk to each other, then one must tread carefully, ensuring proper syncronisation and data mapping before moving (see \cref{f:async_gpu_cpu}).
 
-The reason why code branching is bad for GPU parallelisation is down to the fact that they work like software customisable vector machines. Where collections of threads all carry out the same operation on different pieces of data at the same time. This means that regardless of whether a condition is true or false, the code will execute. It is only data storage that depends on the condition, as illustrated in \cref{fig:code_branching}.
+The reason why code branching is bad for GPU parallelisation is down to the fact that they work like software customisable vector machines. Where collections of threads all carry out the same operation on different pieces of data at the same time. This means that regardless of whether a condition is true or false, the code will execute. It is only data storage that depends on the condition, as illustrated in \cref{f:code_branching}.
 \begin{figure}
-	\centering
-	\begin{subfigure}[t]{0.48\textwidth}
-		\centering
-		\begin{minted}{c}
+    \centering
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \begin{minted}{c}
 if (y == 0){
     x = a+b;
 }
@@ -198,12 +198,12 @@ else{
     x = a/b;
 }
 			\end{minted}
-		\caption{CPU code will only execute if the condition is met. This is called code branching.}
-	\end{subfigure}
-	~
-	\begin{subfigure}[t]{0.48\textwidth}
-		\centering
-		\begin{minted}{cuda}
+        \caption{CPU code will only execute if the condition is met. This is called code branching.}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \begin{minted}{cuda}
 p = (y == 0);
 p: x = a+b;
 
@@ -213,11 +213,11 @@ p: x = a*b;
 
 !p: x = a/b;
 			\end{minted}
-		\vspace{12pt}
-		\caption{GPU code executes every line but only stores results if the the flag before the colon is true.}
-	\end{subfigure}
-	\caption[Explanation of warp divergence.]{The NVidia CUDA compiler replaces \texttt{if} and \texttt{case} statements with logical flags \texttt{p}. Every line is executed, but the data is only stored if the flag prior to the colon is true \cite{nvidia}. This means that having rare but computationally expensive special cases will tank parallel performance and must therefore be dealt with separately.}
-	\label{fig:code_branching}
+        \vspace{12pt}
+        \caption{GPU code executes every line but only stores results if the the flag before the colon is true.}
+    \end{subfigure}
+    \caption[Explanation of warp divergence.]{The NVidia CUDA compiler replaces \texttt{if} and \texttt{case} statements with logical flags \texttt{p}. Every line is executed, but the data is only stored if the flag prior to the colon is true \cite{nvidia}. This means that having rare but computationally expensive special cases will tank parallel performance and must therefore be dealt with separately.}
+    \label{f:code_branching}
 \end{figure}
 
 Dislocation Dynamics (DD)---in particular 3D Discrete Dislocation Dynamics (3D DDD)---can greatly benefit from parallelisation, especially when coupling to Finite Element Methods (FEM). It is worth noting that there are potential issues arising from the very computationally expensive functions and special cases that often arise from analytical solutions in 3D DDD. There are also potential issues with data redundancy---which are non-limiting in the short term---that may eventually require a more data-efficient approach as the computational capabilities and data capabilities of GPUs converge. \Cref{ss:parallel_ddd} expands on these issues in the context of DD.
@@ -239,26 +239,26 @@ Coupling dislocation dynamics (DD) to FEM is important to properly simulate micr
 \subsubsection{Superposition model}
 \label{sss:superposition}
 \begin{figure}
-	\centering
-	\includegraphics[width=\linewidth]{fem_ddd.pdf}
-	\caption[Superposition Model for DDD-FEM coupling.]{Decomposition of the boundary value problem. The volume $ V $ is bounded by surface $ S $ contains a dislocation ensemble and is subjected to initial traction conditions $ \vec{T} $ on $ S_{T} $ and $ \vec{u} $ on $ S_{u} $. First, the traction, $ \vec{\tilde{T}} $, and displacement, $\vec{\tilde{u}}$, fields due to the dislocations in the infinite domain (DDD) are evaluated on the boundaries $ S_{T} $ and $ S_{u} $ respectively. Then a traditional FE method is used to calculate the stress field satisfying the boundary conditions $ \vec{\hat{T}} = \vec{T} - \vec{\tilde{T}} $ and $ \vec{\hat{u}} = \vec{u} - \vec{\tilde{u}} $. Image edited from \cite{analytic_tractions}.}
-	\label{fig:fem_ddd}
+    \centering
+    \includegraphics[width=\linewidth]{fem_ddd.pdf}
+    \caption[Superposition Model for DDD-FEM coupling.]{Decomposition of the boundary value problem. The volume $ V $ is bounded by surface $ S $ contains a dislocation ensemble and is subjected to initial traction conditions $ \vec{T} $ on $ S_{T} $ and $ \vec{u} $ on $ S_{u} $. First, the traction, $ \vec{\tilde{T}} $, and displacement, $\vec{\tilde{u}}$, fields due to the dislocations in the infinite domain (DDD) are evaluated on the boundaries $ S_{T} $ and $ S_{u} $ respectively. Then a traditional FE method is used to calculate the stress field satisfying the boundary conditions $ \vec{\hat{T}} = \vec{T} - \vec{\tilde{T}} $ and $ \vec{\hat{u}} = \vec{u} - \vec{\tilde{u}} $. Image edited from \cite{analytic_tractions}.}
+    \label{f:fem_ddd}
 \end{figure}
 
-The Superposition Model (SM) works by decomposing the problem into separate DDD and FE problems (\cref{fig:fem_ddd}). It is assumed that a linear-elastic body $ V $ bounded by a surface $ S $ is subject to traction boundary conditions, $ \vec{T} $, on $ S_{T} $ and displacement boundary conditions, $ \vec{u} $, on $ S_{u} $. The formulation proposed in \cite{dismot} to impose traction-displacement boundary conditions on DDD problems in finite domains states that the total displacement and stress fields can be written as a superposition of displacement and stress fields obtained from DDD and FE,
+The Superposition Model (SM) works by decomposing the problem into separate DDD and FE problems (\cref{f:fem_ddd}). It is assumed that a linear-elastic body $ V $ bounded by a surface $ S $ is subject to traction boundary conditions, $ \vec{T} $, on $ S_{T} $ and displacement boundary conditions, $ \vec{u} $, on $ S_{u} $. The formulation proposed in \cite{dismot} to impose traction-displacement boundary conditions on DDD problems in finite domains states that the total displacement and stress fields can be written as a superposition of displacement and stress fields obtained from DDD and FE,
 \begin{subequations}
-	\label{eq:superposition}
-	\begin{align}
-		\vec{u}      & = \vec{\tilde{u}} + \vec{\hat{u}}\,,            \\
-		\tns{\sigma} & = \tns{\tilde{\sigma}} + \tns{\hat{\sigma}}\, .
-	\end{align}
+    \label{eq:superposition}
+    \begin{align}
+        \vec{u}      & = \vec{\tilde{u}} + \vec{\hat{u}}\,,            \\
+        \tns{\sigma} & = \tns{\tilde{\sigma}} + \tns{\hat{\sigma}}\, .
+    \end{align}
 \end{subequations}
 The (\textasciitilde) fields are those associated with the dislocation in an infinite medium and are obtained by evaluating analytic fields in a DDD simulation. While the corrective (\textasciicircum) fields are those which must be superimposed to ensure the boundary conditions are met. This means that the image fields can be obtained by running a FE simulation with the ``corrected'' displacement and traction fields,
 \begin{subequations}
-	\begin{align}
-		\vec{\hat{u}}                    & = \vec{u} - \vec{\tilde{u}}\,,                                                                                 \\
-		\tns{\hat{\sigma}} \cdot \vec{n} & = \vec{\hat{T}} = \vec{T} - \underbrace{\vec{\tilde{T}}}_{\displaystyle{\tns{\tilde{\sigma}}}\cdot \vec{n}}\,,
-	\end{align}
+    \begin{align}
+        \vec{\hat{u}}                    & = \vec{u} - \vec{\tilde{u}}\,,                                                                                 \\
+        \tns{\hat{\sigma}} \cdot \vec{n} & = \vec{\hat{T}} = \vec{T} - \underbrace{\vec{\tilde{T}}}_{\displaystyle{\tns{\tilde{\sigma}}}\cdot \vec{n}}\,,
+    \end{align}
 \end{subequations}
 where $ \vec{n} $ is the outer unit normal vector to $ S $. As a dislocation segment moves closer to the surface, its (\textasciitilde) field diverges and starts causing numerical problems \cite{bdd}. A further problem with this method is that modelling elastic inclusions not only requires the calculation of forces induced by dislocations on the inclusion's surface, but also demands the calculation of so-called polarisation stresses due to differences in the inclusion's and matrix properties \cite{dismot, bdd, ddd_precip}.
 
@@ -268,29 +268,29 @@ The relative simplicity of the superposition method has made it a popular choice
 \label{sss:discrete_continuum}
 The Discrete Continuum Model (DCM) takes an alternative approach to solving the same problem. The DCM only treats short-range dislocation-dislocation interactions analytically while all other interactions are numerically calculated via FEM \cite{dcm}. It is based on the regularisation of the atomic displacement jump across the slip plane into a plastic strain inclusion according to eigenstrain theory \cite{eigenstrain}. Like the Superposition Model, the DCM also assumes the simulated volume to be linear-elastic.
 
-The eigenstrain formalism assumes that material defects can be represented as stress-free strain distributions dubbed eigenstrains \cite{eigenstrain}. For example, a dislocation loop of any shape may be approximately represented, thin, coherent, plate-like inclusion with the same contour as the loop and a characteristic thickness $ h $ as shown in \cref{fig:eigenstrain} \cite{dcm}. The eigenstrain tensor, $ \epsilon^{\rvar{p}} $, can then be defined as a symmetric dyadic product of the Burgers vector, $ \vec{b} $, and slip plane normal $ \vec{n} $,
+The eigenstrain formalism assumes that material defects can be represented as stress-free strain distributions dubbed eigenstrains \cite{eigenstrain}. For example, a dislocation loop of any shape may be approximately represented, thin, coherent, plate-like inclusion with the same contour as the loop and a characteristic thickness $ h $ as shown in \cref{f:eigenstrain} \cite{dcm}. The eigenstrain tensor, $ \epsilon^{\rvar{p}} $, can then be defined as a symmetric dyadic product of the Burgers vector, $ \vec{b} $, and slip plane normal $ \vec{n} $,
 \begin{align}\label{eq:eigenstrain}
-	\tns{\epsilon^{\rvar{p}}} & \equiv \dfrac{1}{2h} (\vec{b} \otimes \vec{n} + \vec{n} \otimes \vec{b})\,.
+    \tns{\epsilon^{\rvar{p}}} & \equiv \dfrac{1}{2h} (\vec{b} \otimes \vec{n} + \vec{n} \otimes \vec{b})\,.
 \end{align}
 \cref{eq:eigenstrain} can be used to calculate approximate elastic fields from the stress-free eigenstrain distribution. The approximation is accurate far from the dislocation core \cite{dln_core}. As we move closer but still outside of the core region, the approximation tends toward the exact discrete dislocation solution as $ h \to 0$. Due to linear elasticity, the total plastic strain is the sum of the individual plastic strains due to each dislocation segment.
 \begin{figure}
-	\centering
-	\includegraphics[width=0.5\linewidth]{eigenstrain.pdf}
-	\caption[The eigenstrain formalism.]{The eigenstrain formalism as defined in \cite{eigenstrain}. The dislocation is being approximated by a thin coherent inclusion of thickness $ h $, whose strain-free stress tensor $ \tns{\sigma^{\rvar{p}}} $ as defined by \cref{eq:eigenstrain}. The vectors $ \vec{n} $ and $ \vec{b} $ are the normal vector to the slip plane and the dislocation line's Burgers vector.}
-	\label{fig:eigenstrain}
+    \centering
+    \includegraphics[width=0.5\linewidth]{eigenstrain.pdf}
+    \caption[The eigenstrain formalism.]{The eigenstrain formalism as defined in \cite{eigenstrain}. The dislocation is being approximated by a thin coherent inclusion of thickness $ h $, whose strain-free stress tensor $ \tns{\sigma^{\rvar{p}}} $ as defined by \cref{eq:eigenstrain}. The vectors $ \vec{n} $ and $ \vec{b} $ are the normal vector to the slip plane and the dislocation line's Burgers vector.}
+    \label{f:eigenstrain}
 \end{figure}
 
 The formalism then lets us solve the boundary value problem by finding the stress tensor $ \tns{\sigma} $, elastic strain $ \tns{\epsilon^{\rvar{e}}} $ and displacement $ \vec{u} $ in mechanical equilibrium with the boundary conditions and plastic strain distribution $ \tns{\epsilon^{\rvar{p}}} $ from the ``inclusions''.
 
 It is worth noting that in order to calculate the eigenstrains, there must be sufficient FE nodes inside the thin plate. Therefore smaller values of $ h $ necessitate finer FE meshes. Furthermore, the original DCM experienced numerical blow up as dislocation-dislocation distances approached $ h $ \cite{dcm0}, but this has since been addressed. Assuming linear-elasticity, the revised model \cite{dcm} yields,
 \begin{subequations}\label{eq:discrete_continuum}
-	\begin{align}
-		\nabla \cdot \tns{\sigma} + \vec{f} = \vec{0} \quad & \in V \setminus \{A\}\,, \\
-		\tns{\sigma} = \tns{E} : \tns{\epsilon} \quad       & \in V \setminus \{A\}\,, \\
-		[[\vec{u}]] \quad                                   & \rvar{across } \{A\}\,,  \\
-		\vec{u} = \vec{u_{0}} \quad                         & \in S_{u}\,,             \\
-		\tns{\sigma} \cdot \vec{n} = \vec{T} \quad          & \in S_{T}\,.
-	\end{align}
+    \begin{align}
+        \nabla \cdot \tns{\sigma} + \vec{f} = \vec{0} \quad & \in V \setminus \{A\}\,, \\
+        \tns{\sigma} = \tns{E} : \tns{\epsilon} \quad       & \in V \setminus \{A\}\,, \\
+        [[\vec{u}]] \quad                                   & \rvar{across } \{A\}\,,  \\
+        \vec{u} = \vec{u_{0}} \quad                         & \in S_{u}\,,             \\
+        \tns{\sigma} \cdot \vec{n} = \vec{T} \quad          & \in S_{T}\,.
+    \end{align}
 \end{subequations}
 At time $ t $, $ \{A\} $ denotes the area swept by the dislocation loops since the start of the simulation. $ [[\vec{u}]] $ denotes displacement jumps tangent to $ \{A\} $ due to dislocation glide; its magnitude and direction depend on the Burgers vector $ \vec{b} $. $ \tns{E} $ is the 4\textsuperscript{th}-order elasticity tensor, $ \tns{\sigma} $ the small strain tensor, $ \vec{f} $ are the body forces and, $ : $, is the double dot product defined as, $ (\tns{E}:\tns{\epsilon})_{ij} = E_{ijkl}\epsilon_{kl} $, for a rank 4 tensor $ \tns{E} $ and rank 2 tensor $ \tns{\epsilon} $. The operator, $ \setminus $, is the set difference defined as, $ A \setminus B = \{x \in A | x \notin B\} $. We use the same notation for the volume, surface normal and boundary conditions as in \cref{sss:superposition}. \cref{eq:discrete_continuum} can then be linearly decomposed three parts which are solved via FEM or DDD and coupled.
 
@@ -300,27 +300,27 @@ That said, the DCM allows for reductions in the computational complexity of cert
 \subsubsection{Level set method}
 \label{sss:lvl_set}
 %
-Even though the level set method has not strictly been used to couple DD to FEM, it has been used to model inclusions \cite{ddd_inclusion_as_force} as described in \cref{sss:inclusions}. This type of dislocation dynamics is fundamentally distinct from DDD because Level Set DD uses arbitrary functions rather than a discretisation approach to represent dislocations lines. The idea is that in 3D, a dislocation $ \gamma(t) $ can be represented by the intersection of two zero levels of two level set functions (see \cref{fig:lvl_set_dd}),
+Even though the level set method has not strictly been used to couple DD to FEM, it has been used to model inclusions \cite{ddd_inclusion_as_force} as described in \cref{sss:inclusions}. This type of dislocation dynamics is fundamentally distinct from DDD because Level Set DD uses arbitrary functions rather than a discretisation approach to represent dislocations lines. The idea is that in 3D, a dislocation $ \gamma(t) $ can be represented by the intersection of two zero levels of two level set functions (see \cref{f:lvl_set_dd}),
 \begin{subequations}\label{eq:lvl_set}
-	\begin{align}
-		\phi(x(t),y(t),z(t),t)                                                          & = 0\,, & \qquad
-		\psi(x(t),y(t),z(t),t)                                                          & = 0\,,          \\
-		\dfrac{\rvar{d} \phi}{\rvar{dt}} = \partial_{t}\phi + \vec{v} \cdot \nabla \phi & = 0\,, & \qquad
-		\dfrac{\rvar{d} \psi}{\rvar{dt}} = \partial_{t}\psi + \vec{v} \cdot \nabla \psi & = 0\,,
-	\end{align}
+    \begin{align}
+        \phi(x(t),y(t),z(t),t)                                                          & = 0\,, & \qquad
+        \psi(x(t),y(t),z(t),t)                                                          & = 0\,,          \\
+        \dfrac{\rvar{d} \phi}{\rvar{dt}} = \partial_{t}\phi + \vec{v} \cdot \nabla \phi & = 0\,, & \qquad
+        \dfrac{\rvar{d} \psi}{\rvar{dt}} = \partial_{t}\psi + \vec{v} \cdot \nabla \psi & = 0\,,
+    \end{align}
 \end{subequations}
 where $ \vec{v} $ is the dislocation velocity. This definition uses the material derivative because it is assumed that the function and its spatial coordinates are all functions of time, $ t $. The material derivative also comes up when deriving the Navier-Stokes equations of fluid dynamics.
 \begin{figure}[t]
-	\centering
-	\includegraphics[width=0.3\linewidth]{level_set.pdf}
-	\caption[Level set Dislocation Dynamics.]{Diagram of a continuous dislocation $ \gamma(t) $ as the intersection of the zero level of two level set functions $ \phi(\vec{x}(t),t),~\psi(\vec{x}(t),t) $ as posed by \cref{eq:lvl_set}. Image edited from \cite{lvl_set_dd}.}
-	\label{fig:lvl_set_dd}
+    \centering
+    \includegraphics[width=0.3\linewidth]{level_set.pdf}
+    \caption[Level set Dislocation Dynamics.]{Diagram of a continuous dislocation $ \gamma(t) $ as the intersection of the zero level of two level set functions $ \phi(\vec{x}(t),t),~\psi(\vec{x}(t),t) $ as posed by \cref{eq:lvl_set}. Image edited from \cite{lvl_set_dd}.}
+    \label{f:lvl_set_dd}
 \end{figure}
 
 The level set method is significantly more computationally more expensive than DDD \cite{lvl_set_dd}. It must solve two coupled quasi-linear partial differential equations whose character is in general undefined. It therefore requires the use of very robust numerical solvers such as higher order Total Variation Deminishing (TVD) Runge-Kutta methods for time discretisation (TVD-RK4 or higher) and high order ENO (Essentially Nonoscillatory $ \mathcal{O}(N^5) $ or higher) or WENO (Weighted Essentially Non-Oscilatory) interpolation methods for spatial discretisation \cite{lvl_set_ddd_inc} for the solutions to converge satisfactorily. The method also makes it impossible to obtain many of the useful analytical solutions one can find by discretising dislocations into straight line segments. Another problem is that this method has never been truly coupled to the finite element method. However, if one were to do so there are two naïve ways of going about it:
 \begin{inparaenum}[\itshape1\upshape)]
-	\item numerically integrating along the dislocation lines and finding a way to numerically calculate the forces on FE nodes, or
-	\item discretising the level set curves and using either the DCM or SM to find forces and displacements.
+    \item numerically integrating along the dislocation lines and finding a way to numerically calculate the forces on FE nodes, or
+    \item discretising the level set curves and using either the DCM or SM to find forces and displacements.
 \end{inparaenum}
 The former would be very computationally expensive. Furthermore, no one has found a way to compute the forces or displacements exerted by generally shaped, non-discretised dislocations, numerical solutions are possible as they are needed to find self-interaction energies and dislocation-dislocation forces \cite{lvl_set_dd} but general, closed-form analytical ones are most likely impossible to find. The latter defeats the purpose of the level set method by abandoning the continuum framework. As a result of this, the level set method is not nearly as popular as DDD utilising either the SM or DCM.
 
@@ -328,27 +328,27 @@ The former would be very computationally expensive. Furthermore, no one has foun
 \label{ss:non-singular_dln}
 The Peach-Koehler formula describes the fundamental interactions of dislocations \cite{pk_force} according to the force, $ \vec{f} $, that a local stress $ \tns{\sigma} $ exerts on a dislocation line with Burgers vector, $ \vec{b} $, and line direction, $ \vec{\xi} $,
 \begin{align}
-	\vec{f} & = (\tns{\sigma} \cdot \vec{b}) \times \vec{\xi}\,.
+    \vec{f} & = (\tns{\sigma} \cdot \vec{b}) \times \vec{\xi}\,.
 \end{align}
 
 According to \cite{mura_t}, the internal stress field of a dislocation loop in a homogenous, infinite, linear-elastic medium is given by the contour integral around a loop $ L $,
 \begin{align}\label{eq:field_stress}
-	\sigma_{ij}^{\infty}(\vec{x}) & = C_{ijkl} \oint_{L} \epsilon_{lnh} C_{pqmn} \dfrac{\partial G_{kp}(\vec{x} - \vec{x'})}{\partial x_{q}} b_{m}\; \rvar{d}x'_{h}\,,
+    \sigma_{ij}^{\infty}(\vec{x}) & = C_{ijkl} \oint_{L} \epsilon_{lnh} C_{pqmn} \dfrac{\partial G_{kp}(\vec{x} - \vec{x'})}{\partial x_{q}} b_{m}\; \rvar{d}x'_{h}\,,
 \end{align}
 where $ C_{ijkl} $ is the elastic stiffness tensor, $ \epsilon_{lnh} $ the permutation operator, $ \vec{b} $ the Burgers vector, and $ G_{kp}(\vec{x} - \vec{x'}) $ is Green's function of elasticity \cite{mura_t}. $ G_{kp}(\vec{x} - \vec{x'}) $ is defined as the displacement component in the $ x_{k} $ direction at point $ \vec{x} $ in response to a unit point force applied in the $ x_{p} $ direction at point $ \vec{x'} $ \cite{a_non-singular_continuum_theory_of_dislocations}. In an isotropic elastic solid, $ G(\vec{x} - \vec{x'}) $, takes the form,
 \begin{align}\label{eq:elastic_green_func}
-	G_{ij}(\vec{x} - \vec{x'}) & = \dfrac{1}{8\pi \mu}\left[ \delta_{ij} \partial_{pp} - \dfrac{1}{2(1-\nu)} \partial_{ij} \right] R(\vec{x} - \vec{x'})\,,
+    G_{ij}(\vec{x} - \vec{x'}) & = \dfrac{1}{8\pi \mu}\left[ \delta_{ij} \partial_{pp} - \dfrac{1}{2(1-\nu)} \partial_{ij} \right] R(\vec{x} - \vec{x'})\,,
 \end{align}
 where $ \mu $, $ \nu $ are the isotropic shear modulus and Poisson's ratio respectively, $ \delta_{ij} $ is the Kronecker Delta, $ \partial_{x_{1} \ldots\, x_{n}} \equiv \dfrac{\partial^{n}}{\partial x_{1} \ldots\, \partial x_{n}}$, and $ R = \lVert \vec{x} - \vec{x'} \rVert $. However considering that $ \vec{x} \to \vec{x'} \Rightarrow R \to 0 \Rightarrow \partial_{i} R \to \infty $, some (or all) components of the stress field diverge. Furthermore, the total elastic energy also diverges,
 \begin{align}\label{eq:e_dln1}
-	E & = \dfrac{1}{2} \int S_{ijkl} \sigma_{ij}(\vec{x}) \sigma_{kl}(\vec{x})\; \rvar{d}^{3}\vec{x}\,,
+    E & = \dfrac{1}{2} \int S_{ijkl} \sigma_{ij}(\vec{x}) \sigma_{kl}(\vec{x})\; \rvar{d}^{3}\vec{x}\,,
 \end{align}
 where $ S = C^{-1} $ is the elastic compliance tensor. These divergent properties often prove problematic when numerically computing dislocation forces and energies. \Cref{eq:e_dln1} can also be expressed as a double line integral \cite{dewit1, dewit2},
 \begin{align}\label{eq:e_dln2}
-	E = & - \dfrac{\mu}{8\pi} \oiint_{L} \partial_{k} \partial_{k} R(\vec{x}-\vec{x}') b_{i} b'_{j} \;\rvar{d}x_{i} \;\rvar{d}x'_{j}\nn
-	    & - \dfrac{\mu}{4 \pi (1-\nu)} \oiint_{L} \partial_{i} \partial_{j} R(\vec{x}-\vec{x}') b_{i} b'_{j} \;\rvar{d}x_{k} \;\rvar{d}x'_{k}\nn
-	    & + \dfrac{\mu}{4 \pi (1-\nu)} \oiint_{L} \partial_{k} \partial_{k} R(\vec{x}-\vec{x}') b_{i} b'_{i} \;\rvar{d}x_{j} \;\rvar{d}x'_{j}\nn
-	    & - \nu \oiint_{L} \partial_{k} \partial_{k} R(\vec{x}-\vec{x}') b_{i} b'_{j} \;\rvar{d}x_{j} \;\rvar{d}x'_{i}\;,
+    E = & - \dfrac{\mu}{8\pi} \oiint_{L} \partial_{k} \partial_{k} R(\vec{x}-\vec{x}') b_{i} b'_{j} \;\rvar{d}x_{i} \;\rvar{d}x'_{j}\nn
+        & - \dfrac{\mu}{4 \pi (1-\nu)} \oiint_{L} \partial_{i} \partial_{j} R(\vec{x}-\vec{x}') b_{i} b'_{j} \;\rvar{d}x_{k} \;\rvar{d}x'_{k}\nn
+        & + \dfrac{\mu}{4 \pi (1-\nu)} \oiint_{L} \partial_{k} \partial_{k} R(\vec{x}-\vec{x}') b_{i} b'_{i} \;\rvar{d}x_{j} \;\rvar{d}x'_{j}\nn
+        & - \nu \oiint_{L} \partial_{k} \partial_{k} R(\vec{x}-\vec{x}') b_{i} b'_{j} \;\rvar{d}x_{j} \;\rvar{d}x'_{i}\;,
 \end{align}
 which is important when describing how \citet{a_non-singular_continuum_theory_of_dislocations} derived their non-singular expression.
 
@@ -358,46 +358,46 @@ There have been many attempts at removing this singularity, including finite-str
 
 \Citet{a_non-singular_continuum_theory_of_dislocations} took it upon themselves to define and justify a different Burgers vector distribution that maintains the mathematical convenience of the classical formulation that also eliminates such an unphysical assumption. They did so by introducing a Burgers vector density function,
 \begin{subequations}\label{eq:b_dist}
-	\begin{align}
-		\vec{b}          & = \int \vec{g}(\vec{x}) \;\rvar{d}^{3} \vec{x}\label{seq:bv_dist}\,, \\
-		\vec{g}(\vec{x}) & = \vec{b} \tilde{w}(\vec{x}) = \vec{b} \tilde{w}(r)\,,
-	\end{align}
+    \begin{align}
+        \vec{b}          & = \int \vec{g}(\vec{x}) \;\rvar{d}^{3} \vec{x}\label{seq:bv_dist}\,, \\
+        \vec{g}(\vec{x}) & = \vec{b} \tilde{w}(\vec{x}) = \vec{b} \tilde{w}(r)\,,
+    \end{align}
 \end{subequations}
 where $ r \equiv \lVert \vec{x} \rVert $. When substituting \cref{seq:bv_dist} into \cref{eq:field_stress,eq:e_dln2} the result of multiplying $ R $ with components of $ \vec{b} $ results in the following integrals,
 \begin{subequations}\label{eq:r_times_b_dist}
-	\begin{align}
-		R(\vec{x} - \vec{x}') b_{m}        & = \int R(\vec{x} - \vec{x}'') g_{m}(\vec{x}'' - \vec{x}') \;\rvar{d}^{3}\vec{x}''\,,                                                          \\
-		R(\vec{x} - \vec{x}') b_{m} b'_{n} & = \iint R(\vec{x}'' - \vec{x}''') g_{m}(\vec{x} - \vec{x}'') g_{n}(\vec{x}''' - \vec{x}') \;\rvar{d}^{3}\vec{x}'' \;\rvar{d}^{3}\vec{x}'''\,.
-	\end{align}
+    \begin{align}
+        R(\vec{x} - \vec{x}') b_{m}        & = \int R(\vec{x} - \vec{x}'') g_{m}(\vec{x}'' - \vec{x}') \;\rvar{d}^{3}\vec{x}''\,,                                                          \\
+        R(\vec{x} - \vec{x}') b_{m} b'_{n} & = \iint R(\vec{x}'' - \vec{x}''') g_{m}(\vec{x} - \vec{x}'') g_{n}(\vec{x}''' - \vec{x}') \;\rvar{d}^{3}\vec{x}'' \;\rvar{d}^{3}\vec{x}'''\,.
+    \end{align}
 \end{subequations}
 Using \cref{eq:b_dist,eq:r_times_b_dist} as guidelines, they defined a the following convolutions,
 \begin{subequations}
-	\begin{align}
-		w(\vec{x}) & \equiv \tilde{w}(\vec{x}) * \tilde{w}(\vec{x}) = \int \tilde{w}(\vec{x}-\vec{x}')\tilde{w}(\vec{x}')\; \rvar{d}^{3} \vec{x}'\,, \\
-		R_{a}      & \equiv R(\vec{x}) * w(\vec{x}) = \int R(\vec{x} - \vec{x}') w(\vec{x}') \;\rvar{d}^{3} \vec{x}'\,.
-	\end{align}
+    \begin{align}
+        w(\vec{x}) & \equiv \tilde{w}(\vec{x}) * \tilde{w}(\vec{x}) = \int \tilde{w}(\vec{x}-\vec{x}')\tilde{w}(\vec{x}')\; \rvar{d}^{3} \vec{x}'\,, \\
+        R_{a}      & \equiv R(\vec{x}) * w(\vec{x}) = \int R(\vec{x} - \vec{x}') w(\vec{x}') \;\rvar{d}^{3} \vec{x}'\,.
+    \end{align}
 \end{subequations}
 At which point they assumed there exists an integrable function $ w(\vec{x}) $ such that
 \begin{align}
-	R_{a} = \sqrt{R(\vec{x})^{2} + a^{2}} = \sqrt{x^{2} + y^{2} + z^{2} + a^{2}}\,,
+    R_{a} = \sqrt{R(\vec{x})^{2} + a^{2}} = \sqrt{x^{2} + y^{2} + z^{2} + a^{2}}\,,
 \end{align}
 where $ a $ is an arbitrary constant meant to represent the dislocation core radius whose value may be estimated from atomistic simulations. This is essentially a definition that can be used to replace $ R $ in the classical equations and eliminate the singularity by including a free parameter. However, in order to ensure this is mathematically sound, there must indeed exist a function which yields $ R_{a} $ as \citet{a_non-singular_continuum_theory_of_dislocations} defined it. This can be done by making use of the following property for the convolution of two suitably differentiable functions, $ \partial_{i} (f*g) = \partial_{i}f * g = f * \partial_{i} g $. We may take the Laplacian twice,
 \begin{subequations}
-	\begin{align}
-		\nabla^{2}[\nabla^{2} \{R(\vec{x}) * w(\vec{x})\} ] & = \nabla^{2}[\nabla^{2} R_{a}(\vec{x})]\,,                                                             \\
-		\nabla^{2}[\nabla^{2} \{R(\vec{x})\}] * w(\vec{x})  & = \nabla^{2}[\nabla^{2} R_{a}(\vec{x})]\,,                                                             \\
-		\nabla^{2}[\nabla^{2} \{R(\vec{x})\}]               & = \nabla^{2}\left[\dfrac{2}{R}\right] = -8\pi \delta^{3}(\vec{x}) \label{eq:hand_wavy}\,,              \\
-		\nabla^{2}[\nabla^{2} R_{a}(\vec{x})]               & = \nabla^{2}\left[\dfrac{2}{R_{a}} + \dfrac{a^{2}}{R_{a}^{3}}\right] = -\dfrac{15 a^{4}}{R_{a}^{7}}\,, \\
-		w(\vec{x})                                          & = \dfrac{15 a^{4}}{8\pi R_{a}^{7}} \label{eq:dist}\,.
-	\end{align}
+    \begin{align}
+        \nabla^{2}[\nabla^{2} \{R(\vec{x}) * w(\vec{x})\} ] & = \nabla^{2}[\nabla^{2} R_{a}(\vec{x})]\,,                                                             \\
+        \nabla^{2}[\nabla^{2} \{R(\vec{x})\}] * w(\vec{x})  & = \nabla^{2}[\nabla^{2} R_{a}(\vec{x})]\,,                                                             \\
+        \nabla^{2}[\nabla^{2} \{R(\vec{x})\}]               & = \nabla^{2}\left[\dfrac{2}{R}\right] = -8\pi \delta^{3}(\vec{x}) \label{eq:hand_wavy}\,,              \\
+        \nabla^{2}[\nabla^{2} R_{a}(\vec{x})]               & = \nabla^{2}\left[\dfrac{2}{R_{a}} + \dfrac{a^{2}}{R_{a}^{3}}\right] = -\dfrac{15 a^{4}}{R_{a}^{7}}\,, \\
+        w(\vec{x})                                          & = \dfrac{15 a^{4}}{8\pi R_{a}^{7}} \label{eq:dist}\,.
+    \end{align}
 \end{subequations}
 \Cref{eq:hand_wavy} is a very brave, handwavy statement given that,
 \begin{align}
-	\nabla^{2} \left[R^{-1}\right]= \nabla^{2}\left[(x^{2} + y^{2} + z^{2})^{-1/2}\right] = 0\,,
+    \nabla^{2} \left[R^{-1}\right]= \nabla^{2}\left[(x^{2} + y^{2} + z^{2})^{-1/2}\right] = 0\,,
 \end{align}
 but may be physically ``justified'' by pretending $ \nabla^{2}\left[R^{-1}\right] $ defines a spherical surface of radius 0. And \cref{eq:dist} is a similarly handwavy statement that can be ``justified'' by noting that,
 \begin{align}
-	\lim\limits_{a\to 0} w(\vec{x}) = \delta^{3}(\vec{x})\,.
+    \lim\limits_{a\to 0} w(\vec{x}) = \delta^{3}(\vec{x})\,.
 \end{align}
 Nevertheless, the non-singular formulation by \citet{a_non-singular_continuum_theory_of_dislocations} fixes the physically and mathematically problematic assumption that Burgers vectors follow 3D Dirac delta distributions, and proves useful in producing analytical expressions (see \cref{ss:analytic_forces}) that are not much more complex than the singular case.
 
@@ -406,49 +406,49 @@ Nevertheless, the non-singular formulation by \citet{a_non-singular_continuum_th
 Whether using the SM or DCM, coupling DDD to FEM requires the traction field $ \tns{\sigma^{\infty}}(\vec{x}) \cdot \vec{n}(\vec{x}) $ to be distributed among the set of relevant discrete nodes of a FE or BE model. In the DCM model this applies to dislocations that are sufficiently close to the boundary; while in the SM, it applies to all dislocations.
 Regardless of the coupling model, the force exerted by a dislocation ensemble on a node $ n $ on element $ e $ is given by,
 \begin{align}\label{eq:ddd_fem_force_intro}
-	\vec{F}^{(n)} = \int_{S_{e}} \left[\tns{\sigma^{\infty}}(\vec{x}) \cdot \vec{n}(\vec{x})\right] N_{n}(\vec{x})\; \rvar{d}S_{e}\,,
+    \vec{F}^{(n)} = \int_{S_{e}} \left[\tns{\sigma^{\infty}}(\vec{x}) \cdot \vec{n}(\vec{x})\right] N_{n}(\vec{x})\; \rvar{d}S_{e}\,,
 \end{align}
 where $ \rvar{d}S_{e} $ is the infinitesimal surface element with surface area $ S_{e} $. $ N_{n}(\vec{x}) $ are so-called shape functions (interpolation functions) that distribute the traction field among the surface element's nodes.
 
 The problematic singularity associated with the classical Volterra dislocation is avoided by using the non-singular formulation of \citet{a_non-singular_continuum_theory_of_dislocations} discussed in \cref{ss:non-singular_dln}, which changes \cref{eq:elastic_green_func} into \cref{eq:ns_elastic_green_func},
 \begin{align}\label{eq:ns_elastic_green_func}
-	G_{ij}(\vec{x} - \vec{x'}) & = \dfrac{1}{8\pi \mu}\left[ \delta_{ij} \partial_{pp} - \dfrac{1}{2(1-\nu)} \partial_{ij} \right] R_{a}(\vec{x} - \vec{x'})\,.
+    G_{ij}(\vec{x} - \vec{x'}) & = \dfrac{1}{8\pi \mu}\left[ \delta_{ij} \partial_{pp} - \dfrac{1}{2(1-\nu)} \partial_{ij} \right] R_{a}(\vec{x} - \vec{x'})\,.
 \end{align}
 
 Using the non-singular definition of $ G(\vec{x}-\vec{x}') $ in \cref{eq:field_stress} we obtain the expression for the stress field of a single straight dislocation line segment bounded by two dislocation nodes (1, 2) \cite{a_non-singular_continuum_theory_of_dislocations},
 \begin{align}\label{eq:two_node_stress_field}
-	\tns{\sigma}^{(12)}(\vec{x}) =
-	 & -\dfrac{\mu}{8\pi} \int\limits_{\vec{x_{1}}}^{\vec{x_{2}}} \left( \dfrac{2}{R_{a}^{3}} + \dfrac{3 a^{2}}{R_{a}^{5}} \right) \left[ \left( \vec{R} \times \vec{b} \right) \otimes \rvar{d}\vec{x'} + \rvar{d}\vec{x'} \otimes \left( \vec{R} \times \vec{b} \right) \right]\nn
-	%
-	 & + \dfrac{\mu}{4\pi (1 - \nu)} \int\limits_{\vec{x_{1}}}^{\vec{x_{2}}} \left( \dfrac{1}{R_{a}^{3}} + \dfrac{3 a^{2}}{R_{a}^{5}} \right) \left[ \left(\vec{R} \times \vec{b}\right)\cdot \rvar{d}\vec{x'} \right] \mtx{I}_{2}\nn
-	%
-	 & - \dfrac{\mu}{4\pi (1 - \nu)} \int\limits_{\vec{x_{1}}}^{\vec{x_{2}}} \dfrac{1}{R_{a}^{3}} \left[ \left(\vec{b} \times \rvar{d}\vec{x'}\right) \otimes \vec{R} + \vec{R} \otimes \left(\vec{b} \times \rvar{d}\vec{x'}\right) \right]\nn
-	 & + \dfrac{\mu}{4\pi (1 - \nu)} \int\limits_{\vec{x_{1}}}^{\vec{x_{2}}} \dfrac{3}{R_{a}^{5}} \left[ \left( \vec{R} \times \vec{b} \right) \cdot \rvar{d}\vec{x'} \right]\vec{R} \otimes \vec{R}\,,
+    \tns{\sigma}^{(12)}(\vec{x}) =
+     & -\dfrac{\mu}{8\pi} \int\limits_{\vec{x_{1}}}^{\vec{x_{2}}} \left( \dfrac{2}{R_{a}^{3}} + \dfrac{3 a^{2}}{R_{a}^{5}} \right) \left[ \left( \vec{R} \times \vec{b} \right) \otimes \rvar{d}\vec{x'} + \rvar{d}\vec{x'} \otimes \left( \vec{R} \times \vec{b} \right) \right]\nn
+    %
+     & + \dfrac{\mu}{4\pi (1 - \nu)} \int\limits_{\vec{x_{1}}}^{\vec{x_{2}}} \left( \dfrac{1}{R_{a}^{3}} + \dfrac{3 a^{2}}{R_{a}^{5}} \right) \left[ \left(\vec{R} \times \vec{b}\right)\cdot \rvar{d}\vec{x'} \right] \mtx{I}_{2}\nn
+    %
+     & - \dfrac{\mu}{4\pi (1 - \nu)} \int\limits_{\vec{x_{1}}}^{\vec{x_{2}}} \dfrac{1}{R_{a}^{3}} \left[ \left(\vec{b} \times \rvar{d}\vec{x'}\right) \otimes \vec{R} + \vec{R} \otimes \left(\vec{b} \times \rvar{d}\vec{x'}\right) \right]\nn
+     & + \dfrac{\mu}{4\pi (1 - \nu)} \int\limits_{\vec{x_{1}}}^{\vec{x_{2}}} \dfrac{3}{R_{a}^{5}} \left[ \left( \vec{R} \times \vec{b} \right) \cdot \rvar{d}\vec{x'} \right]\vec{R} \otimes \vec{R}\,,
 \end{align}
 Substituting \cref{eq:two_node_stress_field} into \cref{eq:ddd_fem_force_intro} yields as many integrals as there are surface nodes. Their exact form depends on the shape functions used. The specifics are out of the scope of this work. For a rectangular surface element, the vector formulation can be converted into a set of local scalar coordinates via a series of scalar projections of the set of basis vectors via \cref{eq:ana_loc_coo},
 \begin{align}\label{eq:ana_loc_coo}
-	\vec{R}          & = \vec{x} - \vec{x'} = y\vec{t} + r\vec{p} + s\vec{q}\,,                                        & \qquad
-	R_{a}            & = \sqrt{\vec{R} \cdot \vec{R} + a^{2}}\,, \nn
-	\vec{n}          & = \vec{p} \times \vec{q}\,,                                                                     & \qquad
-	y                & = \dfrac{\vec{R} \cdot \vec{n}}{\vec{t} \cdot \vec{n}}\,,                                                \\
-	r                & = \dfrac{\vec{R} \cdot (\vec{q} \times \vec{t})}{\vec{p} \cdot (\vec{q} \times \vec{t})}\,,     & \qquad
-	s                & = \dfrac{\vec{R} \cdot (\vec{p} \times \vec{t})}{\vec{q} \cdot (\vec{p} \times \vec{t})}\,, \nn
-	\rvar{d}\vec{x}' & = -\vec{t} \;\rvar{d}y \nonumber\,,
+    \vec{R}          & = \vec{x} - \vec{x'} = y\vec{t} + r\vec{p} + s\vec{q}\,,                                        & \qquad
+    R_{a}            & = \sqrt{\vec{R} \cdot \vec{R} + a^{2}}\,, \nn
+    \vec{n}          & = \vec{p} \times \vec{q}\,,                                                                     & \qquad
+    y                & = \dfrac{\vec{R} \cdot \vec{n}}{\vec{t} \cdot \vec{n}}\,,                                                \\
+    r                & = \dfrac{\vec{R} \cdot (\vec{q} \times \vec{t})}{\vec{p} \cdot (\vec{q} \times \vec{t})}\,,     & \qquad
+    s                & = \dfrac{\vec{R} \cdot (\vec{p} \times \vec{t})}{\vec{q} \cdot (\vec{p} \times \vec{t})}\,, \nn
+    \rvar{d}\vec{x}' & = -\vec{t} \;\rvar{d}y \nonumber\,,
 \end{align}
 where $ \vec{n},~\vec{p},~\vec{q},~\vec{t} $ are basis vectors\footnote{Unitary vectors that define a space. This space is not orthogonal because in general only $ \vec{p} \perp \vec{q} $, $ \vec{n} \perp \vec{p} $ and $ \vec{n} \perp \vec{q} $.} that respectively correspond to the outside surface normal of the surface element, the two orthogonal vectors that define the sides of the rectangular surface element, and the dislocation line direction. The integral bounds can then be set up accordingly.
 
 Noting that $ \vec{n} \equiv \vec{p} \times \vec{q} $ is normal to the surface element, if $ \vec{t} $ is parallel to the surface element i.e. a linear combination of $ \vec{p},~\vec{q} $ then the product $ \vec{t} \cdot \vec{n} = 0 $, so this formulation is problematic when a dislocation line segment is parallel to a surface. An easy workaround is to slightly around the axis defined by $ \vec{t} \times \vec{n} $ using the line's midpoint as a fulcrum. This works well in serial code but is problematic for parallelisation due to warp divergence (see \cref{ss:parallel_ddd}).
 
-\Cref{fig:flrs} diagramatically shows the definition of the four basis vectors and summarises the line integrals needed to find an analytical expression of the nodal force.
+\Cref{f:flrs} diagramatically shows the definition of the four basis vectors and summarises the line integrals needed to find an analytical expression of the nodal force.
 \begin{figure}[t]
-	\centering
-	\includegraphics[width=0.8\linewidth]{force_calc_linear_rectangle.pdf}
-	\caption[Analytic tractions on linear rectangular surface elements.]{Diagram of the line integral method used to find analytical expressions for the forces exerted by dislocation on linear rectangular surface elements \cite{analytic_tractions}.
-		\textit{1}) For any given point $ \vec{x} $ on the surface element and any given point $ \vec{x'}$ on the dislocation line segment, define distance $ R_{a} $.
-		\textit{2}) Integrate from $ x_{1} \to x_{2} $ along line direction $ \vec{t} $.
-		\textit{3}) Integrate from $ r_{1} \to r_{2} $ along vector $ \vec{p} $.
-		\textit{4}) Integrate from $ s_{1} \to s_{2} $ along vector $ \vec{q} $.}
-	\label{fig:flrs}
+    \centering
+    \includegraphics[width=0.8\linewidth]{force_calc_linear_rectangle.pdf}
+    \caption[Analytic tractions on linear rectangular surface elements.]{Diagram of the line integral method used to find analytical expressions for the forces exerted by dislocation on linear rectangular surface elements \cite{analytic_tractions}.
+        \textit{1}) For any given point $ \vec{x} $ on the surface element and any given point $ \vec{x'}$ on the dislocation line segment, define distance $ R_{a} $.
+        \textit{2}) Integrate from $ x_{1} \to x_{2} $ along line direction $ \vec{t} $.
+        \textit{3}) Integrate from $ r_{1} \to r_{2} $ along vector $ \vec{p} $.
+        \textit{4}) Integrate from $ s_{1} \to s_{2} $ along vector $ \vec{q} $.}
+    \label{f:flrs}
 \end{figure}
 It is worth noting that over 40 triple integrals arise from \cref{eq:two_node_stress_field,eq:ana_loc_coo}. These were solved via three families of recurrence relationships found via integration by parts and six seed functions found by direct integration. A more detailed description can be found in \cite{analytic_tractions}.
 
@@ -471,29 +471,29 @@ It is well known that much of the grain size strengthening effects arise from di
 
 The model depends on the grain boundary energy density, $ E_{\rvar{GB}}(\delta\theta) $, where $ \delta\theta $ is the crystallographic misorientation between neighbouring crystals; resolved shear stress, $ \tau $, on the incoming dislocation with Burgers vector $ \vec{b_{1}} $; critical penetration stress for the GB, $ \tau_{\rvar{GB}} $; and Burgers vector of the dislocation debris, $ \vec{\Delta b} = \vec{b_{1}} - \vec{b_{2}} $, left behind when the incoming dislocation, $ \vec{b_{1}} $, transmits throught the grain boundary to become a dislocation with Burgers vector, $ \vec{b_{2}} $. The relationship may be approximated by,
 \begin{align}\label{eq:dln_trns}
-	\tau \lvert\vec{b_{1}}\rvert^{2} & \geq \tau_{\rvar{pass}} \lvert\vec{b_{1}}\rvert^{2} = E_{\rvar{GB}}(\theta) \lvert\vec{b_{1}}\rvert + \alpha G \lvert\vec{\Delta b}\rvert^{2}\,,
+    \tau \lvert\vec{b_{1}}\rvert^{2} & \geq \tau_{\rvar{pass}} \lvert\vec{b_{1}}\rvert^{2} = E_{\rvar{GB}}(\theta) \lvert\vec{b_{1}}\rvert + \alpha G \lvert\vec{\Delta b}\rvert^{2}\,,
 \end{align}
 where $ \alpha $ is the material constant and $ G $ the shear modulus. The grain boundary energy density was proposed by \cite{gb_e_dens} to have the simple form,
 \begin{align}
-	E_{\rvar{GB}} & = 	\begin{cases}
-		k \dfrac{\delta\theta}{\theta_{1}}                 & \quad 0 \leq \delta\theta < \theta_{1}\,,          \\
-		k                                                  & \quad \theta_{1} \leq \delta\theta < \theta_{2}\,, \\
-		k \dfrac{\pi/2 - \delta\theta}{\pi/2 - \theta_{2}} & \quad \theta_{2} \leq \delta\theta < \pi/2\,,
-	\end{cases}
+    E_{\rvar{GB}} & = 	\begin{cases}
+        k \dfrac{\delta\theta}{\theta_{1}}                 & \quad 0 \leq \delta\theta < \theta_{1}\,,          \\
+        k                                                  & \quad \theta_{1} \leq \delta\theta < \theta_{2}\,, \\
+        k \dfrac{\pi/2 - \delta\theta}{\pi/2 - \theta_{2}} & \quad \theta_{2} \leq \delta\theta < \pi/2\,,
+    \end{cases}
 \end{align}
 where $ k,~ \theta_{1},~\theta_{2} $, are material specific.
 
 This is of course a gross simplification of the real 3D problem, but this approach was used by \citet{2d_pcm} to investigate the Hall-Petch effect, which correlates grain size with flow stress of a polycrystal,
 \begin{align}\label{eq:hall_petch}
-	\sigma & = \sigma_{0} + \kappa \left(\dfrac{d_{0}}{d}\right)^{n}\,,
+    \sigma & = \sigma_{0} + \kappa \left(\dfrac{d_{0}}{d}\right)^{n}\,,
 \end{align}
 where $ \sigma_{0} $ is the yield stress, $ d_{0} $ a reference crystal size, $ \kappa $ the Hall-Petch slope and $ n $ the crystal size sensitivity parameter. \Citet{2d_pcm} showed that the model reproduces the Hall-Petch effect quite successfully. As a consequence, they showed that even what might appear as an overly simplistic approach can describe a complex emergent phenomenon such as the Hall-Petch effect.
 
 Aside from the Hall-Petch effect, the model has also been utilised by \cite{2d_pcm2} to study the thickness effects of three different types of polycrystalline thin films:
 \begin{inparaenum}[\itshape 1\upshape )]
-	\item no surface treatment,
-	\item surface passivation layer and
-	\item surface grain refinement zones
+    \item no surface treatment,
+    \item surface passivation layer and
+    \item surface grain refinement zones
 \end{inparaenum}. In this study, Frank-Reed sources were seeded across the domain, and the superposition principle was utilised to calculate displacement, strain and stresses in the thin films. Their results qualitatively reproduced experimental observations from expected dislocation patterns, stress distributions, and the eventual disappearance of the size effect as the films got thicker \cite{2d_pcm2}.
 
 Two-dimensional models might seem useless but they have their place, particularly when thin films are concerned. However, they may also be of use when investigating the effects of dislocations on the mechanical behaviour of superconducting tape---whose applications range from medical imaging to fusion energy production. The exotic composition and crystallography of many superconductors (perovskites) would make 3D models very complex and computationally expensive, so 2D models may offer viable alternatives. On top of this, a superconducting tape's operating environment would often have it under strains which might not strictly lie in-plane, but given a small enough segment of tape, strains orthogonal to the its plane may be neglected. Thus making 2D models an acceptable first attempt at tacking the problem, at leas before computational resources and developments in 3D models make more realistic studies of such complex systems possible.
@@ -504,35 +504,35 @@ The article is a perfect example of why 3D DDD is so much more complex than 2D D
 
 In 3D DDD one must account for dislocation-twin boundary (TB) interactions. These may be obtained via geometric considerations, MD, and experimental evidence \cite{twinning2,twinning3,twinning4,twinning5}. We must have information regarding how dislocations are transmitted through a TB such as
 \begin{inparaenum}[\itshape 1\upshape)]
-	\item whether a dislocation leaves a residual dislocation on the TB,
-	\item the possible pre-TB and post-TB slip planes a dislocation can be transmitted to,
-	\item which loading conditions are conducive to which transmission behaviour and
-	\item which types of dislocation can be transmitted or reflected and in what ways \cite{twinning}.
+    \item whether a dislocation leaves a residual dislocation on the TB,
+    \item the possible pre-TB and post-TB slip planes a dislocation can be transmitted to,
+    \item which loading conditions are conducive to which transmission behaviour and
+    \item which types of dislocation can be transmitted or reflected and in what ways \cite{twinning}.
 \end{inparaenum}
 All this obviously depends on the twinning plane, so in order to study more realistic scenarios one must have all the necessary knowledge to properly account for all dislocation-TB interactions. Furthermore, it is possible that certain dislocations may leave behind twinning dislocations that end up as TB steps, whose movement can lead to TB migration and twin growth \cite{twinning6, twinning7}.
 
 \Citet{twinning} modelled four scenarios in order to deconvolute the effects that twins and grain boundaries have on the mechanical behaviour of a cubic crystal. They modelled
 \begin{inparaenum}[\itshape 1\upshape)]
-	\item a cubic twinned polycrustal with two TBs and GBs on the edges of the cube,
-	\item a single crystal with no TBs or GBs,
-	\item a polycrystal with no TBs but GBs,
-	\item a twinned crystal with TBs but not GBs.
+    \item a cubic twinned polycrustal with two TBs and GBs on the edges of the cube,
+    \item a single crystal with no TBs or GBs,
+    \item a polycrystal with no TBs but GBs,
+    \item a twinned crystal with TBs but not GBs.
 \end{inparaenum}
 It is worth noting that the effects of twin growth in plasticity were not accounted for in their DDD simulation and instead had to be numerically computed via the hardening rate $ \theta $,
 \begin{subequations}
-	\begin{align}
-		\theta             & = \dfrac{\rvar{d}\sigma}{\rvar{d}\epsilon} = \dfrac{\rvar{d}}{\rvar{d}\epsilon}  \left[E\left(\epsilon - \epsilon_{\rvar{slip}}^{\rvar{p}} - \epsilon_{\rvar{twin}}^{\rvar{p}}\right)\right] = \theta_{\rvar{s}} + \theta_{\rvar{TG}}\,, \\
-		\theta_{\rvar{TG}} & = -\dfrac{\rvar{d}}{\rvar{d}\epsilon} \left[E \epsilon_{\rvar{twin}}^{\rvar{p}} \right] = -E \bar{m} \gamma_{\rvar{twin}} \dfrac{\rvar{d}}{\rvar{d} \epsilon} \left[f_{\rvar{twin}}\right]\label{seq:tg}\,,
-	\end{align}
+    \begin{align}
+        \theta             & = \dfrac{\rvar{d}\sigma}{\rvar{d}\epsilon} = \dfrac{\rvar{d}}{\rvar{d}\epsilon}  \left[E\left(\epsilon - \epsilon_{\rvar{slip}}^{\rvar{p}} - \epsilon_{\rvar{twin}}^{\rvar{p}}\right)\right] = \theta_{\rvar{s}} + \theta_{\rvar{TG}}\,, \\
+        \theta_{\rvar{TG}} & = -\dfrac{\rvar{d}}{\rvar{d}\epsilon} \left[E \epsilon_{\rvar{twin}}^{\rvar{p}} \right] = -E \bar{m} \gamma_{\rvar{twin}} \dfrac{\rvar{d}}{\rvar{d} \epsilon} \left[f_{\rvar{twin}}\right]\label{seq:tg}\,,
+    \end{align}
 \end{subequations}
 where $ \theta_{\rvar{TG}} $ is the hardening rate due to twin growth, $ \bar{m} $ the mean Schmid factor of the participating twins $ \gamma_{\rvar{twin}} $ the characteristic twinning shear and $ \dfrac{\rvar{d}}{\rvar{d} \epsilon} \left[f_{\rvar{twin}}\right] $ is the change in the change in the twin volume fraction with respect to applied strain. These parameters must be empirically obtained.
 
-With their model, \citet{twinning} managed to qualitatively reproduce experimental observations, including the concave shape of strain-stress curves that arises from the competing hardening effect of TBs restricting dislocation motion (\cref{fig:twinning}), and the softening produced by twin growth as obtained from \cref{seq:tg}.
+With their model, \citet{twinning} managed to qualitatively reproduce experimental observations, including the concave shape of strain-stress curves that arises from the competing hardening effect of TBs restricting dislocation motion (\cref{f:twinning}), and the softening produced by twin growth as obtained from \cref{seq:tg}.
 \begin{figure}[t]
-	\centering
-	\includegraphics[width=\linewidth]{twinning.png}
-	\caption[Modelling twinned multicrystals with DDD.]{Simulated hardening rate as a function of twin volume fraction for (a) yz compressive loading and (b) tensile loading. Image edited from \cite{twinning}.}
-	\label{fig:twinning}
+    \centering
+    \includegraphics[width=\linewidth]{twinning.png}
+    \caption[Modelling twinned multicrystals with DDD.]{Simulated hardening rate as a function of twin volume fraction for (a) yz compressive loading and (b) tensile loading. Image edited from \cite{twinning}.}
+    \label{f:twinning}
 \end{figure}
 
 Twin boundaries in 3D are analogous to grain boundaries in 2D, given that they are coherent, narrow boundaries rather than messy, often incoherent grain boundaries. Consequently, grain boundaries are much harder to treat in 3D; instead, the community focuses on multiphase models where the details of dislocation transmission between phases are ignored or simplified as mentioned in \cref{sss:inclusions}.
@@ -545,10 +545,10 @@ The level set method, having never been coupled to FEM, takes a different approa
 
 Dislocation-permeable inclusions have been simulated via the SM \cite{sm_incl}. As mentioned in \cref{sss:superposition}, there is a need to calculate polarisation stresses due to differences in the elasticity of both phases. Using the same notation as \cref{sss:superposition} this can be done by breaking up the image stress into,
 \begin{subequations}
-	\begin{align}\label{eq:sm_pol_stress}
-		\tns{\hat{\sigma}} & = \tns{^{\rvar{m}}C} \tns{\hat{\epsilon}} \quad \in V_{\rvar{m}}                                                                                  \\
-		\tns{\hat{\sigma}} & = \tns{^{\rvar{p}}C} \tns{\hat{\epsilon}} + \left[\tns{^{\rvar{p}}C} - \tns{^{\rvar{m}}C}\right] \tns{\tilde{\epsilon}} \quad \in V_{\rvar{p}}\,,
-	\end{align}
+    \begin{align}\label{eq:sm_pol_stress}
+        \tns{\hat{\sigma}} & = \tns{^{\rvar{m}}C} \tns{\hat{\epsilon}} \quad \in V_{\rvar{m}}                                                                                  \\
+        \tns{\hat{\sigma}} & = \tns{^{\rvar{p}}C} \tns{\hat{\epsilon}} + \left[\tns{^{\rvar{p}}C} - \tns{^{\rvar{m}}C}\right] \tns{\tilde{\epsilon}} \quad \in V_{\rvar{p}}\,,
+    \end{align}
 \end{subequations}
 where $ \rvar{m},~\rvar{p} $ denote whether a variable belongs to the matrix or precipitate respectively and $ \tns{C} $ is the elastic stiffness tensor.
 
@@ -556,12 +556,12 @@ where $ \rvar{m},~\rvar{p} $ denote whether a variable belongs to the matrix or 
 
 The eigenstrain method \cite{eigenstrain_incl} as described in \cref{sss:discrete_continuum} has been shown to be a viable solution to this problem. One can compute the stresses and displacements produced by the dislocation ensemble on the inclusions' surfaces via DCM or SM. The SM method however needs to calculate polarisation stresses \cite{bdd}, an operation that significantly increases the number of calculations necessary to solve the problem.
 
-The DCM method has been used to simulate multiphase materials where the simulated dislocations reproduced experimentally observed behaviours such as the zig-zag patterns and dislocation forests produced by dislocations around precipitates in nickel superalloys \cite{dcm0, dcm_incl}. Reproducing such behaviours is not as trivial as simply adding inclusions to the simulation domain. In order to produce accurate results, one requires knowledge of the coherency stress between the different phases \cite{dcm_incl}. Such stresses are often due to lattice mismatches and differences in the thermal expansion coefficients. These coherency stresses localise the dislocations around the inclusions and are responsible for the observed localisation and aggregation of dislocations around precipitates as seen in \cref{fig:coherency} \cite{dcm_incl}.
+The DCM method has been used to simulate multiphase materials where the simulated dislocations reproduced experimentally observed behaviours such as the zig-zag patterns and dislocation forests produced by dislocations around precipitates in nickel superalloys \cite{dcm0, dcm_incl}. Reproducing such behaviours is not as trivial as simply adding inclusions to the simulation domain. In order to produce accurate results, one requires knowledge of the coherency stress between the different phases \cite{dcm_incl}. Such stresses are often due to lattice mismatches and differences in the thermal expansion coefficients. These coherency stresses localise the dislocations around the inclusions and are responsible for the observed localisation and aggregation of dislocations around precipitates as seen in \cref{f:coherency} \cite{dcm_incl}.
 \begin{figure}[t]
-	\centering
-	\includegraphics[width=\linewidth]{dln_inclusion.jpg}
-	\caption[Modelling dislocation inclusion interactions with the discrete continuum model.]{(a) Shows the initial dislocation configuration after relaxation in the presence of the calculated von Mises coherency stresses $ \tns{\sigma}_{\rvar{mises}} $. (b) Shows the dislocation forresting around the inclusion as a result of 0.2\% plastic strain for the [001] case. Image obtained from \cite{dcm_incl}.}
-	\label{fig:coherency}
+    \centering
+    \includegraphics[width=\linewidth]{dln_inclusion.jpg}
+    \caption[Modelling dislocation inclusion interactions with the discrete continuum model.]{(a) Shows the initial dislocation configuration after relaxation in the presence of the calculated von Mises coherency stresses $ \tns{\sigma}_{\rvar{mises}} $. (b) Shows the dislocation forresting around the inclusion as a result of 0.2\% plastic strain for the [001] case. Image obtained from \cite{dcm_incl}.}
+    \label{f:coherency}
 \end{figure}
 
 The level set method has also been successfully used to model inclusions. In contrast to the aforementioned methods, they are assumed to be regions in space where dislocations experience a repelling force, instead of a region in space with distinct characteristics to the matrix. The force profile can be very simply defined to depend on the radial distance from the dislocation to a point in the ``inclusion's'' volume \cite{ddd_inclusion_as_force}. It can also be modulated depending on the nature of the inclusion by making the force a radial function, thus avoiding many of the numerical issues facing DDD-FEM couplings (see \cref{ss:ddd_fem,ss:analytic_forces}). It is also possible to make the inclusions impermeable or semi-permeable depending on the magnitude and steepness of the force gradient as presented in \cite{ddd_inclusion_as_force}. Arbitrarily shaped may also be possible if one were to also use angular components to the force function, or even through the use of spherical harmonics.
@@ -572,28 +572,28 @@ Though mathematically appealing, the level set method is far from representing t
 \label{ss:parallel_ddd}
 It has been shown that DDD lends itself well to parallelisation. \Citet{gpu_ddd} investigated some of the more computationally intensive parts of DDD in DDLab \cite{ddlab}, a freely available DD code for Matlab. The algorithms whose parallel performance was studied in \cite{gpu_ddd} were
 \begin{inparaenum}
-	\item segment-segment interaction,
-	\item surface tractions and
-	\item image stresses.
+    \item segment-segment interaction,
+    \item surface tractions and
+    \item image stresses.
 \end{inparaenum}
 
 The segment-segment interaction has $ \mathcal{O}(N^{2}) $ computational complexity, where $ N $ is the number of dislocation segments. The quadratic scaling is due to the $ r^{-1} $ dependence of the dislocation stress fields, so long range interactions cannot be ignored.
 
 Both the surface traction and image stress calculations have $ \mathcal{O}(k N) $ computational where $ k $ is the total number of surface nodes and $ N $ the number of dislocation line segments.
 
-As is usually the case in parallel computing, there is often more than one way to parallelise a problem. The optimal strategy depends on the problem itself. It was no different in \cite{gpu_ddd} as shown in \cref{fig:gpu_ddd}. \Citet{gpu_ddd} realised that the segment-segment interaction calculation can be done via $ \mathcal{O}(N^{2}) $ parallelism, where single pairs of dislocation segments are sent to a single thread, and then globally reduced. However this approach requires $ \mathcal{O}(N^{2}) $ memory and can lead to inefficient data reuse. So they opted instead for $ \mathcal{O}(N) $ parallelisation and serialisation. In this scheme each thread is assigned a unique segment, and each thread computes the forces between its assigned segment and all the others while serially adding the force contributions. The memory access pattern they found best was that of a serial procedure, the reason is that in-thread calculations are serialised so having coalesced memory access patterns for threads would cause problems when serially accessing data for the calculation.
+As is usually the case in parallel computing, there is often more than one way to parallelise a problem. The optimal strategy depends on the problem itself. It was no different in \cite{gpu_ddd} as shown in \cref{f:gpu_ddd}. \Citet{gpu_ddd} realised that the segment-segment interaction calculation can be done via $ \mathcal{O}(N^{2}) $ parallelism, where single pairs of dislocation segments are sent to a single thread, and then globally reduced. However this approach requires $ \mathcal{O}(N^{2}) $ memory and can lead to inefficient data reuse. So they opted instead for $ \mathcal{O}(N) $ parallelisation and serialisation. In this scheme each thread is assigned a unique segment, and each thread computes the forces between its assigned segment and all the others while serially adding the force contributions. The memory access pattern they found best was that of a serial procedure, the reason is that in-thread calculations are serialised so having coalesced memory access patterns for threads would cause problems when serially accessing data for the calculation.
 \begin{figure}[t]
-	\centering
-	\includegraphics[width=\linewidth]{gpu_ddd.jpg}
-	\caption[Parallelisation strategies for three problems in 3D DDD.]{Parallelisation strategies for: (a) the $ N^{2} $ segment interactions; (b) surface traction at k grid points and; (c) and image stresses on $ N $ segments. Image taken from \cite{gpu_ddd}.}
-	\label{fig:gpu_ddd}
+    \centering
+    \includegraphics[width=\linewidth]{gpu_ddd.jpg}
+    \caption[Parallelisation strategies for three problems in 3D DDD.]{Parallelisation strategies for: (a) the $ N^{2} $ segment interactions; (b) surface traction at k grid points and; (c) and image stresses on $ N $ segments. Image taken from \cite{gpu_ddd}.}
+    \label{f:gpu_ddd}
 \end{figure}
 
 However, there is another approach \citet{gpu_ddd} did not consider. It combines both of the aforementioned strategies, $ \mathcal{O}(N^{2}) $ memory and $ \mathcal{O}(N) $ parallelisation and serialisation. Such an approach requires two copies of the input data (one per access pattern). One pattern would allow each thread to obtain its uniquely assigned segment in a coalesced manner. The second would be the serial access pattern already present. Thus obtaining the best performance possible performance at the cost of doubling the required memory. This is a better strategy provided there is enough device memory\footnote{Assuming the line direction is calculated inside the program, each dislocation line segment represents 3, 3-element vectors of type double (8-bytes per entry), totalling 72 bytes in global memory per dislocation line segment (two nodes + Burgers vector per segment). There must also be enough global memory to output the forces, which represent 1, 3-element vector of type double per dislocation node, totalling 24 bytes per node. Assuming a single dislocation loop with $ N $ nodes (therefore $ N $ segments), this brings the total global memory requirement to $ 96N $ bytes. Using two access patterns for the dislocation line segments and Burgers vector means an extra $ 72N $ bytes, giving a grand total of $ 168N $ bytes. Assuming the material parameters are stored in cosntant memory.}, if that is not so, the problem must be split into different GPU calls.
 
 New NVidia architectures have made varying degrees of nested parallelisation possible, NVidia calls this ``dynamic parallism''. When applied to the computationally optimal solution, the $ \mathcal{O}(N^{2}) $ memory requirement is relaxed to $ \mathcal{O}(N) $ (with the same parallel-specific data structure) and $ \mathcal{O}(N^{2}) $ computational parallelism.
 
-The parallisation strategies for the other two problems, (b) and (c) in \cref{fig:gpu_ddd}, involved similar decompositions as the segment-segment interaction. For surface tractions \citet{gpu_ddd} parallelised over $ k $ surface nodes with sequential calculation and addition of the stress from each dislocation line segment. For the image stresses, they chose the reverse strategy since it allows for the serialised addition of the image stresses on dislocation line segments.
+The parallisation strategies for the other two problems, (b) and (c) in \cref{f:gpu_ddd}, involved similar decompositions as the segment-segment interaction. For surface tractions \citet{gpu_ddd} parallelised over $ k $ surface nodes with sequential calculation and addition of the stress from each dislocation line segment. For the image stresses, they chose the reverse strategy since it allows for the serialised addition of the image stresses on dislocation line segments.
 
 Their findings showed very promising results for parallelising DDD simulations. Compared to C, their findings showed that depending on the specific problem and parameters used, the parallel implementation reduced computational time by a factor of $ \sim 110 $ at best and $ \sim 3 $ at worst for sufficiently large problems. This is of course, provided one uses a card designed for high performance computing, as these are tailored towards double precision arithmetic and computationally intensive procedures. However, gaming graphics cards are increasingly capable of double precision arithmetic and though not as drastic, speed ups are still substantial.
 
