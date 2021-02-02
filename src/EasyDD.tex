@@ -216,7 +216,7 @@ An on-going task is improving the folder structure. Which in the past was almost
 
 Modern software practices usually make heavy use of some form of variable encapsulation and code modulirisation to make code safer, simpler to expand and easier to use. This enables users and developers to take advantage of a set of toolboxes that can be chosen according to their needs without having to directly modify the source code, this concept is called ``moduliration''.
 
-\subsubsection{Encapsulation}
+\subsubsection{Encapsulation}\label{ss:encapsulation}
 
 The act of keeping variables neatly stored in a way that fits a purpose is called encapsulation. By encapsulating variableswe greatly improve the usability of software by increasing readability, reducingthe risk of human error by reducing the number of things to keep track of, and if done properly can even improve performance. This concept is tightly bound to the design philosophy of software as described in the following list.
 \begin{itemize}
@@ -237,10 +237,7 @@ This can be remedied by using \mintinline{matlab}{struct} and being sensible abo
 \subsubsection{Generic functions}
 
 Generic functions are implementation-agnostic functions that can be given by the user as any other variable. Only the variable in this case is a function. \mintinline{matlab}{MATLAB} has an old method of doing so using \mintinline{matlab}{feval()}, where the first argument is the name of the file whose function is being called, and subsequent arguments are passed on to the function. However this has some limitations, mainly their performance, and function handles are now preferred, e.g.
-\begin{minted}[
-    frame=lines,
-    linenos
-    ]{matlab}
+\begin{minted}[frame=lines, linenos]{matlab}
     % myFunction is defined in 'myFunction.m' and is called 
     % like so myFunction(foo, bar)
     genericFunction = 'myFunction.m'; 
@@ -249,10 +246,7 @@ Generic functions are implementation-agnostic functions that can be given by the
     feval('genericFunction', foo, bar);
 \end{minted}
 as opposed to,
-\begin{minted}[
-    frame=lines,
-    linenos
-    ]{matlab}
+\begin{minted}[frame=lines, linenos]{matlab}
     % myFunction is defined in 'myFunction.m' and is called 
     % like so myFunction(foo, bar)
     genericFunction = @myFunction; 
@@ -269,9 +263,6 @@ The introduction of regressions makes it so code must be thoroughly and exhausti
 If on the other hand, one were to add a new branch to an \texttt{if} statement (or a brand new \texttt{if} statement) with new computations, likely the function needs new arguments to cover this new case, we may or may not need to make up- or downstream modifications so the function can accommodate the additions. Then very quickly we will find ourselves procedurally programming and fixing the innevitable problems that come with hard to understand spaghetti code---which is most likely also less performant now than it used to be. The problem worsens as we add more functionality. Which can all be avoided by intelligently designing a generic approach, that can be easily expanded if the need arises.
 
 \subsection{Optimisation}
-% \renewcommand{\epigraphwidth}{0.9\linewidth}
-% \renewcommand{\textflush}{flushright}
-% \renewcommand{\epigraphflush}{flushright}
 \renewcommand{\epigraphflush}{flushright}
 \renewcommand{\textflush}{flushright}
 \setlength{\epigraphwidth}{0.75\linewidth}
@@ -299,7 +290,7 @@ The final two optimisations also deal with memory. The first, removes unecessary
 
 In aggregate these changes have given us the ability to use $15 \times$ more nodes as well as letting us build meshes over two orders of magnitude faster, mostly down to improved memory access patterns inside the mesh building loops.
 
-\subsection{Misc quality of life improvements}
+\subsection{Misc quality of life improvements}\label{s:qol}
 
 Formerly, initialising a simulation would involve a series of non-obvious steps, particularly when initially compiling the C and CUDA code used for accelerating simulations. This is now done automatically on a need-to-compile basis and has a fallback in case no \mintinline{CUDA}{CUDA} compiler is found.
 

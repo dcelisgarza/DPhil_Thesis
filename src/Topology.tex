@@ -1,4 +1,4 @@
-\chapter{Topology improvements}
+\chapter{Improved tolopogical operations}
 \label{c:topology}
 
 In 2D, dislocations are parametrised as points on a surface. Therefore aside from annihilation, interactions with grain boundaries \cite{grain_size_eff1, grain_size_eff2}, and perhaps the creation of superdislocations, topological changes in the dislocation network can be mostly ignored. However, in 3D, dislocations are parametrised as lines in a volume. This gives rise to extra complexities that result from multiple dislocations coming into contact with one another. These reactions ultimately lead to the formation of many secondary structures with their own properties that affect the rest of the network.
@@ -23,7 +23,7 @@ The lowest hanging fruit and most obvious problem were collisions that share a l
 
 The combination in which these conditions can be met, and the order in which they are checked will have drastic downstream consequences (see \cref{s:nonCommutativity}). \emph{Especially} at high dislocation densities where multiple collisions happen at every timestep. This had not been an issue in prior to fixing the integrator and matrix inversion, but simulations could now advance to a point where this was having a significant impact, particularly in Haiyang Yu's nanoindentation simulations.
 
-This was a multi-stage fix, where each fix progressively uncovered more and more shortcomings resulting from the unavoidable coupling between topological operations. These progressive fixes are detailed in \cref{s:nonCommutativity,s:remeshing}. Here we will only focus on problems with collisions.
+This was a multi-stage fix, where each fix progressively uncovered more and more shortcomings resulting from the unavoidable coupling between topological operations. These progressive fixes are detailed in \cref{s:nonCommutativity}. Here we will only focus on problems with collisions.
 
 The first fix involved prioritising hinge collisions above others, which we call two-line collisions. This meant detecting and forming the new connection. The rationale for this is that a segments in a hinge are close enough to and connected with each other at a node already that they will interact more strongly than two unconnected segments approaching one another.
 
@@ -46,25 +46,41 @@ The actual algorithm is more sophisticated because it accounts for both complete
 Despite the fact that checking all possible collisions for the minimum distance is a more expensive task, it results in faster simulations because the resulting structures are guaranteed to either produce the shortest segments, which can be cleaned up by remeshing, or the highest energy structures which can be cleaned up by separation. Otherwise the structures often end up in a no-man's land which is energetically unfavourable to separate, or cannot be remeshed; leading to an accumulation of highly immobile, highly energetic structures that cause more and more collisions as simulations advance and create sharp stress gradients that cause the timestep to drop significantly, and preventing simulations from advancing very much after hitting a wall.
 
 \section{Non-commutativity of topological changes}\label{s:nonCommutativity}
-
+% todo #13
 For a given iteration the time-evolution of the network used to be performed before any topological changes. This was very sub-optimal for a couple of reasons.
 
 The fundamental reason is that by doing so, the time evolution erroneously accounts for complex structures that should have dissipated into lower energey ones as per the quasi-static principle our model is based on. In other words, high energy structures in the network mean large stress gradients. These break the assumption that a node and its neighbours experience similar conditions. These locality assumptions lead to \label{eq:nodeVel}, which is what all our mobility laws based on.
 
 The practical reason is that by leaving these structures around when they should have been removed, the computational complexity increases by virtue of having more nodes and segments that would otherwise not be there.
 
-Moreover, the order in which topological changes were carried out was also very sub-optimal. It used to be the case that separation, collision and remeshing were performed in that order; and collision only detected a single event.
+Moreover, the order in which topological changes were carried out was also very sub-optimal. It used to be the case that separation, collision and remeshing were performed in that order; and collision only detected a single event per timestep.
 
-The first step was to ensure all collisions that needed to be performed in a single step were being performed. Unfortunately this quickly revealed the reason why the original version only accounted for a single collision at any given step. It made the terrifyingly-poorly-scaling separation have to separate more high energy structures every time.
+The first step was to ensure all collisions that needed to be performed in a single step were being performed. Unfortunately this quickly revealed the reason why the original version only accounted for a single collision at any given step. It made the extremely poorly-scaling separation have to separate a large number of highly connected, high energy structures every timestep.
 
-The role of separation is to take high energy, highly connected structures and break them apart into lower energy, lower connection ones. Separation is a very poorly scaling operation by itself $\mathcal{O}\left(\sum\limits_{i}\sum\limits_{j=2}^{\left\lfloor C_i/2 \right\rfloor} \dfrac{C_i!}{(C_i-j)! j!}\right)$. Where the sum over $i$ is done over the nodes with more connections than is allowed; $C_i$ is the number of connections for node $i$; and $j$ is the number connections $C_i$ connections can be split into. Mirror symmetries where $2j = C_i$ half the number of possible splitting configurations for that case, but at best this puts the lower bound at approximately Sterling's factorial formula $N! = \mathcal{O}(N\log{N})$. All of these configurations must be generated, which is an $\mathcal{O}(M)$ operation where $M$ are the number of nodes to be added. Unfortunately, this is a relatively expensive operation because the code dynamically expands the relevant arrays. The nodal velocities and segment forces must be calcualted for every configuration. Whichever configuration represents the and highest energy dissipation is picked as the final configuration. Locality is assumed, so only the forces and mobilities of the segments directly involved are calculated. It is therefore extremely important that the number of separations be kept to a minimum.
+The role of separation is to take high energy, highly connected structures and break them apart into lower energy, lower connection ones. Separation is a very poorly scaling operation by itself $\mathcal{O}\left(\sum\limits_{i}\sum\limits_{j=2}^{\left\lfloor C_i/2 \right\rfloor} \dfrac{C_i!}{(C_i-j)! j!}\right)$. Where the sum over $i$ is done over the nodes with more connections than is allowed; $C_i$ is the number of connections for node $i$; and $j$ is the number connections $C_i$ connections can be split into. Mirror symmetries where $2j = C_i$ half the number of possible splitting configurations for that case, but at best this puts the lower bound at approximately Sterling's factorial formula $N! \approx N\log{N}$ for large $N$. All of these configurations must be generated, which is an $\mathcal{O}(M)$ operation where $M$ are the number of nodes to be added. Unfortunately, this is a relatively expensive operation because the code dynamically expands the relevant arrays. The nodal velocities and segment forces must be calcualted for every configuration. Whichever configuration represents the and highest energy dissipation is picked as the final configuration. Locality is assumed, so only the forces and mobilities of the segments directly involved are calculated. It is therefore extremely important that the number of separations be kept to a minimum.
 
-The solution was as simple as calling separation after resolving a single collision. This, together with the fixes made to the collision detection, ensured only minimal energy structures were used for subsequent iterations of the collision-separation loop. It also and kept the number of possible separations low.
+The solution was as simple as calling separation after resolving a single collision. This, together with the fixes made to the collision detection, ensures subsequent iterations of the collision-separation loop utilise minimal energy structures. An added benefit is that it also keeps the number of possible separations to a minimum, because single collisions get resolved at every iteration.
 
-The final pieces of the puzzle were ensuring the network is as clean as possible before running it through the collision-separation loop. This means remeshing the network before to eliminate segments and hinges that need to be remeshed anyway and would only cause problems. And remeshing it after to ensure the next iteration has the cleanest possible network to work with.
+The role of remeshing is to ensure the resolution of the network resolution is appropriate. It does so ensuring there is an appropriate number and distribution of nodes throughout the network to keep discretisation accuracy high, whilst minimising computational cost. Therefore, the final piece of the puzzle was remeshing the network pre- collision-separation loop, as well as remeshing pre- time evolution (post- collision-separation) for the next iteration. It is worth noting that at times, nodes labelled as immobile (an artifical construct to mimic pinning) are not split by separation. Which means they sometimes become very highly connected and as a result can create an impassble obstacle for other nodes. As a result, they get `unpinned' when they reach a critical level of connectivity. Separation is performed afterwards to break them apart.
+
+The new order of topological operations in a single iteration is as follows,
+\begin{enumerate}
+    \item remesh,
+    \item collision-separation loop,
+    \item mobilise highly connected immobile nodes,
+    \item separation,
+    \item remesh.
+\end{enumerate}
+For a given iteration, the first remeshing is called after the network is evolved in time, as the nodes can move into positions that necessitate a remeshing to keep the resolution appropriate; it is then called again at the end of the iteration because collision and separation could have created structures that don't meet the network resolution criteria.
 
 \section{Conclusions}
 
-These solved many of the issues with higher densities %keep writing.
+Discrete dislocation dynamics is a stiff and chaotic dynamical system. It is very sensitive to small changes, as we will see in \cref{c:tractions}. Having a correct topology is of the utmost importance in this regard. Something as small as a collision that was not performed when it should have, can have dramatic downstream consequences. As dislocation density increases, the degree of correctness when resolving their interactions increases in importance. Not only does it increase the accuracy of a simulation, but improves its running speed.
+
+The increase in accuracy is obvious; detecting all the collsions that should be detected; resolving them in a manner more keeping with the quasi-static assumption yielding the mobility law; and ensuring the network resolution is what it should be; make for more accurate simulations.
+
+Part of the increase in running speed is down to the fact that quasi-static conditions are better met than before, so the timsetep can be greater. The other huge benefit to running speed is down to the asymptotic scaling and high proportionality constant of the algorithms we use; $\mathcal{O}(N^2)$ for seg-seg forces and collisions; $\mathcal{O}(C_i!)$ for a single separation; $\mathcal{O}(M N)$ for tractions. Where $N$ is the number of segments, $C_i$ the number of connections, and $M$ the number of surface elements. Simply put, the fewer things to calculate have a disproportionately large impact on how many operations need to be performed every time any of these functions is run.
+
+With these improvements, simulations that used to be computationally intractible within a reasonable timeframe are now very doable. Large, complex simulations with high dislocation densities are still slow by virtue of how topologically active they are. They are simultaneously more accurate and faster by multiple orders of magnitude (sometimes 5 or more) than before.
 \savearabiccounter
-%1417
+%1864

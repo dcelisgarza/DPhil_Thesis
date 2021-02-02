@@ -1,23 +1,265 @@
 \chapter{Future work}
 \label{c:future}
 
-It is clear that there are some fundamental problems preventing us from exploiting the capabilities of discrete dislocation dynamics. The code DDLab, the code that EasyDD is based on made some decisions that would ultimately limit its potential. Namely, the lack of attention paid to the cost of dynamic memory allocation, procedural nature of the code, and its choice of programming language. These choices were reasonable upon inception, but as the Tarleton group has increased in size and maturity it has become evident that it is not enough. We are reaching the upper limits of what can be done with \mintinline{matlab}{MATLAB}. There are more things we can do, more things we are doing. But a constant obstacle in obtaining results is how long they take to get and how difficult it is to add new functionality, even changing boundary conditions.
+During the course of this project, it became increasingly clear there are some fundamental issues preventing us from exploring the full breadth of what discrete dislocation dynamics has to offer. \href{http://micro.stanford.edu/wiki/M01_How_to_Obtain_and_Run_DDLab}{DDLab} \cite{ddlab}, the code that EasyDD is based on, made some design decisions that ultimately limit its potential. Namely, the lack of attention paid to the cost of dynamic memory allocation, procedural nature of the code, and choice of programming language. These choices were reasonable upon inception, but as the Tarleton group has increased in size and maturity, it has become evident that it is not enough. We are reaching the upper limits of what can be done with \mintinline{matlab}{MATLAB}. There are more things we can do, more things we are doing. But a constant obstacle in obtaining results is how long they take to get and how difficult it is to add new functionality, even changing boundary conditions presents a non-trivial obstacle that requires intimate knowledge of how the finite element mesh is generated.
 
 The work described in \cref{c:easydd,c:topology,c:tractions} has done much in not only producing more accurate simulations, but doing so faster. Fengxian Liu's work on modelling climb, diffusion and inclusions would greatly benefit from better designed code. Haiyang Yu's work on modelling hydrogen \cite{YU2018} and nanoindentation would also stand to benefit a great deal from a parallelised and faster dislocation separation algorithm. Potential work relevant to modelling dislocation dynamics in nuclear reactors such as post-damage cascade dislocation dynamics \cite{sand2014radiation}, necessitates spontaneous generation of dislocations as a network evolves. Including stochasticity in the form of Langevin dynamics \cite{li2019diffusion} is also highly relevant, especially at higher temperatures.
 
-Many of these require a complete overhaul to some of the most fundamental parts of EasyDD. Even so it would be hindered by the fact that \mintinline{matlab}{MATLAB} is a scripting language, not designed to be a scientific computing one. It lacks many modern features that make life easy when dealing with large codebases. Furthermore, the need for licences can represent a prohibitative barrier for users and researchers. Not only this, but the cost of distributed licences that allow \mintinline{matlab}{MATLAB} to run on clusters severely limits scalability and potential for collaboration.
+Many of these require a complete overhaul to some of the most fundamental parts of EasyDD. Even so, its potential would be hindered by the fact that \mintinline{matlab}{MATLAB} is a scripting language not designed for scientific computing. It lacks performance, flexibility and many of the modern features that make life easy when dealing with large codebases. Furthermore, the need for licences can represent a prohibitative barrier for users and researchers. Not only this, but the cost of distributed licences that allow \mintinline{matlab}{MATLAB} to run on clusters severely limits scalability and potential for collaboration---something that at one point, inhibited this project.
 
 But there is a better way. Prompted by the public release of the Imperial College COVID-19 source code \href{https://github.com/mrc-ide/covid-sim}{\texttt{https://github.com/mrc-ide/covid-sim}}, and the recurring issues with computational efficiency, compiler compatibility and availability, and fundamental technical debt inherited from \texttt{DDLab} \cite{ddlab}. We started a weekend project that has turned out to be \emph{extremely} promising.
 
-The language of choice is \mintinline{julia}{Julia} \cite{julia}. An open-source JIT (just in time) compiled language designed for scientific computing. It has many features that make it an excellent candidate for a new generation of open, scientific software.
+It is our belief that we are currently in a renaissance of programming languages. There are so many exciting modern languages that build and improve upon the lessons of the past. The most promising for scientific computing is widely regarded to be \mintinline{julia}{Julia} \cite{julia}. An paradigm-shifting, open-source JIT (just in time) compiled language, explicitly designed for scientific computing. It has a number of features that make it an excellent candidate for a new generation of scientific software.
 \begin{enumerate}
-    \item Multiple dispatch: methods are dispatched and compiled based on the types of all their arguments, the types propagate their way through child functions, creating optimal code without having to worry about data types.
-    \item Type system: its type system is based on set theory, where types are arranged in a genealogical tree with broader types giving way to narrower ones, e.g. \mintinline{julia}{Float64 <: AbstractFloat <: Real <: Number <: Any == true}. Structures can be parametric on type. These features let developers create generic code without bothering with type annotations. This type of code greatly improves modularity and allows for ``magic'' like automatic differnetiation without the programme knowing the rules of calculus.
-    \item CPU and GPU Parallelisation: parallelising loops is trivial.
-    \item Metaprogramming: lets code write code. This can be used to autoparallelise functions without rewriting. It also lets developers define custom syntax and precompute values like an extremely powerful C-preprocessor.
-    \item Modern features: \mintinline{julia}{Julia} has all the features of a modern programming language. From a booming and quickly growing package ecosystem already with a few best in class libraries; an integrated testing system and documentation generation; extremely powerful code introspection tools; to interctivity.
+    \item Multiple dispatch: methods are dispatched and compiled based on the types of their arguments. Types propagate their way through child functions. This lets the compiler generate optimal code for the platform being used.
+    \item Type system: its type system is based on set theory, where types are arranged in a genealogical tree with broader types giving way to narrower ones, e.g. \mintinline{julia}{Float64 <: AbstractFloat <: Real <: Number <: Any == true}. Structures can be parametric on type. These features let developers create generic code without bothering with type annotations, and the behaviour will be appropriate for whatever types are used. This kind of code greatly improves modularity and allows for ``magic'' such as automatic differentiation by only defining the basic arithmetic rules for dual numbers. It also allows for zero-cost abstractions, letting users represent mathematical equations as they are written without incurring a performance cost.
+    \item CPU and GPU Parallelisation: parallelising loops is trivial. The \href{https://llvm.org/}{\texttt{LLVM}} compiler is platform agnostic and creates custom, optimal code for almost all CPU and GPU architectures. This means users get platform-specific optimisations for free, and it means the software can remain a single language with no detriment.
+    \item Metaprogramming: one of the most powerful and esoteric features of \mintinline{julia}{Julia}. Much like \mintinline{lisp}{Lisp}, code is an object that can be manipulated by the language itself. This allows code to write and modify code. This can be used to autoparallelise functions on different without rewriting. It lets developers precompute values like an extremely powerful C-preprocessor. It even lets developers design custom syntax and perform mathematical transformations on code itself.
+    \item Modern features: \mintinline{julia}{Julia} has all the features of a modern programming language. From a booming and quickly growing fully-integrated package ecosystem with standard and registered libraries, some of which are now best in class. Integrated testing and documentation generation systems. Extremely powerful code introspection tools, e.g. one can check type stability, call trees, and different stages of compilation all the way down to machine instructions. Plus it sports all the interactivity and unicode features we have come to expect from modern interpreted languages.
+    \item Interoperability: calling other languages from \mintinline{julia}{Julia} is seamless, so the use of external libraries or languages is as easy as calling a \mintinline{julia}{Julia} function. However, \mintinline{julia}{Julia} is so powerful and performant that most of its packages are mono-language. A feature often shared by other modern languages such as \mintinline{go}{Go}, \mintinline{rust}{Rust}, \mintinline{swift}{Swift} and \mintinline{elixir}{Elixir}.
 \end{enumerate}
 
-The code can be found here \href{https://github.com/dcelisgarza/DDD.jl}{\texttt{https://github.com/dcelisgarza/DDD.jl}}. As it has been a didactic side project, it is nowhere near feature complete. But so far, comparisons with C-accelerated portions of EasyDD peg it at around 10\% faster. Direct comparisons to pure \mintinline{matlab}{MATLAB} show between $5$ to $>1000 \times$ faster depending on the function. It is the result of the lessons learned while working on EasyDD. Its design avoids the same pitfalls and has a clear vision for usability, modularity, and extensibility, without sacrificing performance. We think it to be a more than worthwhile endeavour to bite the bullet now rather than wait until there is no more juice to squeeze out of \mintinline{matlab}{MATLAB}. We are looking to continue this as a research software engineering project. Not only so that the shackles of proprietary software can be broken; but also so the full, ambitious vision of EasyDD can be realised.
+The code can be found here \href{https://github.com/dcelisgarza/DDD.jl}{\texttt{https://github.com/dcelisgarza/DDD.jl}}. Of note are the banners at the top of the readme, those point to the documentation; automated, remote testing; and test coverage i.e. which lines of code have been hit during testing and how many times. It is the result of the lessons learned while working on EasyDD. Its design avoids the same pitfalls and has a clear vision for usability, modularity, and extensibility, without sacrificing performance.
 
-% 773 words
+As this has been a didactic, after hours project to escape the anxieties of the pandemic and resolve the frustrations with some fundamental aspects of EasyDD, it is nowhere near feature complete. Nevertheless, we can provide a small show of current capabilities.
+
+\section{Next-Gen 3D discrete dislocation dynamics}
+
+As with every simulation, there are parameters that need to be defined. For dislocation plasticity simulations, the number of parameters is quite large, which is why encapsulation (see \cref{ss:encapsulation}) can be so helpful. However, there are also certain relationships between parameters that must be maintained. This is a problem for usability, as it is very easy for one to use non-sensical parameters and be completely unaware of it until a simulation presents unexpected behaviour. We have solved this issue in EasyDD (see \cref{s:qol}), but the solution is clunky, unelegant and opaque. Here we solve both issues in a single stroke and offer greater flexibility. Setting up a simulations is quite easy and there are multiple options.
+\begin{enumerate}
+    \item Load the data from external files generated by any file extension supported by the \mintinline{julia}{FileIO}. In some cases the data has to be used to manually create the structures, but if \mintinline{julia}{JLD2} is used, it works like \mintinline{matlab}{MATLAB}'s \mintinline{matlab}{save()} and \mintinline{matlab}{load()}. Since these files are usually generated from actual variables, their values are already sensical.
+    \item Use the built-in serialiser. This works like \mintinline{matlab}{MATLAB}'s built-in \mintinline{matlab}{save()} and \mintinline{matlab}{load()} functions.
+    \item Use the specially defined functions that load \mintinline{java}{JSON}\footnote{\mintinline{java}{JSON} is an open standard for representing objects as dictionaries in a file. It is widely used by web develpers because it is language agnostic, has high compressibility ratios, and is human readable.} files and create the structures automatically. Since \mintinline{java}{JSON} is a human readable format, this is the preferred method for creating sets of parameters that can be used in multiple simulations and loaded from the same file. The functions called internally which create the data structures also validate the provided values and calculate sensible default values from them.
+    \item Create the structures manually with keyword functions that validate the data, calculate derived values and provide sensible defaults of derived values.
+\end{enumerate}
+
+Here is how easy creating all the parameters needed for a simulation can be.
+\begin{minted}[frame=lines, linenos]{julia}
+# Dislocation parameters.
+dlnParams = DislocationParameters(; mobility = mobBCC())
+# Material parameters.
+matParams = MaterialParameters(; crystalStruct = BCC())
+# Finite element parameters.
+femParams = FEMParameters(; 
+                type = DispatchRegularCuboidMesh(), 
+                order = LinearElement(), 
+                model = CantileverLoad(), 
+                dx = 1013.0, dy = 1987.0, dz = 2999.0,
+                mx = 3, my = 5, mz = 7
+            )
+# Slip system data.
+slipSystems = SlipSystem(; 
+                crystalStruct = BCC(), 
+                slipPlane = Float64[-1;1;0], 
+                bVec = Float64[1;1;1]
+            )
+# Integration parameters.
+intParams = IntegrationParameters(; 
+                method = AdaptiveEulerTrapezoid()
+            )
+# Integration time, time step and iteration step
+intTime = IntegrationTime()
+\end{minted}
+We're using the as many default values as we can, so a simulation using these might not be very good. But the key thing is that one can provide the values for crucial parameters and the rest will be calculated off those. If one were to provide those derived values, there are checks in place that ensure what the user is providing is viable. All together, these represent over 50 constants that control all aspects of a simulation.
+
+Generating dislocation sources is also quite easy. With EasyDD these are made bespoke for a simulation. That means generating a script that creates the sources as need be. But using multiple dispatch it is quite easy to reuse code by simply dispatching functions based on the types of their variables.
+\begin{minted}[frame=lines, linenos]{julia}
+# Dimensions of the FE domain.
+dx, dy, dz = femParams.dx, femParams.dy, femParams.dz
+
+# Length of each dislocation segment.
+# We only use one segment length, but one can also 
+# provide the lengths of every segment in the loop.
+segLen = (dx + dy + dz) / 30
+
+# One octagonal prismatic loop with one node per side.
+# All nodes are mobile.
+# It will be placed in the middle of the FE domain.
+prismOct = DislocationLoop(;
+    loopType = loopPrism(),
+    numSides = 8,
+    nodeSide = 1,
+    numLoops = 1,
+    segLen = segLen * ones(8),
+    slipSystemIdx = 1,
+    slipSystem = slipSystems,
+    label = nodeTypeDln.(ones(Int, 8)),
+    buffer = 0,
+    range = [
+                dx/2 dx/2; 
+                dy/2 dy/2;
+                dz/2 dz/2
+            ],
+    dist = Zeros(),
+)
+\end{minted}
+This generates a prismatic loop with 8 sides whose nodes are all mobile. It will be centered in the middle of the FE domain with a zero distribution.
+
+The buffer is defined relative to the average segment length and is only used to space the loops out when calculating their positions from the distribution and range. Currently there are zero, random uniform and random normal distributions, but new ones can be quickly and easily added by subtyping the distribution type and making a function that dispatches on it. The loop generation source code does not have to be modified.
+
+The type \mintinline{julia}{nodeTypeDln} only has a limited number of values, each of them with a specific meaning. This provides a safeguard against regressions and useful information to users and developers. For example, by looking at the loop's labels we see that they are \mintinline{julia}{intMobDln}, i.e. internal mobile dislocation nodes. Each node type behaves differently and the values are limited to the types of nodes the code supports. A similar technique is used to denote node sets on the finite element side.
+\begin{minted}[frame=lines, linenos]{julia}
+julia> prismOct.label
+8-element Array{nodeTypeDln,1}:
+ intMobDln::nodeTypeDln = 1
+ intMobDln::nodeTypeDln = 1
+ intMobDln::nodeTypeDln = 1
+ intMobDln::nodeTypeDln = 1
+ intMobDln::nodeTypeDln = 1
+ intMobDln::nodeTypeDln = 1
+ intMobDln::nodeTypeDln = 1
+ intMobDln::nodeTypeDln = 1
+\end{minted}
+
+We can visualise the loop using a myriad of plotting backends but we will use an interactive one similar to \mintinline{matlab}{MATLAB}'s\footnote{\mintinline{matlab}{MATLAB} uses a modified version of this backend.}
+\begin{figure}
+    \centering
+    \includegraphics[trim={5cm 1cm 5cm 3cm},clip,width=0.5\linewidth]{prismOct.pdf}
+    \caption[Sample 8-sided prismatic BCC dislocation loop.]{Sample 8-sided prismatic BCC dislocation loop with slip plane $ \vec{n} = [\overline{1}\, 1\, 0] $, and Burgers vector $\vec{b} = [1\, 1\, 1]$.}
+\end{figure}
+
+\begin{minted}[frame=lines, linenos]{julia}
+using Plots
+plotlyjs()
+
+fig = plotNodes(
+    prismOct,
+    m = 1,
+    l = 3,
+    linecolor = :blue,
+    marker = :circle,
+    markercolor = :blue,
+    legend = false,
+)
+\end{minted}
+
+We can create a prismatic loop in the same way by changing the \mintinline{julia}{loopType} to the shear type, and visualise in the same space by mutating\footnote{By convention, functions that mutate their arguments are denoted by adding an \texttt{!} at the end of the function name.} the figure. This time we will create 10 and distribute them random normally in the domain.
+\begin{figure}
+    \centering
+    \includegraphics[trim={5cm 1cm 5cm 3cm},clip,width=0.5\linewidth]{shearOct.pdf}
+    \caption[Sample 8-sided shear prismatic BCC dislocation loop.]{Adding 10, 8-sided shear BCC dislocation loop with slip plane $ \vec{n} = [\overline{1}\, 1\, 0] $, and Burgers vector $\vec{b} = [1\, 1\, 1]$.}
+\end{figure}
+\begin{minted}[frame=lines, linenos]{julia}
+shearOct = DislocationLoop(;
+    loopType = loopShear(),
+    numSides = 8,
+    nodeSide = 1,
+    numLoops = 10,
+    segLen = segLen * ones(8),
+    slipSystemIdx = 1,
+    slipSystem = slipSystems,
+    label = nodeTypeDln.(ones(Int, 8)),
+    buffer = 0,
+    range = [
+                0 dx; 
+                0 dy;
+                0 dz
+            ],
+    dist = Rand(),
+)
+plotNodes!(
+    fig,
+    shearOct,
+    m = 1,
+    l = 3,
+    linecolor = :red,
+    marker = :star,
+    markercolor = :red,
+    legend = false,
+)
+\end{minted}
+As both loops have the same BCC slip system, they are orthogonal to one another.
+
+The \mintinline{julia}{DislocationLoop} structure only denotes dislocation loops, it does not represent the network. The number of loops in the structure, \mintinline{julia}{numLoops}, is what determines how many will be generated. The values of \mintinline{julia}{buffer}, \mintinline{julia}{range} and \mintinline{julia}{dist} determine how they are distributed.
+
+Dislocation networks can be generated manually by specifying all their relevant fields, giving flexibility for the generation of bespoke networks or by using the \mintinline{julia}{DislocationLoop} structure. The latter is easier and more convenient. If certain types of bespoke structures, such as mixed-slip system loops, jogs or kinks, it would be prudent to utilise multiple dispatch and define a specific \mintinline{julia}{DislocationLoop()} function for the purpose. Making the network is quick and painless. There are also default arguments that change things such as how much memory to allocate to allow for the network to expand and the maximum number of connections a node in the network is allowed to have. The default is to allocate $N\log_2N$ places for $N$ total nodes and segments in the network. The topological operations also use this heuristic when the network needs to be expanded further.
+\begin{minted}[frame=lines, linenos]{julia}
+network = DislocationNetwork([prismOct, shearOct])
+\end{minted}
+
+We could view the network like this, but where's the fun in that? We'll first generate the mesh. And while we're at it we can make the boundary conditions according to \mintinline{julia}{matParams} and \mintinline{julia}{femParams}. We specified in the creation of \mintinline{julia}{femParams} that we would like to model a \mintinline{julia}{CantileverLoad()} dispatching on a \mintinline{julia}{DispatchRegularCuboidMesh()} with elements of order \mintinline{julia}{LinearElement()}. All this ensures the mesh is built of the correct order and type. Adding mesh types only requires the definition of the appropriate types and the mesh generation function. Users do not need to worry about calling different functions.
+\begin{minted}[frame=lines, linenos]{julia}
+regularCuboidMesh = buildMesh(matParams, femParams)
+cantileverBC, forceDisplacement = Boundaries(
+                                    femParams, 
+                                    regularCuboidMesh
+                                )
+\end{minted}
+In \cref{f:feNodeSet} we can visualise the node sets generated by \mintinline{julia}{buildMesh()}. These are used to very easily generate the boundary conditions without knowing the details of how the FE mesh builder works. This greatly expedites the process of defining the boundary conditions for different scenarios. They define which finite element nodes belong to corners, edges and faces. Those not labelled are internal. These are all generated by the mesh builder and is a requirement that forces developers to make the sensible decision of creating node sets so their work is usable by others simply by looking at which nodes belong to which set.
+\begin{figure}
+    \centering
+    \includegraphics[trim={5cm 0cm 0cm 0cm},clip,width=0.4\linewidth]{feNodeSet.pdf}
+    \caption[Finite element node sets.]{Finite element node sets.}
+    \label{f:feNodeSet}
+\end{figure}
+\begin{minted}[frame=lines, linenos]{julia}
+plotFEDomain(regularCuboidMesh)
+\end{minted}
+
+Now that we have our FE mesh and network we can see what they look like.
+\begin{figure}
+    \centering
+    \includegraphics[trim={5cm 0cm 5cm 1.5cm},clip,width=0.5\linewidth]{sampleDomain.pdf}
+    \caption[Sample network and domain.]{Dislocation network and domain.}
+\end{figure}
+\begin{minted}[frame=lines, linenos]{julia}
+plotNodes(
+    regularCuboidMesh,
+    network,
+    m = 1,
+    l = 3,
+    linecolor = :blue,
+    marker = :circle,
+    markercolor = :blue,
+    legend = false,
+)
+\end{minted}
+
+Since we decided to randomly distribute 10 relatively large loops in the domain, there are some segments that are poking out. We can fix that by using the surface remeshing. However, the function requires nodal velocities to work because we need a vector to define the intersection with the surface of the volume.
+
+As of the time of writing, the surface remeshing has not been thoroughly tested and the currently implemented mobility function is out-dated. So instead, we use a random velocity as a stand-in for the real and updated velocities. However, this surface remeshing works for any convex hull regardless of mesh type. It also does not require a surface tasselation because defining the convex hull (using the vertices and a \mintinline{julia}{JuliaGeometry} library), surface normals, and mid-points is enough to exactly determine how to project external nodes. Moreover, the value used to decide how far the nodes should be projected is not hard-coded and is in fact the scale of the FE domain ($\sqrt[3]{\Delta x \Delta y \Delta z}$), ensuring there is always an appropriate closure point for calculating dislocation displacements no matter the domain's aspect ratio.
+\begin{minted}[frame=lines, linenos]{julia}
+numSeg = network.numSeg[1]
+network.nodeVel[:, 1:numSeg] = rand(3, numSeg)
+network = remeshSurfaceNetwork!(regularCuboidMesh,  network)
+\end{minted}
+This showcases one of the quirks of immutable structures in \mintinline{julia}{julia}. Immutable structures are faster and more easily optimised. But arrays inside them cannot be expanded and the values of non-array fields cannot be changed. However, the values of elements inside arrays can be changed. So to keep track of the number of nodes and segments they are vectors of length 1. Also, any function with the potential for resizing the arrays of an immutable structure, has to return the structure, else the new array entries get lost and garbage collected later. Since \mintinline{julia}{remeshSurfaceNetwork!()} can change the values inside the arrays of \mintinline{julia}{network} as well as resize them, its return value gets reassigned to \mintinline{julia}{network}. After running this we get a properly internal network with a bunch of surface nodes.
+\begin{figure}
+    \centering
+    \includegraphics[trim={5cm 0cm 5cm 1.5cm},clip,width=0.5\linewidth]{remeshedSurf.pdf}
+    \caption[Sample network and domain with remeshed surface.]{Sample network and domain with remeshed surface.}
+\end{figure}
+
+As previously stated, this has been mostly a didactic exercise. However, as of the time of writing, the code has the following capabilities.
+\begin{enumerate}
+    \item IO,
+    \item loop and network generation,
+    \item regular cuboid mesh generation,
+    \item boundary conditions for cantilever bending,
+    \item internal remeshing,
+    \item surface remeshing,
+    \item dislocation displacements,
+    \item forces on segments,
+    \item field point stresses,
+    \item outdated BCC mobility function,
+    \item time integration.
+\end{enumerate}
+
+All of which are faster than what is offered by EasyDD---even those accelerated by \mintinline{c}{C}. The $\mathcal{O}(N^2)$ segment-segment calculation is 10\% faster than its equivalent \mintinline{c}{C} function and has already been CPU-parallelised; for large numbers of dislocations it offers linear scaling with number of threads. The self- and Peach-K\"{o}hler forces (in a cuboid mesh) are both $10\times$ faster than their \mintinline{matlab}{MATLAB} counterparts. Since the mesh refinement uses a better heuristic than dynamically sizing arrays every time a new node is added to the network, it is about as slow as \mintinline{matlab}{MATLAB}'s when it needs to allocate memory, but when it does not it is $>100\times$ faster. Mesh coarsening is $3\times$ faster. The calculation of field point stresses for numeric tractions is $30\%$ faster than its \mintinline{c}{C} counterpart. Building the FE mesh is $>10\times$ faster. The outdated mobility law is $>30\times$ faster and in all the tests has not required dampening the matrix inversion. The dislocation displacement calculation is $>10\times$ faster. The cholesky factorisation is $20\times$ faster and uses a substantially smaller amount of memory.
+
+The memory footprint is also substantially lower. Care has been taken to do things as optimally as possible and \mintinline{julia}{Julia}'s typesystem lets sparse arrays be treated in \emph{exactly} the same way as dense ones, which is not always the case in \mintinline{matlab}{MATLAB}, which has thwarted efforts at sparsifying various that could benefit from it.
+
+The total number of lines of code so far, $\sim 3200$ are the equivalent of $\sim 4500$ \emph{without} counting input files and the many different loop generation functions. However this accounts for mutating and non-mutating functions, which are essentially the same implementation only non mutating functions allocate a return value while mutating ones change their arguments. Mutating functions tend to be faster because of the lack of heap allocation, but we decided to make both as only the indexing changes. Accounting only for single versions of mutating or non-mutating functions yields $\sim 1800$ unique lines of code, which is about the same number of lines in the segment-segment \mintinline{c}{C} function.
+
+Moreover, doing the equivalent of what we have shown on EasyDD requires a substantially larger amount of code and a not insignificant amount of knowledge of its inner workings. From generating the network, to defining values for its parameters---which, despite the fact that EasyDD provides a reasonable set of defaults, users can easily define derived parameters incorrectly and be none the wiser. The barrier to entry and potential for error are quite high. Even us, who use the code all the time and have worked on it, sometimes miss things only to catch them after a simulation does something unexpected.
+
+The one knock on \mintinline{julia}{Julia} is its JIT-compiled nature. Which leads to a notoriously long time to first plot and means functions are slow the first time they are run during a session because they need to be compiled. However this is quickly improving and can be solved by keeping a precompiled system image of the offending packages. There is also the conspicuously poor performance of the \texttt{spy()} function, even with the \mintinline{julia}{UnicodePlots} backend. Having said that, the power, flexibility and ease of use of \mintinline{julia}{Julia} greatly outweighs such small issues.
+
+\section{Conclusions and proposal}\label{s:concProp}
+
+What started as a side project to learn and escape from the world during the last year has resulted in quite a promising avenue for future research. One that lets us have our cake and eat it too. Not only is it performant, it is almost trivially parallelisable on both CPUs and GPUs; while staying easy to use and develop. What \mintinline{julia}{Julia} offers is almost incomprehensible. The performance of \mintinline{c}{C} and \mintinline{fortran}{Fortran}; the syntax and interactivity of \mintinline{python}{Python} and \mintinline{r}{R}; metaprogramming of \mintinline{lisp}{Lisp}; and fully integrated testing and package environments of \mintinline{rust}{Rust} and \mintinline{go}{Go}.
+
+A tool is only as good as the craftsman who weilds it. We aspire to be among those elite craftsmen. Why then, should we not use as good a tool as we can? During the course of this project, the whole Tarleton group have made gigantic strides with EasyDD. It has indeed come a \emph{very} long way, but we can do better.
+
+Some issues are so deeply intertwined with how the software was originally designed that they cannot be separated from how it fundamentally operates. To fix them, a fresh new start is needed. Given the extremely encouraging results of what amounts to a pandemic hobby, we think it worthwhile to continue this as a research software engineering project post-DPhil. We think it is better to do so now rather than wait until there is no more juice left to squeeze out of \mintinline{matlab}{MATLAB}. Not only so the shackles of proprietary software can be broken; but also so the full, ambitious vision of EasyDD can be realised.
+% 3635 words
