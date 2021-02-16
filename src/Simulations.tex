@@ -12,6 +12,17 @@ size effects, microns
 dislocation density effects
 
 
+
+Current best loading rate for size effect
+% timeUnit = mumag * 1e6;
+% u\_dot = 1000*dx / timeUnit;
+
+timeUnit = 5e-3 * mumag * 1e6;
+u\_dot = 10*dx / timeUnit;
+
+try to push it as high as it can go without going wonky.
+
+
 In this chapter we present three different simulations. Two of which have an accompaning experimental data for micro tensile loading in the $[1\, 0\, 0]$ and $[1\, 1\, 0]$ directions of a single crystal Zn micropillar provided by Alan Xu from ANSTO Sidney. The third is is a proof of concept for a techinque developed by Jicheng Gong to cyclicly load a cantilever in opposing directions. However, this technique was developed on Ti microcantilevers and the HCP mobility law requires some adaptation before it is ready for general use. Instead we use the BCC law developed in-house by Bruce Bromage that as mentioned in the footnotes of \cref{ss:matrix}.
 
 \section{Nickel tensile cantilever}\label{s:nickelTensile}
