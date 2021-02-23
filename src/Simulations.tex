@@ -1,31 +1,12 @@
 \chapter{Simulations}\label{c:simulations}
 
-size effects, microns
-
-1
-2
-4
-6
-8
-10
-
-dislocation density effects
-
-
-
-Current best loading rate for size effect
-% timeUnit = mumag * 1e6;
-% u\_dot = 1000*dx / timeUnit;
-
-timeUnit = 5e-3 * mumag * 1e6;
-u\_dot = 10*dx / timeUnit;
-
-try to push it as high as it can go without going wonky.
-
-
 In this chapter we present three different simulations. Two of which have an accompaning experimental data for micro tensile loading in the $[1\, 0\, 0]$ and $[1\, 1\, 0]$ directions of a single crystal Zn micropillar provided by Alan Xu from ANSTO Sidney. The third is is a proof of concept for a techinque developed by Jicheng Gong to cyclicly load a cantilever in opposing directions. However, this technique was developed on Ti microcantilevers and the HCP mobility law requires some adaptation before it is ready for general use. Instead we use the BCC law developed in-house by Bruce Bromage that as mentioned in the footnotes of \cref{ss:matrix}.
 
-\section{Nickel tensile cantilever}\label{s:nickelTensile}
+\section{Nickel tensile micropillar}\label{s:nickelTensile}
+
+10 dislocations per square micron.
+
+Square cross-section.
 \subsection{Introduction}
 \subsection{Methodology}
 
@@ -35,12 +16,10 @@ We define surface node sets $\left\{\forall (x, y, z) \in [0,\, 1] \vert S_{xyz}
         S_{0yz},\, S_{0y0},\, S_{0y1},\, S_{00z},\, S_{01z},\, S_{000},\, S_{001},\, S_{010},\, S_{011} & \gets u_x = 0           \\
         S_{01z},\, S_{010},\, S_{011}                                                                   & \gets u_y = 0           \\
         S_{0y0},\, S_{010},\, S_{000}                                                                   & \gets u_z = 0           \\
-        S_{100},\, S_{110},\, S_{101},\, S_{111}                                                        & \gets u_x = U \neq 0\,.
+        S_{1yz},\, S_{1y0},\, S_{1y1},\, S_{10z},\, S_{11z},\, S_{100},\, S_{101},\, S_{110},\, S_{111} & \gets u_x = U \neq 0\,.
     \end{align}
 \end{subequations}
-In simple terms, the whole $yz$-plane at $x=0$ (including corner nodes and edges) is fixed in $x$; the whole $y$-edge at $x,\,z=0$ (including corner nodes) is also fixed in $z$; the whole $z$-edge at at $x = 0\,\, y = 1$ (including corner nodes) is fixed in $y$; and the nodes at $x=1$ have a displacement $U$ applied in the $x$-direction. All other degrees of freedom are free to move as necessary.
-
-Once mapped to our simulated cuboid geometry it looks like \cref{f:tensileSetup}.
+In simple terms, the whole $yz$-plane at $x=0$ (including corner nodes and edges) is fixed in $x$; the whole $y$-edge at $x,\,z=0$ (including corner nodes) is also fixed in $z$; the whole $z$-edge at $x = 0\,\, y = 1$ (including corner nodes) is fixed in $y$; and the nodes at $x=1$ have a displacement $U$ applied in the $x$-direction. All other degrees of freedom are free to move as necessary. Once mapped to our simulated cuboid geometry, it looks like \cref{f:tensileSetup}.
 \begin{figure}
     \centering
     \includegraphics[width=0.8\linewidth]{tensileSetup.pdf}
@@ -48,15 +27,33 @@ Once mapped to our simulated cuboid geometry it looks like \cref{f:tensileSetup}
     \label{f:tensileSetup}
 \end{figure}
 
-In EasyDD, time is defined in units of shear modulus, which has SI units of $\left[\si{\kilo\gram\cdot\metre^{-1}\cdot\second^{-2}}\right]$. We know the displacement rate used in the experiments has units of $\left[\si{\metre\cdot\second^{-1}}\right]$. For a uniaxial loading scenario on a cuboid domain, obtaining the displacement rate, is fairly straight forward. We want a stress that when distributed along the loaded dimension, will give us the experimental one,
-\begin{align}
-    \dot{u}_\rvar{emp} \equiv \dfrac{\Delta l}{\Delta t} =
-    \dot{u}_\rvar{sim} \equiv \dfrac{L}{\mu} \to
-    \Delta t \equiv \dfrac{\Delta l \mu}{L} \therefore
-    \dot{u}_\rvar{sim} = \dfrac{L}{\Delta t} = \dfrac{L^2}{\Delta l \mu}\,,
+In EasyDD, time is defined in units of shear modulus \cref{eq:timeConversion},
+\begin{align}\label{eq:timeConversion}
+    t_{\rvar{real}} & = t_{\rvar{sim}} \dfrac{B}{\mu}\,,
 \end{align}
-where $L$ is the dimension along the loaded axis, $\mu$ the material's shear modulus, $\Delta l$ the experimental displacement over a $\Delta t$ time interval. Since we use micron units, the displacement and shear modulus have been converted to them.
+where $B \coloneqq [\si{\pascal}][\si{\second}]$ is the dislocation mobility and $\mu \coloneqq [\si{\pascal}]$. The dislocation mobilities are normalised such that edge dislocations have mobility 1, other mobilities are defined from these. So the time conversion to real time is a matter of dividing the simulation time by the shear modulus.
 
+The experimental loading rate provided was \SI{5}{\nano\metre/\second} but when converted to simulation time, gives a loading rate that is far too low for the timescales we can model. So we defined $\Delta t_0 \equiv 5\times 10^{-3} \mu$ (our simulation length scales are in microns) and found the maximum loading rate of the form $\dot{u} \equiv a \dfrac{\Delta l}{\Delta t_0}$, for which the quasi-static condition held true, where $\Delta l$ is the length of the beam in the loading direction and $a$ is a constant.
+
+% size effects, microns
+
+% 1
+% 2
+% 4
+% 6
+% 8
+% 10
+
+% dislocation density effects
+
+% Current best loading rate for size effect
+% % timeUnit = mumag * 1e6;
+% % u\_dot = 1000*dx / timeUnit;
+
+% timeUnit = 5e-3 * mumag * 1e6;
+% u\_dot = 10*dx / timeUnit;
+
+% try to push it as high as it can go without going wonky.
 \subsection{Results and discussion}
 \subsection{Conclusions}
 
