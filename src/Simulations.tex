@@ -29,11 +29,11 @@ In simple terms, the whole $yz$-plane at $x=0$ (including corner nodes and edges
 
 In EasyDD, time is defined in units of shear modulus \cref{eq:timeConversion},
 \begin{align}\label{eq:timeConversion}
-    t_{\rvar{real}} & = t_{\rvar{sim}} \dfrac{B}{\mu}\,,
+    t_{\rvar{real}} & = t_{\rvar{sim}} \dfrac{B}{\lVert\mu\rVert}\,,
 \end{align}
-where $B \coloneqq [\si{\pascal}][\si{\second}]$ is the dislocation mobility and $\mu \coloneqq [\si{\pascal}]$. The dislocation mobilities are normalised such that edge dislocations have mobility 1, other mobilities are defined from these. So the time conversion to real time is a matter of dividing the simulation time by the shear modulus.
+where $B \coloneqq [\si{\pascal}][\si{\second}]$ is the dislocation mobility and $\lVert\mu\rVert \coloneqq [\si{\pascal}]$ is the magnitude of the shear modulus (the shear modulus we use for the simulations is normalised to 1, its magnitude is used to scale parameters). The dislocation mobilities are normalised such that edge dislocations have mobility 1, other mobilities are defined from these. So the time conversion to real time is a matter of dividing the simulation time by the shear modulus.
 
-The experimental loading rate provided was \SI{5}{\nano\metre/\second} but when converted to simulation time, gives a loading rate that is far too low for the timescales we can model. So we defined $\Delta t_0 \equiv 5\times 10^{-3} \mu$ (our simulation length scales are in microns) and found the maximum loading rate of the form $\dot{u} \equiv a \dfrac{\Delta l}{\Delta t_0}$, for which the quasi-static condition held true, where $\Delta l$ is the length of the beam in the loading direction and $a$ is a constant.
+The experimental loading rate provided was \SI{5}{\nano\metre/\second}, which when converted to simulation time, gives a loading rate that is far too low for the timescales we can model. So we defined $\Delta t_0 \equiv 5\times 10^{-9} \lVert\mu\rVert$ and found the maximum loading rate of the form $\dot{u} \equiv a \dfrac{\Delta l}{\Delta t_0}$, for which the quasi-static condition held true, where $\Delta l$ is the length of the beam in the loading direction and $a$ is a constant.
 
 % size effects, microns
 
