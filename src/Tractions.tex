@@ -941,6 +941,8 @@ where $a$ is the number of entries, $N$ the number of nodes and $E$ the number o
     \label{f:parallel_exec}
 \end{figure}
 
+There are 6*3*8 bytes of information in each unit problem (6 nodes with 3 coordinates each, all double precision numbers that take up 8 bytes each), so we must consider the maximum shared memory in a GPU.
+
 Realistically, this is extremely difficult to achieve, particularly in dynamic, non-conservative simulations such as discrete dislocation dynamics. So we also came up with two heuristics that aim to utilise as many computational resources as possible.
 \begin{align}\label{eq:numThreads}
     T & = 32 \left\lceil (n \mod{T_{\rvar{max}}})/32 \right\rceil \\
