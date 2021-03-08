@@ -1,19 +1,22 @@
 \chapter{Introduction}
 \label{c:intro}
+
 \section{Materials science and history}
 \label{s:matsci_history}
+
 Metals and alloys are of such importance to humankind that entire eras of our history have been defined by and named after discoveries and advances in metallurgy \cite{metals_prehistory1, metals_prehistory2}. A civilisation's ability to gain mastery of the properties and usage of materials is often strongly correlated with its success in history \cite{metals_success1}. The historical influence of metals and alloys has touched all areas of human existence, from fashion to warfare \cite{metals_social}.
 
-It should come as no surprise that a material's use is often linked to its properties. When a civilisation learned to harness the properties of a novel material, its influence often grew as a result \cite{guns_germs_steel, metals_success2}. Whether building a woodcutter's axe or a fusion reactor, the mechanical behaviour and deformation of materials---metals and alloys in particular---are still among their most important properties for engineering applications.
+It should come as no surprise that a material's use is often linked to its properties. When a civilisation learned to harness the properties of a novel material, its influence often grew as a result \cite{guns_germs_steel, metals_success2}. Whether building a woodcutter's axe or a fusion reactor, the mechanical properties of materials---metals and alloys in particular---are among the most important considerations for using a material in engineering applications.
 
-Traditionally such properties have been largely studied via empirical methods such as tensile and compressive tests, beam bending, and indentation \cite{tensile_test_theory, bending_test_theory, indentation_theory}. Such tests have mainly focused on macroscopic scales, thus offering bulk-averaged properties valuable for engineers. Unfortunately such tests only describe observed behaviours without truly elucidating the fundamental mechanisms behind them \cite{micromech_test1}. This has recently started to change with the advent of micro-scale testing, where tests can be performed on single crystals or individual crystal boundaries, and can even probe specific slip systems to see how they behave under various loading scenarios \cite{micromech_test2, micromech_test3}. The increased resolution and more thorough parameter control goes a long way in providing a window through which more fundamental behaviours can be observed and hopefully explained; thus providing a way of deconvoluting macroscopic observations into their constituent phenomena \cite{micro_macro1, micro_macro2}.
+Traditionally, such properties have been largely studied via empirical methods such as tensile and compressive tests, beam bending, and indentation \cite{tensile_test_theory, bending_test_theory, indentation_theory}. Such tests have mainly focused on macroscopic scales, thus offering bulk-averaged properties valuable to engineers. Unfortunately, such methods only describe observed behaviours without truly elucidating the fundamental mechanisms behind them \cite{micromech_test1}. Advancing technology has allowed progressively smaller scale tests. Micro- and nano-scale testing, where tests can be performed on carefully controlled samples such as single crystals, thin films, crystal boundaries, etc. For example, it is possible to probe specific slip systems to see how they behave under various loading scenarios \cite{micromech_test2, micromech_test3}. The increased resolution and more thorough parameter control goes a long way in providing a window through which more fundamental behaviours can be observed and hopefully explained; thus providing a way of deconvolving macroscopic observations into their constituent phenomena \cite{micro_macro1, micro_macro2}.
 
-However, understanding the underlying mechanisms behind empirical results through experimental means has proven difficult at every scale \cite{multiscale_model_mats1, multiscale_model_mats2}. Fortunately modelling and simulation can be powerful allies in this task. In particular, the study of dislocations is experimentally challenging \cite{dln_exp_obs1, dln_exp_obs2, dln_exp_obs3}. By virtue of being such an important player in the mechanical properties of materials, dislocations demand careful study from both empirical and in-sillico avenues.
+However, understanding the underlying mechanisms behind empirical results through experimental means has proven difficult at every scale \cite{multiscale_model_mats1, multiscale_model_mats2}. Fortunately modelling and simulation can be powerful allies in this task. In particular, the study of dislocations is experimentally challenging \cite{dln_exp_obs1, dln_exp_obs2, dln_exp_obs3}. By virtue of being such an important player in the mechanical properties of materials, dislocations demand careful study from both empirical and in-silico avenues, where insights from one can inform the other, and form a feedback loop that continually advances our understanding.
 
-The need for a more detailed picture of material properties is especially relevant in highly engineered alloys subjected to extreme conditions, such as those found in fusion reactors. The time-dependent shift in material properties and composition is of the utmost concern such extreme environments; radiation damage, large temperature gradients, gas diffusion and plasma instabilities provide the means for properties to change drastically over a components' lifetime \cite{fusmat1, mats_fusion1, mats_fusion2}. It is therefore imperative that we find ways of predicting and accounting for these changes. This requires a deeper understanding of the process driving the mechanical behaviour. Virtual experiments allow analysis and interpretation of micromechanical tests and can help provide new fundamental insight.
+The story of humanity is the story of our tools. Every leap in technological capability has come as a result of better understanding the materials available to us; from the hand-axes of \textit{homo habilis} to fusion reactors, our increasingly detailed understanding of the properties of materials has enabled us to reach previously unimaginable goals. As we push the boundaries of what is possible, the need for knowledge becomes more important. Progress is made by subjecting our tools to increasingly extreme conditions and working to solve the problems that arise. Some of the most extreme conditions we have ever dreamt of achieving, are those found inside fusion reactors, where radiation damage, large temperature gradients, gas diffusion and plasma instabilities provide the means for properties to change drastically over a components' lifetime \cite{fusmat1, mats_fusion1, mats_fusion2}. In-silico research is an increasingly key component of scientific research. For our purposes, it can aid in the analysis and interpretation of micromechanical tests, as well as provide new fundamental insights that cannot be obtained via traditional methods.
 
 \section{Fusion energy production}
 \label{s:fusion}
+
 There currently exist two major branches of research for fusion energy production \cite{icfvsmcf}:
 \begin{inparaenum}[\itshape1\upshape)]
     \item magnetic confinement fusion (MCF) \cite{mcf} which confines the plasma using magnetic fields and
@@ -23,6 +26,7 @@ The physics and engineering challenges vary greatly between both approaches but 
 
 \subsection{Operating environment}
 \label{ss:operating_env}
+
 One constant feature of nuclear energy production is ionising and non-ionising radiation. In the case of fission, this is mostly in the form of low energy neutrons and residual radiation of fission products; fusion on the other hand, deals with the sparsely explored 14 MeV neutron spectrum \cite{mats_fis_fus}. The lack of appropriate sources of suitably energetic neutrons \cite{ifmif} has meant that modelling, and searching for experimental analogues of damage cascades have become a crucial part of materials research \cite{fusmat1s}.
 
 Operating environments change vastly between ICF and MCF as described by \cref{tab:rad} \cite{openv}. The table should be read with a measure of skepticism as the numbers and conditions are approximate because they are not yet fully known, especially for ICF. However it is still, a fairly reasonable first approximation into the materials requirements for both ``mainstream'' types of fusion energy production. That said, the components needed for energy harvesting---a divertor in the case of MCF, and an open problem for ICF---are conspicuous by their absence.
@@ -71,8 +75,10 @@ Overall, the table is unrepresentative of potential operating environments in la
 
 \subsection{Effects of radiation on reactor materials}
 \label{ss:rad_effect_mat}
+
 \subsubsection{Radiation Damage}
 \label{sss:rad_damage}
+
 One of the bigger problems in radiation damage research is the lack of a truly standardised way of measuring damage on materials \cite{srimisbad}. The most common unit is displacements per atom (dpa) \cite{dpa}. It is defined as the average number of displacements undergone by each atom in a material as a result of being irradiated. The ``fundamental'' unit of measurement for this is the number of displacements per unit volume per unit time, $R$
 \begin{align}
     R & = N\int _{E_{\rvar{min}}}^{E_{\rvar{max}}}\int _{T_{\rvar{min}}}^{T_{\rvar{max}}}\phi (E)\,\sigma (E,T)\,\upsilon (T)\;\rvar{d}T\;\rvar{d}E\;,
@@ -83,6 +89,7 @@ In principle, this is a rather good measure of damage \cite{dpa}. The catch is t
 
 \subsubsection{Transmutation}
 \label{sss:transmutation}
+
 Transmutation products are one of the biggest sources of problems for materials in fusion applications \cite{fusmat1, mats_fusion1}. Not only do they tend to embrittle materials, they often also reduce their thermal conductivity \cite{transmute}. The former presents significant challenges for structural materials \cite{ods_rad_res}; the latter is especially egregious for energy extraction by limiting the divertor's ability to conduct heat thus lowering the reactor's efficiency and causing thermal stresses due to the generation of hot spots that cannot be easily dissipated. As a result, understanding the mechanical and thermal behaviour of transmutation alloys is crucial for moving forward \cite{nirrhard, colcas, hardening} but doing so requires knowledge of the time evolution of a reactor's components. Because the composition changes in a a non-trivial way, so do the mechanical properties. Worse still are the long timescales over which this happens---on the order of years or tens of years \cite{transmute2}. Even if we were able to expermentally irradiate fusion-relevant materials with appropriately energetic neutrons, it would take years before we could characterise their behaviour, and doing so would be problematic due to radioactive decay.
 
 The way we go about addressing the time-dependent compositional change of a material is to model it. Culham Centre for Fusion Energy's (CCFE) FISPACT \cite{fispact} software takes an MC approach at calculating transmutation and decay products of a sample given certain conditions. The code utilises external data provided by the European Activation File which provides cross sections and decay rates for a wide range of isotopes \cite{fispact_library}. Unfortunately there is a lack cross section data for certain neutron energies that contribute in a non-negligible manner to a fusion environment. Interpolating to fill the gaps would not be appropriate as the data is non-smooth and subject to resonance peaks, so the solution is imperfect.
@@ -91,6 +98,7 @@ Transmutation products will always be problematic, but they are a fact of workin
 
 \section{Parallel computing}
 \label{s:parallel_comp}
+
 Processing chips are made up of millions or even billions of transistors acting as switches in logic gates. Each time a logic gate fires, the capacitors inside them charge and discharge at the chip's frequency or clock speed \cite{cpu_trnstor}. Consider the power of any electronic component,
 \begin{align}
     P(t) & = I(t) V(t) \label{eq:pow_ec} \,,
@@ -130,6 +138,8 @@ Furthermore, higher voltages and frequencies result in higher temperatures, whic
 This set of optimum conditions is the reason behind the multicore and multithreaded design of modern Central Processing Units (CPUs) and Graphics Processing Units (GPUs). It is also why in recent years there has been such a massive push for parallelism in all computing markets. It is simply not feasable to continually increase clock speeds and voltages because cooling solutions would struggle to remove heat fast enough, and power consumption would skyrocket.
 
 \subsection{Computation on graphics processing units}
+\label{sc:compgpu}
+
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{gpu_parallel.png}
@@ -154,6 +164,8 @@ OpenACC is similar to OpenMP in that they both use pragmas\footnote{Pragmas are 
 Recently however, a third option has become increasingly viable. NVidia's Computer Unified Device Architecture (CUDA) framework provides the best aspects of both OpenCL and OpenACC. The tradeoff is that it only works on NVidia GPUs and is a closed source product. However, the accessibility and flexibility of CUDA provides anyone familiar with C/C++ the means to develop a GPU application with little issue. NVidia is also strongly backing scientific research by adding double precision support on their GPUs. They have also worked to provide parallel equivalents of well known serial libraries---such as cuBLAS \& cuFFT---for scientific computing. They have additionally developed a wide range of specialist graphics cards tailor-made for scientific purposes. As such, they are the leaders in GPU computing in scientific communities \cite{nvidia}.
 
 \subsubsection{Hurdles for parallelisation}
+\label{sc:hurdpara}
+
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{mem_access.pdf}
@@ -224,6 +236,7 @@ Dislocation Dynamics (DD)---in particular 3D Discrete Dislocation Dynamics (3D D
 
 \section{3D dislocation dynamics modelling}
 \label{s:3d_ddd}
+
 The plastic deformation of materials is generally governed by the generation and motion of line defects known as dislocations through the crystal lattice. Microstructural features such as grain boundaries, precipitates and inclusions impede dislocation motion causing strengthening but often limiting ductility \cite{init_fail_dln}. Understanding the behaviour of the dislocation ensemble is highly complicated even when ignoring dislocation-microstructure interactions. However, if we want to truly comprehend their real-world behaviour, we cannot limit ourselves to idealised scenarios.
 
 One of the most often used parametrisations of DD is Discrete Dislocation Dynamics (DDD). Where dislocations are parametrised as a series of nodes linked by straight line segments. This reduces computational requirements and allows for analytic solutions to be obtained. At present, neither DDD or Finite Element (FE) models can truly handle all of the complexities of real-world alloys \cite{ddd_fem1, paradis, fem_ddd2, fem_ddd}. For one, DDD relies on assuming a linear-elastic isotropic solid domain with periodic boundary conditions, while FE relies on assuming continuum properties inside its \emph{finite} domain.
@@ -234,10 +247,12 @@ Furthermore, dislocations often accumulate in the vicinity of microstructural fe
 
 \subsection{Coupling dislocation dynamics to finite element methods}
 \label{ss:ddd_fem}
+
 Coupling dislocation dynamics (DD) to FEM is important to properly simulate micromechanical tests because DD provides us with a more precise set of inputs and greater granularity for solving the FE problem. There are at present two methods with which to do so, the \nameref{sss:superposition} and the \nameref{sss:discrete_continuum}. The most accurate implementation of dislocation dynamics is discrete dislocation dynamics, where the dislocation is broken into nodes and connecting segments. This is compuationally efficient and allows for analytical solutions. However, as discussed in \cref{sss:lvl_set} explicit discretisation is not the only way to tackle the problem.
 
 \subsubsection{Superposition model}
 \label{sss:superposition}
+
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{fem_ddd.pdf}
@@ -266,6 +281,7 @@ The relative simplicity of the superposition method has made it a popular choice
 
 \subsubsection{Discrete continuum model}
 \label{sss:discrete_continuum}
+
 The Discrete Continuum Model (DCM) takes an alternative approach to solving the same problem. The DCM only treats short-range dislocation-dislocation interactions analytically while all other interactions are numerically calculated via FEM \cite{dcm}. It is based on the regularisation of the atomic displacement jump across the slip plane into a plastic strain inclusion according to eigenstrain theory \cite{eigenstrain}. Like the Superposition Model, the DCM also assumes the simulated volume to be linear-elastic.
 
 The eigenstrain formalism assumes that material defects can be represented as stress-free strain distributions dubbed eigenstrains \cite{eigenstrain}. For example, a dislocation loop of any shape may be approximately represented, thin, coherent, plate-like inclusion with the same contour as the loop and a characteristic thickness $ h $ as shown in \cref{f:eigenstrain} \cite{dcm}. The eigenstrain tensor, $ \epsilon^{\rvar{p}} $, can then be defined as a symmetric dyadic product of the Burgers vector, $ \vec{b} $, and slip plane normal $ \vec{n} $,
@@ -297,9 +313,10 @@ At time $ t $, $ \{A\} $ denotes the area swept by the dislocation loops since t
 It is worth noting that the DCM is substantially more complicated than the SM. By requiring the finite elements be small enough for the eigenstate formalism to work, it strongly couples DDD to the FE model and software. It shifts the brunt of the computational workload from DDD to FEM. Essentially trading computationally intensive long range interactions which scale on the order of $ \mathcal{O}(N^{2}) $, where $ N $ is the number of dislocation line segments; for computationally intensive tasks scaling on the order of $ \mathcal{O}(M^{3}) $ where $ M $ is the number of finite elements in a cubic mesh with $ N $ elements per side. Furthermore, it cannot be used with BE methods as the eigenstrain formalism demands the use of internal elements rather than simply requiring a surface mesh.
 
 That said, the DCM allows for reductions in the computational complexity of certain parts of the problem which would otherwise have to be done via DDD \cite{dcm}; namely long-range dislocation-dislocation or dislocation-surface interactions via an interaction distance cutoff that is only possible with the eigenstrain formulation. Compared to the SM, gains in computational efficiency grow as dislocation density increases with respect to the number of finite elements. Since dislocation-dislocation and dislocation-surface interactions are among the most computationally expensive aspects of DDD, the DCM can reduce the overall computational cost of simulations with large enough dislocation densities.
+
 \subsubsection{Level set method}
 \label{sss:lvl_set}
-%
+
 Even though the level set method has not strictly been used to couple DD to FEM, it has been used to model inclusions \cite{ddd_inclusion_as_force} as described in \cref{sss:inclusions}. This type of dislocation dynamics is fundamentally distinct from DDD because Level Set DD uses arbitrary functions rather than a discretisation approach to represent dislocations lines. The idea is that in 3D, a dislocation $ \gamma(t) $ can be represented by the intersection of two zero levels of two level set functions (see \cref{f:lvl_set_dd}),
 \begin{subequations}\label{eq:lvl_set}
     \begin{align}
@@ -326,6 +343,7 @@ The former would be very computationally expensive. Furthermore, no one has foun
 
 \subsection{Non-singular continuum theory of dislocations}
 \label{ss:non-singular_dln}
+
 The Peach-Koehler formula describes the fundamental interactions of dislocations \cite{pk_force} according to the force, $ \vec{f} $, that a local stress $ \tns{\sigma} $ exerts on a dislocation line with Burgers vector, $ \vec{b} $, and line direction, $ \vec{\xi} $,
 \begin{align}
     \vec{f} & = (\tns{\sigma} \cdot \vec{b}) \times \vec{\xi}\,.
@@ -403,6 +421,7 @@ Nevertheless, the non-singular formulation by \citet{a_non-singular_continuum_th
 
 \subsection{Analytical forces exerted by a dislocation line segment on surface elements}
 \label{ss:analytic_forces}
+
 Whether using the SM or DCM, coupling DDD to FEM requires the traction field $ \tns{\sigma^{\infty}}(\vec{x}) \cdot \vec{n}(\vec{x}) $ to be distributed among the set of relevant discrete nodes of a FE or BE model. In the DCM model this applies to dislocations that are sufficiently close to the boundary; while in the SM, it applies to all dislocations.
 Regardless of the coupling model, the force exerted by a dislocation ensemble on a node $ n $ on element $ e $ is given by,
 \begin{align}\label{eq:ddd_fem_force_intro}
@@ -456,7 +475,7 @@ Quadratic triangular surface elements pose a much more challenging problem due t
 
 \subsection{Multiphase simulations}
 \label{ss:multiphase}
-%
+
 Modelling heterogeneity in DDD remains challenging. The core assumption of DDD is that we have a homogenous linear elastic space with invariant properties. However, modelling multiphase systems such as multicrystals and inclusions necessitates a weakening of such assumptions, particularly the space's homogeneity. Multiphase models are also necessary to apply DDD to more realistic scenarios.
 
 Fusion in particular is riddled with examples of highly heterogenous materials. As previously mentioned, neutron bombardment often causes clustering of transmutation products particularly on divertor and first wall materials; such clusters often substantially change many of their mechanical and thermal properties. The whole point of Oxide-Dispersion Strengthened (ODS) steels \cite{ddd_ods} is to hamper radiation damage by distributing oxide inclusions within their matrix. If we hope to model such alloys with DDD we must find a way to relax our homogeneity criteria.
@@ -465,6 +484,7 @@ Furthermore, many potential candidates for structural and even first wall materi
 
 \subsubsection{Polycrystalline materials}
 \label{ss:polycrystal}
+
 Polycrystalline materials have been studied using DDD, however most of these are in 2D. One of the easiest phenomena to investigate with 2D DDD are grain size effects \cite{2d_pcm, 2d_pcm2}.
 
 It is well known that much of the grain size strengthening effects arise from dislocation-grain boundary (GB) interactions including transmission, reflection, emission and absorption of dislocations \cite{grain_size_eff1, grain_size_eff2}; with transmission being the most typically observed.
@@ -539,6 +559,7 @@ Twin boundaries in 3D are analogous to grain boundaries in 2D, given that they a
 
 \subsubsection{Inclusions}
 \label{sss:inclusions}
+
 Inclusions have been modelled using the three methods described in \cref{ss:ddd_fem}. However, they have gone about it differently. The SM and DCM apply their formulations heirarchically to allow for dislocation motion into and out of the inclusion. Furthermore, being coupled DDD-FEM problems, the inclusions must also be appropriately meshed, oftentimes this means inclusion geometries are limited to the mesh type. However, FEM allows for the calculation of coherency stresses which are seen by the dislocations and cause dislocation localisation and forresting in the vicinity of inclusions, just as experimentally observed \cite{sm_incl, dcm_incl}.
 
 The level set method, having never been coupled to FEM, takes a different approach. Where the particles can be modelled as a region where dislocations experience a user-defined force. Coherency stresses have so far been neglected, but their effects may be modelled with the use of functions akin to diffuse orbital functions used in theoretical and computational quantum chemistry. Within this framework the inclusions may be arbitrarily defined to have any smooth shape, especially if one were to use piecewise parametric fourier curves.
