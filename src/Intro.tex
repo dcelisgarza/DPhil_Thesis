@@ -17,19 +17,19 @@ The story of humanity is the story of our tools. Every leap in technological cap
 \section{Fusion energy production}
 \label{s:fusion}
 
-There currently exist two major branches of research for fusion energy production \cite{icfvsmcf}:
+There currently exist two major branches of research for large scale fusion energy production \cite{icfvsmcf}:
 \begin{inparaenum}[\itshape1\upshape)]
     \item magnetic confinement fusion (MCF) \cite{mcf} which confines the plasma using magnetic fields and
     \item inertial confinement fusion (ICF) \cite{icf} which uses a frozen fuel pellet which is either directly or indirectly compressed by arrays of powerful lasers.
 \end{inparaenum}
-The physics and engineering challenges vary greatly between both approaches but the fundamental materials problems remain largely the same, with few a exceptions such as divertors \cite{icf_mcf1, icf_mcf2}.
+The physics and engineering challenges vary greatly between both approaches but the fundamental materials problems remain largely the same---with a few exceptions such as divertors \cite{icf_mcf1, icf_mcf2}.
 
 \subsection{Operating environment}
 \label{ss:operating_env}
 
-One constant feature of nuclear energy production is ionising and non-ionising radiation. In the case of fission, this is mostly in the form of low energy neutrons and residual radiation of fission products; fusion on the other hand, deals with the sparsely explored 14 MeV neutron spectrum \cite{mats_fis_fus}. The lack of appropriate sources of suitably energetic neutrons \cite{ifmif} has meant that modelling, and searching for experimental analogues of damage cascades have become a crucial part of materials research \cite{fusmat1s}.
+A constant feature of nuclear energy production is the exposure of reactor materials to large loads of ionising and non-ionising radiation. In the case of fission, this is mostly in the form of low energy neutrons and residual radiation from fission products. Fusion on the other hand, deals with the sparsely explored 14 MeV neutron spectrum \cite{mats_fis_fus}. The lack of appropriate sources of suitably energetic neutrons \cite{ifmif} has meant that modelling, as well as searching for experimental analogues for the true damage cascades have become a crucial part of materials research \cite{fusmat1s}.
 
-Operating environments change vastly between ICF and MCF as described by \cref{tab:rad} \cite{openv}. The table should be read with a measure of skepticism as the numbers and conditions are approximate because they are not yet fully known, especially for ICF. However it is still, a fairly reasonable first approximation into the materials requirements for both ``mainstream'' types of fusion energy production. That said, the components needed for energy harvesting---a divertor in the case of MCF, and an open problem for ICF---are conspicuous by their absence.
+When it comes to fusion, the operating environments change vastly between ICF and MCF, as described by \cref{tab:rad} \cite{openv}. The table should be read with a healthy dose of scepticism, given that the numbers and conditions for commercial reactors, or even reactors capable of producing a net positive amount of energy, are not yet fully known because they do not exist. This is especially true for ICF, where we are \emph{extremely far} from achieving the operating frequencies required for a commercial reactor. However, the table provides a fairly reasonable first approximation of the demands placed on reactor materials for both mainstream types of fusion energy production. That said, the demands on the components needed for energy harvesting---a divertor in the case of MCF, and an open problem for ICF---are conspicuous by their absence.
 
 \begin{table}
     \centering
@@ -58,11 +58,11 @@ Operating environments change vastly between ICF and MCF as described by \cref{t
             \bottomrule
         \end{tabular}
     }
-    \caption[Estimated operating conditions of MCF and ICF fusion reactors.]{Estimated operating environment comparison between MCF (ITER) and ICF (LMJ). Reproduced from \cite{openv}. Note these numbers are unrepresentative of actual fusion power plants as both ITER and the LMJ are experiments---it is likely power plants will require much harsher operating conditions.\\ * End of life.}
+    \caption[Estimated operating conditions of MCF and ICF fusion reactors.]{Estimated operating environment comparison between MCF (ITER) and ICF (LMJ). Reproduced from \cite{openv}. Note these numbers are unrepresentative of actual fusion power plants as both ITER and the LMJ are experiments---it is likely power plants will be subject to much harsher operating conditions.\\ * End of life.}
     \label{tab:rad}
 \end{table}
 
-\Cref{tab:rad} shows that dosages and dosage rates vary wildly between approaches. For the most part, MCF receives higher doses of neutrons and ions in both the first wall and diagnostic equipment. This seems to indicate that the material requirements for MCF are stricter than for ICF. However, shrapnel production is a strong possibility in ICF, especially in indirect drive reactors; where a specially made container called a ``hohlraum'' holds the fuel pellet and is subsequently obliterated when the pellet undergoes fusion (see \cref{f:hohlraum} \cite{hohlraum}). This is a huge challenge as such high energy shrapnel would be capable of destroying diagnostic equipment and damaging the first wall \cite{icfpwr1,icfpwr2,icfpwr3}.
+\Cref{tab:rad} shows that dosages and dosage rates vary wildly between approaches. For the most part, MCF receives higher doses of neutrons and ions in both the first wall and diagnostic equipment. This seems to indicate that the material requirements for MCF are stricter than for ICF. However, shrapnel production is a strong possibility in ICF, especially in indirect drive reactors; where a specially made container called a ``hohlraum'' holds the fuel pellet and is subsequently obliterated when the pellet undergoes fusion (see \cref{f:hohlraum} \cite{hohlraum}). This is a huge challenge, as such high energy shrapnel would be capable of destroying diagnostic equipment and damaging the first wall \cite{icfpwr1,icfpwr2,icfpwr3}.
 
 \begin{figure}[t]
     \centering
@@ -71,7 +71,7 @@ Operating environments change vastly between ICF and MCF as described by \cref{t
     \label{f:hohlraum}
 \end{figure}
 
-Overall, the table is unrepresentative of potential operating environments in large-scale power stations, but sets lower limits on the demands of the materials involved in both ``mainstream'' proposals for fusion energy production.
+Overall, the table is unrepresentative of potential operating environments in large-scale power stations, but sets lower limits on the demands of the materials involved in both mainstream proposals for fusion energy production.
 
 \subsection{Effects of radiation on reactor materials}
 \label{ss:rad_effect_mat}
@@ -631,4 +631,4 @@ This project applies such techniques to accelerate and improve the ease with whi
 
 Some of the work presented herein has already proven useful in the simulation of complex simulations such as nano-indentation \cite{YU2018} and several other research projects within the Tarleton group. Here we showcase the new capabilities, findings and methods; improvements, fixes and redesign of the codebase; as well as a showcase of relatively simple, yet formerly inaccessible simulations resulting from this work. Finally, we present an ambitious proposal for future work resulting from the insights gained during the project.
 \savearabiccounter
-% 8838 words.
+% 8927 words.
