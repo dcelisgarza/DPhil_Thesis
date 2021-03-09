@@ -1,0 +1,3 @@
+{"rule":"OXFORD_SPELLING_NOUNS","sentence":"^\\QA civilisation's ability to gain mastery of the properties and usage of materials is often strongly correlated with its success in history \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q.\\E$"}
+{"rule":"OXFORD_SPELLING_NOUNS","sentence":"^\\QWhen a civilisation learned to harness the properties of a novel material, its influence often grew as a result \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q.\\E$"}
+{"rule":"OXFORD_SPELLING_ISE_VERBS","sentence":"^\\QA constant feature of nuclear energy production is the exposure of reactor materials to large loads of ionising and non-ionising radiation.\\E$"}

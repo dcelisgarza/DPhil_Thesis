@@ -1,1 +1,13 @@
 archeology
+divertors
+divertor
+Hohlraum
+hohlraum
+FISPACT
+CCFE
+fluence
+KMC
+LMJ
+ITER
+dpa
+ablator
