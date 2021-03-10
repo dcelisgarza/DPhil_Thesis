@@ -64,7 +64,7 @@ When it comes to fusion, the operating environments change vastly between ICF an
 
 \Cref{tab:rad} shows that dosages and dosage rates vary wildly between approaches. For the most part, MCF receives higher doses of neutrons and ions in both the first wall and diagnostic equipment. This seems to indicate that the material requirements for MCF are stricter than for ICF. However, shrapnel production is a strong possibility in ICF, especially in indirect drive reactors; where a specially made container called a \emph{hohlraum} holds the fuel pellet and is subsequently obliterated when the pellet undergoes fusion (see \cref{f:hohlraum} \cite{hohlraum}). This is a huge challenge, as such high energy shrapnel would be capable of destroying diagnostic equipment and damaging the first wall \cite{icfpwr1,icfpwr2,icfpwr3}.
 
-\begin{figure}[t]
+\begin{figure}
     \centering
     \includegraphics[width=\linewidth]{hohlraum.jpg}
     \caption[Hohlraum design for indirect drive in Inertial Confinement Fusion.]{\textbf{a} Cross-section of the National Ignition Facility's ICF target design showing the gold hohlraum and plastic capsule, fuel pellet, and incident laser bundles. \textbf{b} X-ray image of the actual capsule for N130927 with DT fuel layer and surrounding CH (carbon–hydrogen) plastic ablator. \textbf{c} X-ray radiation drive temperature as a function of time for the National Ignition Campaign (NIC) low-foot implosion and the post-NIC high-foot implosion. Image taken from \cite{hohlraum}.}
@@ -143,7 +143,7 @@ This set of optimum conditions is the reason behind the multicore and multithrea
 \subsection{Computation on graphics processing units}
 \label{sc:compgpu}
 
-\begin{figure}[t]
+\begin{figure}
     \centering
     \includegraphics[width=\linewidth]{gpu_parallel.png}
     \caption[CUDA runtime schematic.]{CUDA runtime schematic. Repetitive but computationally intensive tasks can be offloaded to the GPU. Both GPU and CPU are completely indipendent from each other and can work on different parts of the code at the same time, care must be taken to ensure proper syncronisation. Image taken from \cite{nvidia}.}
@@ -169,10 +169,10 @@ Recently however, a third option has become viable. NVidia's Computer Unified De
 \subsubsection{Hurdles for parallelisation}
 \label{sc:hurdpara}
 
-\begin{figure}[t]
+\begin{figure}
     \centering
     \includegraphics[width=\linewidth]{mem_access.pdf}
-    \caption[Memory access pattern example.]{Arrows represent fetch requests by single threads in a GPU. Data should be arranged in such a way that all threads in a warp (collections of 32 threads) access contiguous memory locations to reduce time-consuming memory fetch operations. This is often unintuitive but extremely important, especially on scientific computing cards which are optimised for long computational times and low memory fetch frequency.}
+    \caption[Memory access pattern example.]{Arrows represent fetch requests by single threads in a GPU. Data should be arranged in such a way that all threads in a warp (collections of 32 threads) can simultaneously access contiguous memory locations, reducing cache-misses and improving throughput. This access pattern can be unintuitive when parallelising serial algorithms, but is extremely important, especially when using scientific computing cards, as they are optimised for long computation times and low memory fetch frequency.}
     \label{f:mem_accessIntro}
 \end{figure}
 
@@ -180,24 +180,24 @@ The difficulty in parallelisation varies tremendously from problem to problem. P
 
 The largest hurdle when implementing parallel algorithms is often the efficient use of data. In order to obtain good parallel performance, a lot of thought has to be placed on data access patterns, data read/write conflicts, and memory allocation and transfer \cite{nvidia}. For best performance, all this must be analysed on a case by case basis. If done incorrectly, the performance of a parallel application may be lower than the serial version. One must consider a wide range of parameters to successfully parallelise a problem. Among these are GPU architecture, problem size, computational and memory complexity, code branching, required arithmetic precision, and error tolerances \cite{nvidia, gpu_rev}.
 
-Efficient parallelisation of many problems requires ``coalesced memory access'' as shown in \cref{f:mem_accessIntro}, which means we have to be extremely careful when mapping CPU memory to global GPU (device) memory. The fact that threads work ``simultaneously''\footnote{Not quite but essentially simultaneously. See \cite{nvidia} for details.} means that in order to obtain good performance, data which is to be ``simultaneously'' loaded into each thread must be contiguous. This maximises cache memory use and therefore reduces slow memory fetch operations to global or shared memory.
+Efficient parallelisation of many problems requires \emph{coalesced memory access} as shown in \cref{f:mem_accessIntro}, which means we have to be extremely careful when mapping CPU memory to global GPU (device) memory. The fact that threads work ``simultaneously''\footnote{Not quite but essentially simultaneously. See \cite{nvidia} for details.} means that in order to obtain good performance, data which is to be simultaneously loaded into each thread must be contiguous. This maximises cache memory use and therefore reduces slow memory fetch operations.
 
-Special cases, such as having a parallel dislocation line segment to a surface as discussed in \cref{ss:analytic_forces}, must be treated carefully due to the way code branching works in GPUs. There are various ways of doing so:
+Special cases, such as having a parallel dislocation line segment to a surface, as discussed in \cref{ss:analytic_forces}, must be treated carefully due to the way code branching works in GPUs. There are various ways of doing so:
 \begin{inparaenum}[\itshape 1\upshape)]
     \item if the special case is inexpensive, it can be treated within the same GPU function;
-    \item if the special case is expensive and always known (certain boundary conditions in FEM), it can be placed in its own GPU function that treats it separately;
-    \item if the special case is expesive and found at runtime it may be asynchronously treated by the CPU or buffered into its own GPU function to be executed at a later time.
+    \item if the special case is expensive and always known (such as certain boundary conditions in FEM), it can be placed in its own GPU function that treats it separately;
+    \item if the special case is expesive and only found at runtime, it may be asynchronously treated by the CPU or buffered into its own GPU function to be executed at a later time.
 \end{inparaenum}
 
-\begin{figure}[t]
+\begin{figure}
     \centering
     \includegraphics[width=\textwidth]{async.pdf}
-    \caption[GPU and CPU asynchronous execution.]{GPU and CPU code run independent of each other. Leads to state ambiguities if both sides need to talk to each other \cite{nvidia}.}
+    \caption[GPU and CPU asynchronous execution.]{GPU and CPU code run independent of each other. This can lead to state ambiguities if both sides need to be aware of one another \cite{nvidia}.}
     \label{f:async_gpu_cpu}
 \end{figure}
-One of the advantages of GPU-CPU independence is that both can work concurrently on the problem. If both systems have to talk to each other, then one must tread carefully, ensuring proper syncronisation and data mapping before moving (see \cref{f:async_gpu_cpu}).
+One of the advantages of GPU-CPU independence is that both can work concurrently on different aspects of the problem. If both systems have to talk to each other, or there are any race conditions (one process needs to finish before the other can start), then one must tread carefully, ensuring proper syncronisation and data mapping before proceeding (see \cref{f:async_gpu_cpu}).
 
-The reason why code branching is bad for GPU parallelisation is down to the fact that they work like software customisable vector machines. Where collections of threads all carry out the same operation on different pieces of data at the same time. This means that regardless of whether a condition is true or false, the code will execute. It is only data storage that depends on the condition, as illustrated in \cref{f:code_branching}.
+The reason why code branching is bad for GPU parallelisation is down to the fact that they work like software-customisable vector machines. As in vector processors, collections of threads all carry out the same operation on different pieces of data at the same time. The threads essentially behave as one, operating on different data. This is advantageous to a GPU because it means more energy and space can be used for computation rather than logic and scheduling. However, this eliminates the ability of code to branching within each collection of threads. This means that every branch of an \texttt{if} or \texttt{switch-case} statement will be executed whether a condition is met or not\footnote{If the branch can be resolved at compile time, it is possible for the compiler to prune it as part of compile time optimisation. However, this can be unreliable and depends on how transparent the optimsation is to the compiler, how agressive the optimisation setting is, and how the compiler is implemented. Therefore, relying on compile time optimisation to prune branches is not recommended.}. Only data storage depends on whether a condition is true or false, as illustrated in \cref{f:code_branching}.
 \begin{figure}
     \centering
     \begin{subfigure}[t]{0.48\textwidth}
@@ -229,7 +229,7 @@ p: x = a*b;
 !p: x = a/b;
 			\end{minted}
         \vspace{12pt}
-        \caption{GPU code executes every line but only stores results if the the flag before the colon is true.}
+        \caption{GPU code executes every line but only stores results if the flag before the colon is true.}
     \end{subfigure}
     \caption[Explanation of warp divergence.]{The NVidia CUDA compiler replaces \texttt{if} and \texttt{case} statements with logical flags \texttt{p}. Every line is executed, but the data is only stored if the flag prior to the colon is true \cite{nvidia}. This means that having rare but computationally expensive special cases will tank parallel performance and must therefore be dealt with separately.}
     \label{f:code_branching}
@@ -242,16 +242,16 @@ Dislocation Dynamics (DD)---in particular 3D Discrete Dislocation Dynamics (3D D
 
 The plastic deformation of materials is generally governed by the generation and motion of line defects known as dislocations through the crystal lattice. Microstructural features such as grain boundaries, precipitates and inclusions impede dislocation motion causing strengthening but often limiting ductility \cite{init_fail_dln}. Understanding the behaviour of the dislocation ensemble is highly complicated even when ignoring dislocation-microstructure interactions. However, if we want to truly comprehend their real-world behaviour, we cannot limit ourselves to idealised scenarios.
 
-One of the most often used parametrisations of DD is Discrete Dislocation Dynamics (DDD). Where dislocations are parametrised as a series of nodes linked by straight line segments. This reduces computational requirements and allows for analytic solutions to be obtained. At present, neither DDD or Finite Element (FE) models can truly handle all of the complexities of real-world alloys \cite{ddd_fem1, paradis, fem_ddd2, fem_ddd}. For one, DDD relies on assuming a linear-elastic isotropic solid domain with periodic boundary conditions, while FE relies on assuming continuum properties inside its \emph{finite} domain.
+One of the most often used parametrisations of DD is Discrete Dislocation Dynamics (DDD). Where dislocations are parametrised as a series of nodes linked by straight line segments. This reduces computational requirements and allows for analytic solutions to be obtained. At present, neither DDD nor Finite Element (FE) models can truly handle all the complexities of real-world alloys \cite{ddd_fem1, paradis, fem_ddd2, fem_ddd}. For one, DDD relies on assuming a linear-elastic isotropic solid domain with periodic or infinite boundary conditions, while FE relies on assuming continuum properties inside a \emph{finite} domain.
 
-Crystal Plasticity Finite Element Methods (CPFEM) use constitutive equations to calculate dislocation motion and generation on a set of slip systems. These are given as dislocation densities and thus are still ``bulk'' models because they don't interact with each other \cite{cpfem1}. CPFEM can handle finite strains and anisotropy but not strain localisation/slip bands, etc.
+Crystal Plasticity Finite Element Methods (CPFEM) use constitutive equations to calculate dislocation motion and generation on a set of slip systems. These are given as dislocation densities and thus can still be considered ``bulk'' models because there are no explicit dislocations interacting with one another \cite{cpfem1}. CPFEM can handle finite strains and anisotropy but not strain localisation/slip bands, etc.
 
-Furthermore, dislocations often accumulate in the vicinity of microstructural features. The interaction of dislocations with microstructure can lead to further increased hardening and local hot spots in stress that can lead to failure initiation \cite{size_effects, dln_ind_hard}. Hardware accleration, i.e. using Graphics Processing Units (GPUs), has been shown to be very effective in DDD \cite{gpu_ddd}, and has the potential to enable the simulation of much larger numbers of dislocations for longer timescales. In order to study these phenomena we must find a way of coupling DDD and FEM into a single multiscale model that can simulate micromechanical tests more accurately than CPFEM. With a model such as this we may potentially be able to predict and observe emergent phenomena/properties, explain michromechanical behaviours, and even predict and explain experimental results based on underlying dislocation mechanisms.
+Furthermore, dislocations often accumulate in the vicinity of microstructural features. The interaction of dislocations with microstructure and other dislocations can lead to work hardening and local stress concentrations that can lead to failure initiation \cite{size_effects, dln_ind_hard}. Hardware accleration, i.e. using Graphics Processing Units (GPUs), has been shown to be very effective in DDD \cite{gpu_ddd}, and has the potential to enable the simulation of much larger numbers of dislocations for longer timescales. In order to study these phenomena we must find a way of coupling DDD and FEM into a single multiscale model with the potential to simulate micromechanical tests more accurately than CPFEM. With a model such as this, we may potentially be able to predict and observe emergent phenomena/properties, explain michromechanical behaviours, and even predict and explain experimental results based on underlying dislocation mechanisms\footnote{Though predicting and replicating experimental results requires the initial conditions of the experiment and simulation be roughly equivalent.}.
 
 \subsection{Coupling dislocation dynamics to finite element methods}
 \label{ss:ddd_fem}
 
-Coupling dislocation dynamics (DD) to FEM is important to properly simulate micromechanical tests because DD provides us with a more precise set of inputs and greater granularity for solving the FE problem. There are at present two methods with which to do so, the \nameref{sss:superposition} and the \nameref{sss:discrete_continuum}. The most accurate implementation of dislocation dynamics is discrete dislocation dynamics, where the dislocation is broken into nodes and connecting segments. This is compuationally efficient and allows for analytical solutions. However, as discussed in \cref{sss:lvl_set} explicit discretisation is not the only way to tackle the problem.
+Coupling dislocation dynamics (DD) to FEM is important to properly simulate micromechanical tests because DD provides us with a more precise set of inputs and greater granularity for solving the FE problem. There are at present two methods with which to do so, the \nameref{sss:superposition} and the \nameref{sss:discrete_continuum}. Discrete dislocation dynamics, where the dislocation is broken into nodes connected by segments is a relatively compuationally- and data-efficient implementation of dislocation dynamics, which has the added advantage of having analytical solutions for straight-line segments. However, as discussed in \cref{sss:lvl_set}, explicit discretisation is not the only way to tackle the problem.
 
 \subsubsection{Superposition model}
 \label{sss:superposition}
@@ -259,39 +259,41 @@ Coupling dislocation dynamics (DD) to FEM is important to properly simulate micr
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{fem_ddd.pdf}
-    \caption[Superposition Model for DDD-FEM coupling.]{Decomposition of the boundary value problem. The volume $ V $ is bounded by surface $ S $ contains a dislocation ensemble and is subjected to initial traction conditions $ \vec{T} $ on $ S_{T} $ and $ \vec{u} $ on $ S_{u} $. First, the traction, $ \vec{\tilde{T}} $, and displacement, $\vec{\tilde{u}}$, fields due to the dislocations in the infinite domain (DDD) are evaluated on the boundaries $ S_{T} $ and $ S_{u} $ respectively. Then a traditional FE method is used to calculate the stress field satisfying the boundary conditions $ \vec{\hat{T}} = \vec{T} - \vec{\tilde{T}} $ and $ \vec{\hat{u}} = \vec{u} - \vec{\tilde{u}} $. Image edited from \cite{analytic_tractions}.}
+    \caption[Superposition Model for DDD-FEM coupling.]{The superposition used to couple DDD and FEM. The volume $V$ is bounded by a surface $S = S_{T} \cup S_{U}$ and contains a dislocation ensemble and is subjected to tractions $\vec{T}$ on $S_{T}$ and $\vec{U}$ on $S_{u}$. First, the traction, $\vec{\tilde{T}}$, and displacement, $\vec{\tilde{u}}$, fields due to the dislocations in the infinite domain (DDD) are evaluated on the boundaries $S_{T}$ and $S_{U}$ respectively. Then an elastic boundary value problem can be solved with FEM to calculate the corrective elastic fields required to satisfy the boundary conditions $\vec{\hat{T}} = \vec{T} - \vec{\tilde{T}}$ and $\vec{\hat{u}} = \vec{U} - \vec{\tilde{u}}$.}
     \label{f:fem_ddd}
 \end{figure}
 
-The Superposition Model (SM) works by decomposing the problem into separate DDD and FE problems (\cref{f:fem_ddd}). It is assumed that a linear-elastic body $ V $ bounded by a surface $ S $ is subject to traction boundary conditions, $ \vec{T} $, on $ S_{T} $ and displacement boundary conditions, $ \vec{u} $, on $ S_{u} $. The formulation proposed in \cite{dismot} to impose traction-displacement boundary conditions on DDD problems in finite domains states that the total displacement and stress fields can be written as a superposition of displacement and stress fields obtained from DDD and FE,
+The Superposition Model (SM) works by decomposing the problem into separate DDD and FE problems (\cref{f:fem_ddd}). It is assumed that a linear-elastic body $ V $ bounded by a surface $ S $ is subject to traction boundary conditions, $ \vec{T} $, on $ S_{T} $ and displacement boundary conditions, $ \vec{U} $, on $ S_{u} $. The formulation proposed in \cite{dismot} to impose traction-displacement boundary conditions on DDD problems in finite domains states that the total displacement and stress fields can be written as a superposition of displacement and stress fields obtained from DDD and FE,
 \begin{subequations}
     \label{eq:superposition}
     \begin{align}
-        \vec{u}      & = \vec{\tilde{u}} + \vec{\hat{u}}\,,            \\
+        \vec{U}      & = \vec{\tilde{u}} + \vec{\hat{u}}\,,            \\
         \tns{\sigma} & = \tns{\tilde{\sigma}} + \tns{\hat{\sigma}}\, .
     \end{align}
 \end{subequations}
-The (\textasciitilde) fields are those associated with the dislocation in an infinite medium and are obtained by evaluating analytic fields in a DDD simulation. While the corrective (\textasciicircum) fields are those which must be superimposed to ensure the boundary conditions are met. This means that the image fields can be obtained by running a FE simulation with the ``corrected'' displacement and traction fields,
+The, (\textasciitilde), fields are those associated with the dislocation in an infinite medium and are obtained by evaluating analytic fields in a DDD simulation. The corrective, (\textasciicircum), fields are those which must be superimposed to ensure the boundary conditions are met. This means that the image fields can be obtained by running a FE simulation with the ``corrected'' displacement and traction fields,
 \begin{subequations}
     \begin{align}
-        \vec{\hat{u}}                    & = \vec{u} - \vec{\tilde{u}}\,,                                                                                 \\
+        \vec{\hat{u}}                    & = \vec{U} - \vec{\tilde{u}}\,,                                                                                 \\
         \tns{\hat{\sigma}} \cdot \vec{n} & = \vec{\hat{T}} = \vec{T} - \underbrace{\vec{\tilde{T}}}_{\displaystyle{\tns{\tilde{\sigma}}}\cdot \vec{n}}\,,
     \end{align}
 \end{subequations}
-where $ \vec{n} $ is the outer unit normal vector to $ S $. As a dislocation segment moves closer to the surface, its (\textasciitilde) field diverges and starts causing numerical problems \cite{bdd}. A further problem with this method is that modelling elastic inclusions not only requires the calculation of forces induced by dislocations on the inclusion's surface, but also demands the calculation of so-called polarisation stresses due to differences in the inclusion's and matrix properties \cite{dismot, bdd, ddd_precip}.
+where $ \vec{n} $ is the outer unit normal vector to $ S $. As a dislocation segment moves closer to the surface, its (\textasciitilde) field diverges and starts causing numerical problems \cite{bdd}. \Cref{ss:paperIntro} is a more in-depth discussion on the superposition method and dislocation-induced surface tractions.
 
-The relative simplicity of the superposition method has made it a popular choice \cite{analytic_tractions, ddd_fem_sm, ddd_fem_sm2} for coupling DDD and FEM because all it requires is the calculation of forces and displacements on the boundaries (see \cref{ss:analytic_forces}).
+A further problem with this method is that modelling elastic inclusions not only requires the calculation of forces induced by dislocations on the inclusion's surface, but also demands the calculation of so-called polarisation stresses due to differences in the inclusion's and matrix elastic properties \cite{dismot, bdd, ddd_precip}.
+
+That said, the relative simplicity of the superposition method has made it a popular choice \cite{analytic_tractions, ddd_fem_sm, ddd_fem_sm2} for coupling DDD and FEM because all it requires is the calculation of forces and displacements on the boundaries (see \cref{ss:analytic_forces}).
 
 \subsubsection{Discrete continuum model}
 \label{sss:discrete_continuum}
 
-The Discrete Continuum Model (DCM) takes an alternative approach to solving the same problem. The DCM only treats short-range dislocation-dislocation interactions analytically while all other interactions are numerically calculated via FEM \cite{dcm}. It is based on the regularisation of the atomic displacement jump across the slip plane into a plastic strain inclusion according to eigenstrain theory \cite{eigenstrain}. Like the Superposition Model, the DCM also assumes the simulated volume to be linear-elastic.
+The Discrete Continuum Model (DCM) takes an alternative approach to solving the same coupling problem. The DCM only treats short-range dislocation-dislocation interactions analytically while all other interactions are numerically calculated via FEM \cite{dcm}. It is based on the regularisation of the atomic displacement jump across the slip plane into a plastic strain inclusion according to eigenstrain theory \cite{eigenstrain}. Like the Superposition Model, the DCM also assumes the simulated volume to be linear-elastic.
 
-The eigenstrain formalism assumes that material defects can be represented as stress-free strain distributions dubbed eigenstrains \cite{eigenstrain}. For example, a dislocation loop of any shape may be approximately represented, thin, coherent, plate-like inclusion with the same contour as the loop and a characteristic thickness $ h $ as shown in \cref{f:eigenstrain} \cite{dcm}. The eigenstrain tensor, $ \epsilon^{\rvar{p}} $, can then be defined as a symmetric dyadic product of the Burgers vector, $ \vec{b} $, and slip plane normal $ \vec{n} $,
+The eigenstrain formalism assumes that material defects can be represented as stress-free strain distributions, dubbed \emph{eigenstrains} \cite{eigenstrain}. For example, a dislocation loop of any shape may be approximately represented by thin, coherent, plate-like inclusions with the same contour as the loop and a characteristic thickness, $ h $, as shown in \cref{f:eigenstrain} \cite{dcm}. The eigenstrain tensor, $ \epsilon^{\rvar{p}} $, can then be defined as a symmetric dyadic product of the Burgers vector, $ \vec{b} $, and slip plane normal $ \vec{n} $,
 \begin{align}\label{eq:eigenstrain}
     \tns{\epsilon^{\rvar{p}}} & \equiv \dfrac{1}{2h} (\vec{b} \otimes \vec{n} + \vec{n} \otimes \vec{b})\,.
 \end{align}
-\cref{eq:eigenstrain} can be used to calculate approximate elastic fields from the stress-free eigenstrain distribution. The approximation is accurate far from the dislocation core \cite{dln_core}. As we move closer but still outside of the core region, the approximation tends toward the exact discrete dislocation solution as $ h \to 0$. Due to linear elasticity, the total plastic strain is the sum of the individual plastic strains due to each dislocation segment.
+\Cref{eq:eigenstrain} can be used to calculate approximate elastic fields from the stress-free eigenstrain distribution. The approximation is accurate far from the dislocation core \cite{dln_core}. As we move closer---but still outside the core region---the approximation tends toward the exact discrete dislocation solution as $ h \to 0$. From linear elasticity, the total plastic strain is the sum of the individual plastic strains due to each dislocation segment.
 \begin{figure}
     \centering
     \includegraphics[width=0.5\linewidth]{eigenstrain.pdf}
@@ -301,21 +303,21 @@ The eigenstrain formalism assumes that material defects can be represented as st
 
 The formalism then lets us solve the boundary value problem by finding the stress tensor $ \tns{\sigma} $, elastic strain $ \tns{\epsilon^{\rvar{e}}} $ and displacement $ \vec{u} $ in mechanical equilibrium with the boundary conditions and plastic strain distribution $ \tns{\epsilon^{\rvar{p}}} $ from the ``inclusions''.
 
-It is worth noting that in order to calculate the eigenstrains, there must be sufficient FE nodes inside the thin plate. Therefore smaller values of $ h $ necessitate finer FE meshes. Furthermore, the original DCM experienced numerical blow up as dislocation-dislocation distances approached $ h $ \cite{dcm0}, but this has since been addressed. Assuming linear-elasticity, the revised model \cite{dcm} yields,
+It is worth noting that in order to accurately calculate the eigenstrains, there must be sufficient FE nodes inside the thin plate. Therefore, smaller values of $ h $ necessitate finer FE meshes. Furthermore, the original DCM experienced numerical blow up as dislocation-dislocation distances approached $ h $ \cite{dcm0}, but this has since been addressed. Assuming linear-elasticity, the revised model \cite{dcm} yields,
 \begin{subequations}\label{eq:discrete_continuum}
     \begin{align}
         \nabla \cdot \tns{\sigma} + \vec{f} = \vec{0} \quad & \in V \setminus \{A\}\,, \\
         \tns{\sigma} = \tns{E} : \tns{\epsilon} \quad       & \in V \setminus \{A\}\,, \\
         [[\vec{u}]] \quad                                   & \rvar{across } \{A\}\,,  \\
-        \vec{u} = \vec{u_{0}} \quad                         & \in S_{u}\,,             \\
+        \vec{u} = \vec{u_{0}} \quad                         & \in S_{U}\,,             \\
         \tns{\sigma} \cdot \vec{n} = \vec{T} \quad          & \in S_{T}\,.
     \end{align}
 \end{subequations}
-At time $ t $, $ \{A\} $ denotes the area swept by the dislocation loops since the start of the simulation. $ [[\vec{u}]] $ denotes displacement jumps tangent to $ \{A\} $ due to dislocation glide; its magnitude and direction depend on the Burgers vector $ \vec{b} $. $ \tns{E} $ is the 4\textsuperscript{th}-order elasticity tensor, $ \tns{\sigma} $ the small strain tensor, $ \vec{f} $ are the body forces and, $ : $, is the double dot product defined as, $ (\tns{E}:\tns{\epsilon})_{ij} = E_{ijkl}\epsilon_{kl} $, for a rank 4 tensor $ \tns{E} $ and rank 2 tensor $ \tns{\epsilon} $. The operator, $ \setminus $, is the set difference defined as, $ A \setminus B = \{x \in A | x \notin B\} $. We use the same notation for the volume, surface normal and boundary conditions as in \cref{sss:superposition}. \cref{eq:discrete_continuum} can then be linearly decomposed three parts which are solved via FEM or DDD and coupled.
+At time $ t $, $ \{A\} $ denotes the area swept by the dislocation loops since the start of the simulation. $ [[\vec{u}]] $ denotes displacement jumps tangent to $ \{A\} $ due to dislocation glide; its magnitude and direction depend on the Burgers vector $ \vec{b} $. $ \tns{E} $ is the 4\textsuperscript{th}-order elasticity tensor, $ \tns{\sigma} $ the small strain tensor, $ \vec{f} $ are the body forces and, $ : $, is the double dot product defined as, $ (\tns{E}:\tns{\epsilon})_{ij} = E_{ijkl}\epsilon_{kl} $, between a rank 4 tensor ($ \tns{E} $) and a rank 2 tensor ($ \tns{\epsilon} $). The operator, $ \setminus $, is the set difference defined as, $ A \setminus B = \{x \in A | x \notin B\} $. \Cref{eq:discrete_continuum} can then be linearly decomposed three parts which are solved via FEM or DDD and coupled as described in \cite{dcm}.
 
-It is worth noting that the DCM is substantially more complicated than the SM. By requiring the finite elements be small enough for the eigenstate formalism to work, it strongly couples DDD to the FE model and software. It shifts the brunt of the computational workload from DDD to FEM. Essentially trading computationally intensive long range interactions which scale on the order of $ \mathcal{O}(N^{2}) $, where $ N $ is the number of dislocation line segments; for computationally intensive tasks scaling on the order of $ \mathcal{O}(M^{3}) $ where $ M $ is the number of finite elements in a cubic mesh with $ N $ elements per side. Furthermore, it cannot be used with BE methods as the eigenstrain formalism demands the use of internal elements rather than simply requiring a surface mesh.
+It is worth noting that the DCM is \emph{substantially} more complicated than the SM. By requiring the finite elements be small enough for the eigenstate formalism to work, it strongly couples DDD to the FE model and software implementation. It shifts the brunt of the computational workload from DDD to FEM. Essentially trading computationally intensive, long-range interactions which scale on the order of $ \mathcal{O}(N^{2}) $, where $ N $ is the number of dislocation line segments; for computationally intensive tasks scaling on the order of $ \mathcal{O}(M^{3}) $ where $ M $ is the number of finite elements in 3D (assuming linear cubic elements). Furthermore, it cannot be used with BE methods as the eigenstrain formalism demands the use of internal elements rather than simply requiring a surface mesh.
 
-That said, the DCM allows for reductions in the computational complexity of certain parts of the problem which would otherwise have to be done via DDD \cite{dcm}; namely long-range dislocation-dislocation or dislocation-surface interactions via an interaction distance cutoff that is only possible with the eigenstrain formulation. Compared to the SM, gains in computational efficiency grow as dislocation density increases with respect to the number of finite elements. Since dislocation-dislocation and dislocation-surface interactions are among the most computationally expensive aspects of DDD, the DCM can reduce the overall computational cost of simulations with large enough dislocation densities.
+That said, the DCM allows for reductions in the computational complexity of certain parts of the problem which would otherwise have to be done via DDD \cite{dcm}; namely long-range dislocation-dislocation or dislocation-surface interactions via an interaction distance cutoff that is only possible with the eigenstrain formulation. Compared to the superposition method, gains in computational efficiency grow as dislocation density increases with respect to the number of finite elements. Since dislocation-dislocation and dislocation-surface interactions are among the most computationally expensive aspects of DDD, the DCM can reduce the overall computational cost of simulations with large enough dislocation densities and fine enough finite element meshes.
 
 \subsubsection{Level set method}
 \label{sss:lvl_set}
@@ -635,5 +637,5 @@ This project applies such techniques to accelerate and improve the ease with whi
 Some of the work presented herein has already proven useful in the simulation of complex simulations such as nano-indentation \cite{YU2018} and several other research projects within the Tarleton group. Here we showcase the new capabilities, findings and methods; improvements, fixes and redesign of the codebase; as well as a showcase of relatively simple, yet formerly inaccessible simulations resulting from this work. Finally, we present an ambitious proposal for future work resulting from the insights gained during the project.
 \savearabiccounter
 
-% 9006 written words.
-% 1996 edited
+% 9139 written words.
+% 4775 edited
