@@ -8,3 +8,4 @@
 {"rule":"MORFOLOGIK_RULE_EN_GB","sentence":"^\\QThe two other dissipation mechanisms are: short-circuit, sc, which depends on frequency and occurs when a direct path from transistor to ground is made as a result of multiple transistors conducting simultaneously; and leakage, leak, which depends on the voltage and is due to micro-currents between doped parts a transistor.\\E$"}
 {"rule":"SENTENCE_WHITESPACE","sentence":"^\\QEnergy required by a Samsung Galaxy S2 CPU at 37 to complete the Gold-Rader implementation of the bit-reverse algorithm.\\E$"}
 {"rule":"MORFOLOGIK_RULE_EN_GB","sentence":"^\\QEnergy required by a Samsung Galaxy S2 CPU at 37 to complete the Gold-Rader implementation of the bit-reverse algorithm.\\E$"}
+{"rule":"SENTENCE_WHITESPACE","sentence":"^\\QArrows represent fetch requests by single threads in a GPU.\\E$"}
