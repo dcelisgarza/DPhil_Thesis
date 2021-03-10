@@ -99,21 +99,24 @@ Transmutation products will always be problematic, but they are a fact of workin
 \section{Parallel computing}
 \label{s:parallel_comp}
 
-Processing chips are made up of millions or even billions of transistors acting as switches in logic gates. Each time a logic gate fires, the capacitors inside them charge and discharge at the chip's frequency or clock speed \cite{cpu_trnstor}. Consider the power of any electronic component,
-\begin{align}
-    P(t) & = I(t) V(t) \label{eq:pow_ec} \,,
+Processing chips are made up of millions or even billions of transistors acting as switches in logic gates. Each time a logic gate fires, the capacitors inside them charge and discharge at the chip's frequency otherwise known as clock speed \cite{cpu_trnstor}. Consider the power of any electronic component,
+\begin{align}\label{eq:pow_ec}
+    P(t) & = I(t) V(t) \,,
 \end{align}
-where $ I $ is current and $ V $ is voltage both as a function of time. The current, $ I $, of a capacitor and the definition of power, $ P $, as functions of time, $ t $, are given by,
-\begin{align}
-    I(t) = C \dfrac{\mathrm{d}V(t)}{\rvar{d}t} \label{eq:cap_cur_pow_dt}\,, \qquad
-    P(t) = \dfrac{\rvar{d}E(t)}{\rvar{d}t}\,,
+where $ I $ is current and $ V $ is voltage, both as functions of time, $t$. The current, $ I $, of a capacitor and the definition of power, $ P $, as functions of time, $ t $, as well as the definition of capacitance are given by,
+\begin{align}\label{eq:cap_cur_pow_dt}
+    I(t) = C \dfrac{\mathrm{d}V(t)}{\rvar{d}t} \,, \qquad
+    P(t) = \dfrac{\rvar{d}E(t)}{\rvar{d}t}\,, \qquad
+    C = \dfrac{Q_\rvar{c}}{V_\rvar{c}}
 \end{align}
-where $ C $ is capacitance and $ E $ the energy stored in the capacitor. Substituting \cref{eq:cap_cur_pow_dt} into \cref{eq:pow_ec} and integrating twice, we obtain the expression for the energy stored in a capacitor,
-\begin{align}
-    %		\int\limits_{0}^{E_{c}}\int\limits_{0}^{\infty} \dfrac{\rvar{d}E(t)}{\rvar{d}t}\; \rvar{d}t &= C \int\limits_{0}^{V_{c}}\int\limits_{0}^{\infty} V(t) \dfrac{\mathrm{d}V(t)}{\rvar{d}t}\; \rvar{d}t\\
-    E_{\rvar{c}} & = \dfrac{C V_{\rvar{c}}^{2}}{2} \label{eq:e_cap}\,,
-\end{align}
-where $ V_{\rvar{c}} $ and $ E_{\rvar{c}} $ are the voltage and energy stored in the capacitor. Recalling that in a processing chip, the capacitors are charged and discharged at the chip's clock speed $ f $, we arrive at the expression for power consumption, $ P_{\rvar{c}} $, of a capacitor charging and discharging at frequency $ f $ \cite{microelec},
+where $ C $ is capacitance, $ E $ the energy stored in the capacitor, $Q_\rvar{c}$ the charge stored in the capacitor and $V_\rvar{c}$ the voltage of the capacitor. Substituting \cref{eq:cap_cur_pow_dt} into \cref{eq:pow_ec} and integrating twice, we obtain the expression for the energy stored in a capacitor,
+\begin{subequations}
+    \begin{align}\label{eq:e_cap}
+        \int\limits_{0}^{E_{c}}\int\limits_{0}^{\infty} \dfrac{\rvar{d}E(t)}{\rvar{d}t}\; \delta t & = C \int\limits_{0}^{V_{c}}\int\limits_{0}^{\infty} V(t) \dfrac{\mathrm{d}V(t)}{\rvar{d}t}\; \delta t\,, \\
+        E_{\rvar{c}}                                                                               & = \dfrac{C V_{\rvar{c}}^{2}}{2}  = \dfrac{Q_\rvar{c} V_\rvar{c}}{2} = \dfrac{Q_\rvar{c}^2}{2C}\,,
+    \end{align}
+\end{subequations}
+where $ V_{\rvar{c}} $, $ E_{\rvar{c}} $, $Q_\rvar{c}$ are the voltage, energy and charge stored in the capacitor. Recalling that in a processing chip, the capacitors are charged and discharged at the chip's clock speed $ f $, we arrive at the expression for power consumption, $ P_{\rvar{c}} $, of a capacitor charging and discharging at frequency $ f $ \cite{microelec},
 \begin{align}
     P_{\rvar{c}} & = E_{\rvar{c}} f \propto C V_{\rvar{c}}^{2} f \label{eq:p_cap}\,.
 \end{align}
@@ -135,7 +138,7 @@ Furthermore, higher voltages and frequencies result in higher temperatures, whic
     \label{f:cpu_en_cnvx}
 \end{figure}
 
-This set of optimum conditions is the reason behind the multicore and multithreaded design of modern Central Processing Units (CPUs) and Graphics Processing Units (GPUs). It is also why in recent years there has been such a massive push for parallelism in all computing markets. It is simply not feasable to continually increase clock speeds and voltages because cooling solutions would struggle to remove heat fast enough, and power consumption would skyrocket.
+This set of optimum conditions is the reason behind the multicore and multithreaded design of modern Central Processing Units (CPUs) and Graphics Processing Units (GPUs). It is also why in recent years there has been such a massive push for parallelism in all computing markets. It is simply not feasible to continually increase clock speeds and voltages because cooling solutions would struggle to remove heat fast enough, and power consumption would skyrocket.
 
 \subsection{Computation on graphics processing units}
 \label{sc:compgpu}
@@ -143,7 +146,7 @@ This set of optimum conditions is the reason behind the multicore and multithrea
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{gpu_parallel.png}
-    \caption[CUDA runtime schematic.]{CUDA runtime schematic. Repetitive but computationally intensive tasks can be offloaded to the GPU. Both GPU and CPU are completely independent from each other and can work on different parts of the code at the same time, care must be taken to ensure proper syncronisation. Image taken from \cite{nvidia}.}
+    \caption[CUDA runtime schematic.]{CUDA runtime schematic. Repetitive but computationally intensive tasks can be offloaded to the GPU. Both GPU and CPU are completely indipendent from each other and can work on different parts of the code at the same time, care must be taken to ensure proper syncronisation. Image taken from \cite{nvidia}.}
     \label{f:cuda}
 \end{figure}
 
@@ -170,14 +173,14 @@ Recently however, a third option has become increasingly viable. NVidia's Comput
     \centering
     \includegraphics[width=\linewidth]{mem_access.pdf}
     \caption[Memory access pattern example.]{Arrows represent fetch requests by single threads in a GPU. Data should be arranged in such a way that all threads in a warp (collections of 32 threads) access contiguous memory locations to reduce time-consuming memory fetch operations. This is often unintuitive but extremely important, especially on scientific computing cards which are optimised for long computational times and low memory fetch frequency.}
-    \label{f:mem_access}
+    \label{f:mem_accessIntro}
 \end{figure}
 
 The difficulty in parallelisation varies tremendously from problem to problem. Problems where data is uncorrelated and independent---such as sampling well-behaved probability distributions---are almost trivially parallelisable. Problems where data is correlated or strongly dependent on its neighbours---such as Dislocation Dynamics---require a more careful approach \cite{parallel_algs}.
 
 The largest hurdle when implementing parallel algorithms is often the efficient use of data. In order to obtain good parallel performance, a lot of thought has to be placed on data access patterns, data read/write conflicts, and memory allocation and transfer \cite{nvidia}. For best performance, all this must be analysed on a case by case basis. If done incorrectly, the performance of a parallel application may be lower than the serial version. One must consider a wide range of parameters to successfully parallelise a problem. Among these are GPU architecture, problem size, computational and memory complexity, code branching, required arithmetic precision, and error tolerances \cite{nvidia, gpu_rev}.
 
-Efficient parallelisation of many problems requires ``coalesced memory access'' as shown in \cref{f:mem_access}, which means we have to be extremely careful when mapping CPU memory to global GPU (device) memory. The fact that threads work ``simultaneously''\footnote{Not quite but essentially simultaneously. See \cite{nvidia} for details.} means that in order to obtain good performance, data which is to be ``simultaneously'' loaded into each thread must be contiguous. This maximises cache memory use and therefore reduces slow memory fetch operations to global or shared memory.
+Efficient parallelisation of many problems requires ``coalesced memory access'' as shown in \cref{f:mem_accessIntro}, which means we have to be extremely careful when mapping CPU memory to global GPU (device) memory. The fact that threads work ``simultaneously''\footnote{Not quite but essentially simultaneously. See \cite{nvidia} for details.} means that in order to obtain good performance, data which is to be ``simultaneously'' loaded into each thread must be contiguous. This maximises cache memory use and therefore reduces slow memory fetch operations to global or shared memory.
 
 Special cases, such as having a parallel dislocation line segment to a surface as discussed in \cref{ss:analytic_forces}, must be treated carefully due to the way code branching works in GPUs. There are various ways of doing so:
 \begin{inparaenum}[\itshape 1\upshape)]
@@ -632,5 +635,5 @@ This project applies such techniques to accelerate and improve the ease with whi
 Some of the work presented herein has already proven useful in the simulation of complex simulations such as nano-indentation \cite{YU2018} and several other research projects within the Tarleton group. Here we showcase the new capabilities, findings and methods; improvements, fixes and redesign of the codebase; as well as a showcase of relatively simple, yet formerly inaccessible simulations resulting from this work. Finally, we present an ambitious proposal for future work resulting from the insights gained during the project.
 \savearabiccounter
 
-% 8987 written words.
-% 1632 edited
+% 9006 written words.
+% 1996 edited
