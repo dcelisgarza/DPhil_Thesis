@@ -362,7 +362,7 @@ where $ C_{ijkl} $ is the elastic stiffness tensor, $ \epsilon_{lnh} $ the permu
 \begin{align}\label{eq:elastic_green_func}
     G_{ij}(\vec{x} - \vec{x'}) & = \dfrac{1}{8\pi \mu}\left[ \delta_{ij} \partial_{pp} - \dfrac{1}{2(1-\nu)} \partial_{ij} \right] R(\vec{x} - \vec{x'})\,,
 \end{align}
-where $ \mu $, $ \nu $ are the isotropic shear modulus and Poisson's ratio respectively, $ \delta_{ij} $ is the Kronecker Delta, $ \partial_{x_{1} \ldots\, x_{n}} \equiv \dfrac{\partial^{n}}{\partial x_{1} \ldots\, \partial x_{n}}$, and $ R = \lVert \vec{x} - \vec{x'} \rVert $. However considering that $ \vec{x} \to \vec{x'} \Rightarrow R \to 0 \Rightarrow \partial_{i} R \to \infty $, some (or all) components of the stress field diverge. Furthermore, the total elastic energy also diverges,
+where $ \mu $, $ \nu $ are the isotropic shear modulus and Poisson's ratio respectively, $ \delta_{ij} $ is the Kronecker Delta, $ \partial_{x_{1} \ldots\, x_{n}} \equiv \dfrac{\partial^{n}}{\partial x_{1} \ldots\, \partial x_{n}}$, and $ R = \lVert \vec{x} - \vec{x'} \rVert $. However, considering that $ \vec{x} \to \vec{x'} \Rightarrow R \to 0 \Rightarrow \partial_{i} R \to \infty $, some (or all) components of the stress field diverge. Furthermore, the total elastic energy also diverges,
 \begin{align}\label{eq:e_dln1}
     E & = \dfrac{1}{2} \int S_{ijkl} \sigma_{ij}(\vec{x}) \sigma_{kl}(\vec{x})\; \rvar{d}^{3}\vec{x}\,,
 \end{align}
@@ -393,7 +393,7 @@ where $ r \equiv \lVert \vec{x} \rVert $. When substituting \cref{seq:bv_dist} i
         R(\vec{x} - \vec{x}') b_{m} b'_{n} & = \iint R(\vec{x}'' - \vec{x}''') g_{m}(\vec{x} - \vec{x}'') g_{n}(\vec{x}''' - \vec{x}') \;\rvar{d}^{3}\vec{x}'' \;\rvar{d}^{3}\vec{x}'''\,.
     \end{align}
 \end{subequations}
-Using \cref{eq:b_dist,eq:r_times_b_dist} as guidelines, they defined a the following convolutions,
+Using \cref{eq:b_dist,eq:r_times_b_dist} as guidelines, they defined the following convolutions,
 \begin{subequations}
     \begin{align}
         w(\vec{x}) & \equiv \tilde{w}(\vec{x}) * \tilde{w}(\vec{x}) = \int \tilde{w}(\vec{x}-\vec{x}')\tilde{w}(\vec{x}')\; \rvar{d}^{3} \vec{x}'\,, \\
@@ -483,7 +483,7 @@ Quadratic triangular surface elements pose a much more challenging problem due t
 
 Modelling heterogeneity in DDD remains challenging. The core assumption of DDD is that we have a homogenous linear elastic space with invariant properties. However, modelling multiphase systems such as multicrystals and inclusions necessitates a weakening of such assumptions, particularly the space's homogeneity. Multiphase models are also necessary to apply DDD to more realistic scenarios.
 
-Fusion in particular is riddled with examples of highly heterogenous materials. As previously mentioned, neutron bombardment often causes clustering of transmutation products particularly on divertor and first wall materials; such clusters often substantially change many of their mechanical and thermal properties. The whole point of Oxide-Dispersion Strengthened (ODS) steels \cite{ddd_ods} is to hamper radiation damage by distributing oxide inclusions within their matrix. If we hope to model such alloys with DDD we must find a way to relax our homogeneity criteria.
+Fusion in particular is riddled with examples of highly heterogenous materials. As previously mentioned, neutron bombardment often causes clustering of transmutation products particularly on divertor and first wall materials; such clusters often substantially change many of their mechanical and thermal properties. The whole point of Oxide-Dispersion Strengthened (ODS) steels \cite{ddd_ods} is to hamper radiation damage by distributing oxide inclusions within their matrix; if we hope to model such alloys with DDD we must find a way to relax our homogeneity criteria.
 
 Furthermore, many potential candidates for structural and even first wall materials of fusion reactors are designed with complex microstructures in order to resist thermal creep and radiation damage. Understanding dislocation behaviours near the crystal boundaries of these microstructurally complex materials is another niche where DDD simulations can shed light into the mechanisms that give rise to these materials' desirable properties.
 
@@ -517,11 +517,11 @@ where $ \sigma_{0} $ is the yield stress, $ d_{0} $ a reference crystal size, $ 
 Aside from the Hall-Petch effect, the model has also been utilised by \cite{2d_pcm2} to study the thickness effects of three different types of polycrystalline thin films:
 \begin{inparaenum}[\itshape 1\upshape )]
     \item no surface treatment,
-    \item surface passivation layer and
+    \item surface passivation layer, and
     \item surface grain refinement zones
 \end{inparaenum}. In this study, Frank-Reed sources were seeded across the domain, and the superposition principle was utilised to calculate displacement, strain and stresses in the thin films. Their results qualitatively reproduced experimental observations from expected dislocation patterns, stress distributions, and the eventual disappearance of the size effect as the films got thicker \cite{2d_pcm2}.
 
-Two-dimensional models might seem useless but they have their place, particularly when thin films are concerned. However, they may also be of use when investigating the effects of dislocations on the mechanical behaviour of superconducting tape---whose applications range from medical imaging to fusion energy production. The exotic composition and crystallography of many superconductors (perovskites) would make 3D models very complex and computationally expensive, so 2D models may offer viable alternatives. On top of this, a superconducting tape's operating environment would often have it under strains which might not strictly lie in-plane, but given a small enough segment of tape, strains orthogonal to the its plane may be neglected. Thus making 2D models an acceptable first attempt at tacking the problem, at leas before computational resources and developments in 3D models make more realistic studies of such complex systems possible.
+Though two-dimensional models might seem useless, they have their place, particularly when thin films are concerned. However, they may also be of use when investigating the effects of dislocations on the mechanical behaviour of superconducting tape---whose applications range from medical imaging to fusion energy production. The exotic composition and crystallography of many superconductors (perovskites) would make 3D models very complex and computationally expensive, so 2D models may offer viable alternatives. On top of this, a superconducting tape's operating environment would often have it under strains which might not strictly lie in-plane, but given a small enough segment of tape, strains orthogonal to its plane may be neglected. Thus making 2D models an acceptable first attempt at tacking the problem, at leas before computational resources and developments in 3D models make more realistic studies of such complex systems possible.
 
 The 3D case is substantially more complicated than the 2D case. A recent study by \citet{twinning} looked at the role of twinning on the hardening response of polycrystalline Mg using 3D DDD.
 
@@ -607,7 +607,7 @@ The segment-segment interaction has $ \mathcal{O}(N^{2}) $ computational complex
 
 Both the surface traction and image stress calculations have $ \mathcal{O}(k N) $ computational where $ k $ is the total number of surface nodes and $ N $ the number of dislocation line segments.
 
-As is usually the case in parallel computing, there is often more than one way to parallelise a problem. The optimal strategy depends on the problem itself. It was no different in \cite{gpu_ddd} as shown in \cref{f:gpu_ddd}. \Citet{gpu_ddd} realised that the segment-segment interaction calculation can be done via $ \mathcal{O}(N^{2}) $ parallelism, where single pairs of dislocation segments are sent to a single thread, and then globally reduced. However this approach requires $ \mathcal{O}(N^{2}) $ memory and can lead to inefficient data reuse. So they opted instead for $ \mathcal{O}(N) $ parallelisation and serialisation. In this scheme each thread is assigned a unique segment, and each thread computes the forces between its assigned segment and all the others while serially adding the force contributions. The memory access pattern they found best was that of a serial procedure, the reason is that in-thread calculations are serialised so having coalesced memory access patterns for threads would cause problems when serially accessing data for the calculation.
+As is usually the case in parallel computing, there is often more than one way to parallelise a problem. The optimal strategy depends on the problem itself. It was no different in \cite{gpu_ddd} as shown in \cref{f:gpu_ddd}. \Citet{gpu_ddd} realised that the segment-segment interaction calculation can be done via $ \mathcal{O}(N^{2}) $ parallelism, where single pairs of dislocation segments are sent to a single thread, and then globally reduced. However, this approach requires $ \mathcal{O}(N^{2}) $ memory and can lead to inefficient data reuse. So they opted instead for $ \mathcal{O}(N) $ parallelisation and serialisation. In this scheme each thread is assigned a unique segment, and each thread computes the forces between its assigned segment and all the others while serially adding the force contributions. The memory access pattern they found best was that of a serial procedure, the reason is that in-thread calculations are serialised so having coalesced memory access patterns for threads would cause problems when serially accessing data for the calculation.
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{gpu_ddd.jpg}
@@ -621,12 +621,12 @@ New NVidia architectures have made varying degrees of nested parallelisation pos
 
 The parallisation strategies for the other two problems, (b) and (c) in \cref{f:gpu_ddd}, involved similar decompositions as the segment-segment interaction. For surface tractions \citet{gpu_ddd} parallelised over $ k $ surface nodes with sequential calculation and addition of the stress from each dislocation line segment. For the image stresses, they chose the reverse strategy since it allows for the serialised addition of the image stresses on dislocation line segments.
 
-Their findings showed very promising results for parallelising DDD simulations. Compared to C, their findings showed that depending on the specific problem and parameters used, the parallel implementation reduced computational time by a factor of $ \sim 110 $ at best and $ \sim 3 $ at worst for sufficiently large problems. This is of course, provided one uses a card designed for high performance computing, as these are tailored towards double precision arithmetic and computationally intensive procedures. However, gaming graphics cards are increasingly capable of double precision arithmetic and though not as drastic, speed ups are still substantial.
+Their findings showed very promising results for parallelising DDD simulations. Compared to C, their findings showed that depending on the specific problem and parameters used, the parallel implementation reduced computational time by a factor of $ \sim 110 $ at best and $ \sim 3 $ at worst for sufficiently large problems. This is of course, provided one uses a card designed for high performance computing, as these are tailored towards double precision arithmetic and computationally intensive procedures. However, gaming graphics cards are increasingly capable of double precision arithmetic and though not as drastic, speed gains are still substantial.
 
 \section{Project outline and new science}
 \label{s:objectives}
 
-If anything should be clear from this work is that materials science is far from being solved. Even within the small niche of dislocation dynamics modelling, there are a huge number of open problems and an equally large number of solutions; each with its particular sets of advantages, disadvantages, ideosyncrasies and challenges.
+If anything should be clear from the present work, is that materials science is far from being solved. Even within the small niche of dislocation dynamics modelling, there are a huge number of open problems and an equally large number of solutions; each with its particular sets of advantages, disadvantages, ideosyncrasies and challenges.
 
 The rapid advancement in computer technology; pushed by the ever-increasing complexity of the problems that occupy humankind; but simultaneously restricted by the physical constraints of classical computers, have opened up new avenues for research. Research that blurs the boundaries between fields and produces something new. Undoubtedly materials science sprang up this way, when metallurgists decided to take elements from the fields of chemistry, physics and mathematics to create a new discipline.
 
@@ -634,7 +634,7 @@ With increasing frequency, one finds people across vastly different fields who c
 
 This project applies such techniques to accelerate and improve the ease with which outstanding problems in materials science can be tackled; making use of more accurate models, hardware acceleration and the techniques of high performance computing to enable larger and more complex simulations than ever before---striving for increasingly faithful and insightful recreations of reality with a user-friendly code on a desktop PC.
 
-Some of the work presented herein has already proven useful in the simulation of complex simulations such as nano-indentation \cite{YU2018} and several other research projects within the Tarleton group. Here we showcase the new capabilities, findings and methods; improvements, fixes and redesign of the codebase; as well as a showcase of relatively simple, yet formerly inaccessible simulations resulting from this work. Finally, we present an ambitious proposal for future work resulting from the insights gained during the project.
+Much of the work presented herein has already proven useful in the simulation of complex simulations such as nano-indentation \cite{YU2018} and several other research projects within the Tarleton group. Here we showcase the new capabilities, findings and methods; improvements, fixes and redesign of the codebase; as well as a showcase of relatively simple, yet formerly inaccessible simulations resulting from this work. Finally, we present an ambitious proposal for future work resulting from the insights gained during the project.
 \savearabiccounter
 
 % 9139 written words.
