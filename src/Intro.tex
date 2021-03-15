@@ -322,7 +322,7 @@ That said, the DCM allows for reductions in the computational complexity of cert
 \subsubsection{Level set method}
 \label{sss:lvl_set}
 
-Even though the level set method has not strictly been used to couple DD to FEM, it has been used to model inclusions \cite{ddd_inclusion_as_force} as described in \cref{sss:inclusions}. This type of dislocation dynamics is fundamentally distinct from DDD because Level Set DD uses arbitrary functions rather than a discretisation approach to represent dislocations lines. The idea is that in 3D, a dislocation $ \gamma(t) $ can be represented by the intersection of two zero levels of two level set functions (see \cref{f:lvl_set_dd}),
+Even though the level set method has not strictly been used to couple DD to FEM, it has been used to model inclusions \cite{ddd_inclusion_as_force}, as described in \cref{sss:inclusions}. This type of dislocation dynamics is fundamentally distinct from DDD because Level Set DD uses arbitrary functions rather than a discretisation approach to represent dislocations lines. The idea is that in 3D, a dislocation $ \gamma(t) $ can be represented by the intersection of two zero levels of two level set functions (see \cref{f:lvl_set_dd}),
 \begin{subequations}\label{eq:lvl_set}
     \begin{align}
         \phi(x(t),y(t),z(t),t)                                                          & = 0\,, & \qquad
@@ -332,19 +332,19 @@ Even though the level set method has not strictly been used to couple DD to FEM,
     \end{align}
 \end{subequations}
 where $ \vec{v} $ is the dislocation velocity. This definition uses the material derivative because it is assumed that the function and its spatial coordinates are all functions of time, $ t $. The material derivative also comes up when deriving the Navier-Stokes equations of fluid dynamics.
-\begin{figure}[t]
+\begin{figure}
     \centering
     \includegraphics[width=0.3\linewidth]{level_set.pdf}
     \caption[Level set Dislocation Dynamics.]{Diagram of a continuous dislocation $ \gamma(t) $ as the intersection of the zero level of two level set functions $ \phi(\vec{x}(t),t),~\psi(\vec{x}(t),t) $ as posed by \cref{eq:lvl_set}. Image edited from \cite{lvl_set_dd}.}
     \label{f:lvl_set_dd}
 \end{figure}
 
-The level set method is significantly more computationally more expensive than DDD \cite{lvl_set_dd}. It must solve two coupled quasi-linear partial differential equations whose character is in general undefined. It therefore requires the use of very robust numerical solvers such as higher order Total Variation Deminishing (TVD) Runge-Kutta methods for time discretisation (TVD-RK4 or higher) and high order ENO (Essentially Nonoscillatory $ \mathcal{O}(N^5) $ or higher) or WENO (Weighted Essentially Non-Oscilatory) interpolation methods for spatial discretisation \cite{lvl_set_ddd_inc} for the solutions to converge satisfactorily. The method also makes it impossible to obtain many of the useful analytical solutions one can find by discretising dislocations into straight line segments. Another problem is that this method has never been truly coupled to the finite element method. However, if one were to do so there are two naïve ways of going about it:
+The level set method is significantly more computationally expensive than DDD \cite{lvl_set_dd}. It must solve two coupled quasi-linear partial differential equations whose character is in general undefined. It therefore requires the use of very robust numerical solvers such as higher order Total Variation Deminishing (TVD) Runge-Kutta methods for time discretisation (TVD-RK4 or higher), and high order ENO (Essentially Nonoscillatory $ \mathcal{O}(N^5) $ or higher) or WENO (Weighted Essentially Non-Oscilatory) interpolation methods for spatial discretisation \cite{lvl_set_ddd_inc} for the solutions to converge satisfactorily. The method also makes it impossible to obtain many of the useful analytical solutions one can find by discretising dislocations into straight line segments. Another problem is that this method has never been truly coupled to the finite element method. However, if one were to do so there are two naïve ways of going about it:
 \begin{inparaenum}[\itshape1\upshape)]
     \item numerically integrating along the dislocation lines and finding a way to numerically calculate the forces on FE nodes, or
     \item discretising the level set curves and using either the DCM or SM to find forces and displacements.
 \end{inparaenum}
-The former would be very computationally expensive. Furthermore, no one has found a way to compute the forces or displacements exerted by generally shaped, non-discretised dislocations, numerical solutions are possible as they are needed to find self-interaction energies and dislocation-dislocation forces \cite{lvl_set_dd} but general, closed-form analytical ones are most likely impossible to find. The latter defeats the purpose of the level set method by abandoning the continuum framework. As a result of this, the level set method is not nearly as popular as DDD utilising either the SM or DCM.
+The former would be very computationally expensive. Furthermore, no one has found a way to compute the forces or displacements exerted by generally shaped, non-discretised dislocations, numerical solutions are possible as they are needed to find self-interaction energies and dislocation-dislocation forces \cite{lvl_set_dd} but general, closed-form analytical ones are most likely impossible to find. Both approaches defeat the purpose of the level set method, necessitating some form of discretisation whilst keeping the high computational cost. As a result of this, the level set method is not nearly as popular as DDD utilising either the SM or DCM.
 
 \subsection{Non-singular continuum theory of dislocations}
 \label{ss:non-singular_dln}
@@ -377,7 +377,14 @@ which is important when describing how \citet{a_non-singular_continuum_theory_of
 
 The singularity in $ R $ is the result of unreasonably and unphysically assuming a dislocation loop's Burgers vector distribution is a Delta function. The assumption was made to allow for closed-form and relatively simple expressions. As noted in \cite{bv_dist}, other distributions may be used but they either result in significantly more complicated expressions or destroy the analytical nature of the classical formulation.
 
-There have been many attempts at removing this singularity, including finite-strain elasticity \cite{non_sing3}, non-local and gradient elasticity \cite{non_sing1, non_sing2}, interaction cut-off radius \cite{pk_force}, average stress at two points on opposite sides of the dislocation line \cite{non_sing4, non_sing5}, and spreading the Burgers vector distribution out over a finite width \cite{bv_dist, non_sing6, non_sing7}. Unfortunately all of these approaches failed in one way or another \cite{a_non-singular_continuum_theory_of_dislocations}. Depending on the approach, the following undesirable qualities may present themselves include inconsistencies, impractical implementation, lack of closed-form solutions for non-straight finite dislocations, lack of self-consistency, and the possibility for multiple expressions and solutions for the line integral of the dislocation line energy.
+There have been many attempts at removing this singularity, including finite-strain elasticity \cite{non_sing3}, non-local and gradient elasticity \cite{non_sing1, non_sing2}, interaction cut-off radius \cite{pk_force}, average stress at two points on opposite sides of the dislocation line \cite{non_sing4, non_sing5}, and spreading the Burgers vector distribution out over a finite width \cite{bv_dist, non_sing6, non_sing7}. Unfortunately all of these approaches failed in one way or another \cite{a_non-singular_continuum_theory_of_dislocations}. Depending on the approach, various undesirable qualities may present themselves, including
+\begin{inparaenum}[\itshape1\upshape)]
+    \item inconsistencies with other theories;
+    \item impractical implementation;
+    \item lack of closed-form solutions for non-straight finite dislocations;
+    \item lack of self-consistency; and
+    \item the possibility for multiple non-degenerate expressions and solutions for the line integral of the dislocation line energy.
+\end{inparaenum}
 
 \Citet{a_non-singular_continuum_theory_of_dislocations} took it upon themselves to define and justify a different Burgers vector distribution that maintains the mathematical convenience of the classical formulation that also eliminates such an unphysical assumption. They did so by introducing a Burgers vector density function,
 \begin{subequations}\label{eq:b_dist}
@@ -386,7 +393,7 @@ There have been many attempts at removing this singularity, including finite-str
         \vec{g}(\vec{x}) & = \vec{b} \tilde{w}(\vec{x}) = \vec{b} \tilde{w}(r)\,,
     \end{align}
 \end{subequations}
-where $ r \equiv \lVert \vec{x} \rVert $. When substituting \cref{seq:bv_dist} into \cref{eq:field_stress,eq:e_dln2} the result of multiplying $ R $ with components of $ \vec{b} $ results in the following integrals,
+where $ r \equiv \lVert \vec{x} \rVert $. When substituting \cref{seq:bv_dist} into \cref{eq:field_stress,eq:e_dln2}. The result of multiplying $ R $ with components of $ \vec{b} $ results in the following integrals,
 \begin{subequations}\label{eq:r_times_b_dist}
     \begin{align}
         R(\vec{x} - \vec{x}') b_{m}        & = \int R(\vec{x} - \vec{x}'') g_{m}(\vec{x}'' - \vec{x}') \;\rvar{d}^{3}\vec{x}''\,,                                                          \\
@@ -404,7 +411,7 @@ At which point they assumed there exists an integrable function $ w(\vec{x}) $ s
 \begin{align}
     R_{a} = \sqrt{R(\vec{x})^{2} + a^{2}} = \sqrt{x^{2} + y^{2} + z^{2} + a^{2}}\,,
 \end{align}
-where $ a $ is an arbitrary constant meant to represent the dislocation core radius whose value may be estimated from atomistic simulations. This is essentially a definition that can be used to replace $ R $ in the classical equations and eliminate the singularity by including a free parameter. However, in order to ensure this is mathematically sound, there must indeed exist a function which yields $ R_{a} $ as \citet{a_non-singular_continuum_theory_of_dislocations} defined it. This can be done by making use of the following property for the convolution of two suitably differentiable functions, $ \partial_{i} (f*g) = \partial_{i}f * g = f * \partial_{i} g $. We may take the Laplacian twice,
+where $ a $ is an arbitrary constant meant to represent the dislocation core radius, whose value may be estimated from atomistic simulations. This is essentially a definition that can be used to replace $ R $ in the classical equations and eliminate the singularity by including a free parameter. However, in order to ensure this is mathematically sound, there must indeed exist a function which yields $ R_{a} $ as \citet{a_non-singular_continuum_theory_of_dislocations} defined it. This can be done by making use of the following property for the convolution of two suitably differentiable functions, $ \partial_{i} (f*g) = \partial_{i}f * g = f * \partial_{i} g $. We may take the Laplacian twice,
 \begin{subequations}
     \begin{align}
         \nabla^{2}[\nabla^{2} \{R(\vec{x}) * w(\vec{x})\} ] & = \nabla^{2}[\nabla^{2} R_{a}(\vec{x})]\,,                                                             \\
@@ -414,11 +421,11 @@ where $ a $ is an arbitrary constant meant to represent the dislocation core rad
         w(\vec{x})                                          & = \dfrac{15 a^{4}}{8\pi R_{a}^{7}} \label{eq:dist}\,.
     \end{align}
 \end{subequations}
-\Cref{eq:hand_wavy} is a very brave, handwavy statement given that,
+\Cref{eq:hand_wavy} is a very brave statement given that,
 \begin{align}
-    \nabla^{2} \left[R^{-1}\right]= \nabla^{2}\left[(x^{2} + y^{2} + z^{2})^{-1/2}\right] = 0\,,
+    \nabla^{2} \left[R^{-1}\right] & = \nabla^{2}\left[(x^{2} + y^{2} + z^{2})^{-1/2}\right] = 0/\,,
 \end{align}
-but may be physically ``justified'' by pretending $ \nabla^{2}\left[R^{-1}\right] $ defines a spherical surface of radius 0. And \cref{eq:dist} is a similarly handwavy statement that can be ``justified'' by noting that,
+but may be physically justified by pretending $ \nabla^{2}\left[R^{-1}\right] $ arises from assuming a spherical surface of radius 0. \Cref{eq:dist} is a similarly dubious statement that can be justified by noting that,
 \begin{align}
     \lim\limits_{a\to 0} w(\vec{x}) = \delta^{3}(\vec{x})\,.
 \end{align}
@@ -439,51 +446,51 @@ The problematic singularity associated with the classical Volterra dislocation i
     G_{ij}(\vec{x} - \vec{x'}) & = \dfrac{1}{8\pi \mu}\left[ \delta_{ij} \partial_{pp} - \dfrac{1}{2(1-\nu)} \partial_{ij} \right] R_{a}(\vec{x} - \vec{x'})\,.
 \end{align}
 
-Using the non-singular definition of $ G(\vec{x}-\vec{x}') $ in \cref{eq:field_stress} we obtain the expression for the stress field of a single straight dislocation line segment bounded by two dislocation nodes (1, 2) \cite{a_non-singular_continuum_theory_of_dislocations},
-\begin{align}\label{eq:two_node_stress_field}
-    \tns{\sigma}^{(12)}(\vec{x}) =
-     & -\dfrac{\mu}{8\pi} \int\limits_{\vec{x_{1}}}^{\vec{x_{2}}} \left( \dfrac{2}{R_{a}^{3}} + \dfrac{3 a^{2}}{R_{a}^{5}} \right) \left[ \left( \vec{R} \times \vec{b} \right) \otimes \rvar{d}\vec{x'} + \rvar{d}\vec{x'} \otimes \left( \vec{R} \times \vec{b} \right) \right]\nn
+Using the non-singular definition of $ G(\vec{x}-\vec{x}') $ in \cref{eq:field_stress} we obtain the expression for the stress field of a single straight dislocation line segment bounded by two dislocation nodes at $\vec{x_1}$ and $\vec{x_2}$1, 2) \cite{a_non-singular_continuum_theory_of_dislocations},
+\begin{align}
+    \label{eq:stressIntro}
+    \tns{\tilde{\sigma}}(\vec{x}) = &
+    - \dfrac{\mu}{8\pi} \int\limits_{\vec{x_1}}^{\vec{x_2}} \left( \dfrac{2}{R_{a}^{3}} + \dfrac{3a^2}{R_{a}^{5}} \right) \left[ \left(\vec{R} \times \vec{b}\right) \otimes \mathrm{d}\vec{x'} + \mathrm{d}\vec{x'} \otimes \left(\vec{R} \times \vec{b}\right) \right]          \\
     %
-     & + \dfrac{\mu}{4\pi (1 - \nu)} \int\limits_{\vec{x_{1}}}^{\vec{x_{2}}} \left( \dfrac{1}{R_{a}^{3}} + \dfrac{3 a^{2}}{R_{a}^{5}} \right) \left[ \left(\vec{R} \times \vec{b}\right)\cdot \rvar{d}\vec{x'} \right] \mtx{I}_{2}\nn
+                                    & + \dfrac{\mu}{4\pi(1-\nu)} \int\limits_{\vec{x_1}}^{\vec{x_2}} \left( \dfrac{1}{R_{a}^{3}} + \dfrac{3a^2}{R_{a}^{5}} \right) \left[ \left(\vec{R} \times \vec{b}\right) \cdot \mathrm{d}\vec{x'} \right]\vec{I_2}\nonumber                  \\
     %
-     & - \dfrac{\mu}{4\pi (1 - \nu)} \int\limits_{\vec{x_{1}}}^{\vec{x_{2}}} \dfrac{1}{R_{a}^{3}} \left[ \left(\vec{b} \times \rvar{d}\vec{x'}\right) \otimes \vec{R} + \vec{R} \otimes \left(\vec{b} \times \rvar{d}\vec{x'}\right) \right]\nn
-     & + \dfrac{\mu}{4\pi (1 - \nu)} \int\limits_{\vec{x_{1}}}^{\vec{x_{2}}} \dfrac{3}{R_{a}^{5}} \left[ \left( \vec{R} \times \vec{b} \right) \cdot \rvar{d}\vec{x'} \right]\vec{R} \otimes \vec{R}\,,
+                                    & -\dfrac{\mu}{4\pi(1-\nu)} \int\limits_{\vec{x_1}}^{\vec{x_2}}  \dfrac{1}{R_{a}^{3}} \left[ \left(\vec{b} \times \mathrm{d}\vec{x'}\right) \otimes \vec{R} + \vec{R} \otimes \left(\vec{b} \times \mathrm{d}\vec{x'}\right) \right]\nonumber \\
+    %
+                                    & + \dfrac{\mu}{4\pi(1-\nu)} \int\limits_{\vec{x_1}}^{\vec{x_2}} \dfrac{3}{R_{a}^{5}} \left[ \left(\vec{R} \times \vec{b}\right) \cdot \mathrm{d}\vec{x'} \right]\vec{R}\otimes\vec{R}\nonumber,
 \end{align}
-Substituting \cref{eq:two_node_stress_field} into \cref{eq:ddd_fem_force_intro} yields as many integrals as there are surface nodes. Their exact form depends on the shape functions used. The specifics are out of the scope of this work. For a rectangular surface element, the vector formulation can be converted into a set of local scalar coordinates via a series of scalar projections of the set of basis vectors via \cref{eq:ana_loc_coo},
-\begin{align}\label{eq:ana_loc_coo}
-    \vec{R}          & = \vec{x} - \vec{x'} = y\vec{t} + r\vec{p} + s\vec{q}\,,                                        & \qquad
-    R_{a}            & = \sqrt{\vec{R} \cdot \vec{R} + a^{2}}\,, \nn
-    \vec{n}          & = \vec{p} \times \vec{q}\,,                                                                     & \qquad
-    y                & = \dfrac{\vec{R} \cdot \vec{n}}{\vec{t} \cdot \vec{n}}\,,                                                \\
-    r                & = \dfrac{\vec{R} \cdot (\vec{q} \times \vec{t})}{\vec{p} \cdot (\vec{q} \times \vec{t})}\,,     & \qquad
-    s                & = \dfrac{\vec{R} \cdot (\vec{p} \times \vec{t})}{\vec{q} \cdot (\vec{p} \times \vec{t})}\,, \nn
-    \rvar{d}\vec{x}' & = -\vec{t} \;\rvar{d}y \nonumber\,,
+where,
+\begin{align}
+    \vec{R}            & = \vec{x} - \vec{x'} = y \vec{l} + r \vec{p} + s \vec{q} \\
+    %
+    R_a                & = \sqrt{\vec{R} \cdot \vec{R} + a^2}                     \\
+    %
+    \mathrm{d}\vec{x'} & = -\mathrm{d} y \vec{l}\,.
 \end{align}
-where $ \vec{n},~\vec{p},~\vec{q},~\vec{t} $ are basis vectors\footnote{Unitary vectors that define a space. This space is not orthogonal because in general only $ \vec{p} \perp \vec{q} $, $ \vec{n} \perp \vec{p} $ and $ \vec{n} \perp \vec{q} $.} that respectively correspond to the outside surface normal of the surface element, the two orthogonal vectors that define the sides of the rectangular surface element, and the dislocation line direction. The integral bounds can then be set up accordingly.
+The vectors $\vec{p}$ and $\vec{q}$ are aligned with the edges of the rectangular finite element, $\vec{n} = \vec{p} \times \vec{q}$ is the element surface normal (pointing away from the dislocation), and $\vec{l}$ is parallel to the dislocation line segment as shown in \cref{f:force_lin_rect}. Then (provided $\vec{l}$ is not parallel to $\vec{p}$ or $\vec{q}$) $\vec{R}$ can be expressed in terms of $(\vec{l},~\vec{p},~\vec{q})$ with coefficients,
+\begin{align}
+    y = \dfrac{\vec{R}\cdot \vec{n}}{\vec{l}\cdot \vec{n}} \label{eq:problemIntro},\quad
+    %
+    r = \dfrac{\vec{R}\cdot (\vec{q} \times \vec{l})}{\vec{p}\cdot (\vec{q} \times \vec{l})}, \quad
+    %
+    s = \dfrac{\vec{R}\cdot (\vec{p} \times \vec{l})}{\vec{q}\cdot (\vec{p} \times \vec{l})}\,.
+\end{align}
+\Cref{eq:stressIntro} can be turned into a series of triple integrals solved via recursion relations and a few seed functions.
 
-Noting that $ \vec{n} \equiv \vec{p} \times \vec{q} $ is normal to the surface element, if $ \vec{t} $ is parallel to the surface element i.e. a linear combination of $ \vec{p},~\vec{q} $ then the product $ \vec{t} \cdot \vec{n} = 0 $, so this formulation is problematic when a dislocation line segment is parallel to a surface. An easy workaround is to slightly around the axis defined by $ \vec{t} \times \vec{n} $ using the line's midpoint as a fulcrum. This works well in serial code but is problematic for parallelisation due to warp divergence (see \cref{ss:parallel_ddd}).
-
-\Cref{f:flrs} diagramatically shows the definition of the four basis vectors and summarises the line integrals needed to find an analytical expression of the nodal force.
-\begin{figure}[t]
+\Cref{f:force_lin_rectIntro} diagramatically summarises the over 40 triple line integrals needed to find an analytical expression of the nodal forces on linear rectangular elements.
+\begin{figure}
     \centering
     \includegraphics[width=0.8\linewidth]{force_calc_linear_rectangle.pdf}
-    \caption[Analytic tractions on linear rectangular surface elements.]{Diagram of the line integral method used to find analytical expressions for the forces exerted by dislocation on linear rectangular surface elements \cite{analytic_tractions}.
-        \textit{1}) For any given point $ \vec{x} $ on the surface element and any given point $ \vec{x'}$ on the dislocation line segment, define distance $ R_{a} $.
-        \textit{2}) Integrate from $ x_{1} \to x_{2} $ along line direction $ \vec{t} $.
-        \textit{3}) Integrate from $ r_{1} \to r_{2} $ along vector $ \vec{p} $.
-        \textit{4}) Integrate from $ s_{1} \to s_{2} $ along vector $ \vec{q} $.}
-    \label{f:flrs}
+    \caption[Analytic tractions on linear rectangular surface elements.]{Diagram of the parametric line integrals solved by \citet{analytic_tractions} to find the forces on linear rectangular surface elements.}
+    \label{f:force_lin_rectIntro}
 \end{figure}
-It is worth noting that over 40 triple integrals arise from \cref{eq:two_node_stress_field,eq:ana_loc_coo}. These were solved via three families of recurrence relationships found via integration by parts and six seed functions found by direct integration. A more detailed description can be found in \cite{analytic_tractions}.
-
-Quadratic triangular surface elements pose a much more challenging problem due to the fact that $ \vec{p} \not\perp \vec{q} $. This property is not the only addition that significantly complicates the integrals, the interpolation functions are quadratic which increase the number of integrals. The non-orthogonality of $ \vec{q},~ \vec{p} $ means the integration limits in the $ r,~s $ coordinates must be parametrised appropriately and the integrations should be carried out in an order suitable for the chosen parametrisation. Aside from these technical considerations, the techniques for solving the problem for quadratic rectangular surface elements are the same as the linear rectangular case \cite{analytic_tractions}. It is worth noting however, that the implementation of such a procedure may require quadruple precision arithmetic.
+\Cref{c:tractions} contains more detail regarding the theory, implementation and advantages of these analytic tractions over the traditional solution of using Gauss quadrature.
 
 \subsection{Multiphase simulations}
 \label{ss:multiphase}
 
 Modelling heterogeneity in DDD remains challenging. The core assumption of DDD is that we have a homogenous linear elastic space with invariant properties. However, modelling multiphase systems such as multicrystals and inclusions necessitates a weakening of such assumptions, particularly the space's homogeneity. Multiphase models are also necessary to apply DDD to more realistic scenarios.
 
-Fusion in particular is riddled with examples of highly heterogenous materials. As previously mentioned, neutron bombardment often causes clustering of transmutation products particularly on divertor and first wall materials; such clusters often substantially change many of their mechanical and thermal properties. The whole point of Oxide-Dispersion Strengthened (ODS) steels \cite{ddd_ods} is to hamper radiation damage by distributing oxide inclusions within their matrix; if we hope to model such alloys with DDD we must find a way to relax our homogeneity criteria.
+Fusion in particular is riddled with examples of highly heterogenous materials. As previously mentioned, neutron bombardment often causes clustering of transmutation products, particularly on divertor and first wall materials; such clusters often substantially change many of their mechanical and thermal properties. The whole point of Oxide-Dispersion Strengthened (ODS) steels \cite{ddd_ods} is to hamper radiation damage by distributing oxide inclusions within their matrix; if we hope to model such alloys with DDD we must find a way to relax our homogeneity criteria.
 
 Furthermore, many potential candidates for structural and even first wall materials of fusion reactors are designed with complex microstructures in order to resist thermal creep and radiation damage. Understanding dislocation behaviours near the crystal boundaries of these microstructurally complex materials is another niche where DDD simulations can shed light into the mechanisms that give rise to these materials' desirable properties.
 
@@ -637,5 +644,5 @@ This project applies such techniques to accelerate and improve the ease with whi
 Much of the work presented herein has already proven useful in the simulation of complex simulations such as nano-indentation \cite{YU2018} and several other research projects within the Tarleton group. Here we showcase the new capabilities, findings and methods; improvements, fixes and redesign of the codebase; as well as a showcase of relatively simple, yet formerly inaccessible simulations resulting from this work. Finally, we present an ambitious proposal for future work resulting from the insights gained during the project.
 \savearabiccounter
 
-% 9139 written words.
-% 4775 edited
+% 8894 written words.
+% 6047 edited
