@@ -501,11 +501,11 @@ Polycrystalline materials have been studied using DDD, however most of these are
 
 It is well known that much of the grain size strengthening effects arise from dislocation-grain boundary (GB) interactions including transmission, reflection, emission and absorption of dislocations \cite{grain_size_eff1, grain_size_eff2}; with transmission being the most typically observed.
 
-The model depends on the grain boundary energy density, $ E_{\rvar{GB}}(\delta\theta) $, where $ \delta\theta $ is the crystallographic misorientation between neighbouring crystals; resolved shear stress, $ \tau $, on the incoming dislocation with Burgers vector $ \vec{b_{1}} $; critical penetration stress for the GB, $ \tau_{\rvar{GB}} $; and Burgers vector of the dislocation debris, $ \vec{\Delta b} = \vec{b_{1}} - \vec{b_{2}} $, left behind when the incoming dislocation, $ \vec{b_{1}} $, transmits throught the grain boundary to become a dislocation with Burgers vector, $ \vec{b_{2}} $. The relationship may be approximated by,
+These models depend on the grain boundary energy density, $ E_{\rvar{GB}}(\delta\theta) $, where $ \delta\theta $ is the crystallographic misorientation between neighbouring crystals; resolved shear stress, $ \tau $, on the incoming dislocation with Burgers vector $ \vec{b_{1}} $; critical penetration stress for the GB, $ \tau_{\rvar{GB}} $; and Burgers vector of the dislocation debris, $ \vec{\Delta b} = \vec{b_{1}} - \vec{b_{2}} $, left behind when the incoming dislocation, $ \vec{b_{1}} $, transmits throught the grain boundary to become a dislocation with Burgers vector, $ \vec{b_{2}} $. The relationship may be approximated by,
 \begin{align}\label{eq:dln_trns}
     \tau \lvert\vec{b_{1}}\rvert^{2} & \geq \tau_{\rvar{pass}} \lvert\vec{b_{1}}\rvert^{2} = E_{\rvar{GB}}(\theta) \lvert\vec{b_{1}}\rvert + \alpha G \lvert\vec{\Delta b}\rvert^{2}\,,
 \end{align}
-where $ \alpha $ is the material constant and $ G $ the shear modulus. The grain boundary energy density was proposed by \cite{gb_e_dens} to have the simple form,
+where $ \alpha $ is the material constant and $ G $ the shear modulus. The grain boundary energy density was proposed by \citet{gb_e_dens} to have the simple form,
 \begin{align}
     E_{\rvar{GB}} & = 	\begin{cases}
         k \dfrac{\delta\theta}{\theta_{1}}                 & \quad 0 \leq \delta\theta < \theta_{1}\,,          \\
@@ -521,18 +521,17 @@ This is of course a gross simplification of the real 3D problem, but this approa
 \end{align}
 where $ \sigma_{0} $ is the yield stress, $ d_{0} $ a reference crystal size, $ \kappa $ the Hall-Petch slope and $ n $ the crystal size sensitivity parameter. \Citet{2d_pcm} showed that the model reproduces the Hall-Petch effect quite successfully. As a consequence, they showed that even what might appear as an overly simplistic approach can describe a complex emergent phenomenon such as the Hall-Petch effect.
 
-Aside from the Hall-Petch effect, the model has also been utilised by \cite{2d_pcm2} to study the thickness effects of three different types of polycrystalline thin films:
+Aside from the Hall-Petch effect, the model has also been utilised by \citet{2d_pcm2} to study the thickness effects of three different types of polycrystalline thin films:
 \begin{inparaenum}[\itshape 1\upshape )]
     \item no surface treatment,
     \item surface passivation layer, and
-    \item surface grain refinement zones
-\end{inparaenum}. In this study, Frank-Reed sources were seeded across the domain, and the superposition principle was utilised to calculate displacement, strain and stresses in the thin films. Their results qualitatively reproduced experimental observations from expected dislocation patterns, stress distributions, and the eventual disappearance of the size effect as the films got thicker \cite{2d_pcm2}.
+    \item surface grain refinement zones.
+\end{inparaenum}
+In their study, Frank-Reed sources were seeded across the domain, and the superposition principle was utilised to calculate displacement, strain and stresses in the thin films. Their results qualitatively reproduced experimental observations from expected dislocation patterns, stress distributions, and the eventual disappearance of the size effect as the films got thicker.
 
-Though two-dimensional models might seem useless, they have their place, particularly when thin films are concerned. However, they may also be of use when investigating the effects of dislocations on the mechanical behaviour of superconducting tape---whose applications range from medical imaging to fusion energy production. The exotic composition and crystallography of many superconductors (perovskites) would make 3D models very complex and computationally expensive, so 2D models may offer viable alternatives. On top of this, a superconducting tape's operating environment would often have it under strains which might not strictly lie in-plane, but given a small enough segment of tape, strains orthogonal to its plane may be neglected. Thus making 2D models an acceptable first attempt at tacking the problem, at leas before computational resources and developments in 3D models make more realistic studies of such complex systems possible.
+Though two-dimensional models might seem useless, they have their place, particularly when thin films are concerned. However, they may also be of use when investigating the effects of dislocations on the mechanical behaviour of superconducting tape---whose applications range from medical imaging to fusion energy production. The exotic composition and crystallography of many superconductors (perovskites) would make 3D models very complex and computationally expensive, so 2D models may offer viable alternatives. On top of this, a superconducting tape's operating environment would often have it under strains which might not strictly lie in-plane, but given a small enough segment of tape, strains orthogonal to its plane may be neglected. Thus making 2D models an acceptable first attempt at tacking the problem, at least until developments in 3D models make more realistic studies of such complex systems possible.
 
-The 3D case is substantially more complicated than the 2D case. A recent study by \citet{twinning} looked at the role of twinning on the hardening response of polycrystalline Mg using 3D DDD.
-
-The article is a perfect example of why 3D DDD is so much more complex than 2D DDD. Admitedly, it uses a material with a HCP crystal structure which complicates matters compared to FCC or BCC.
+The 3D case is substantially more complicated than the 2D case. A study by \citet{twinning}, looked at the role of twinning on the hardening response of polycrystalline Mg using 3D DDD. The article is a perfect example of why 3D DDD is so much more complex than 2D DDD. Admitedly, it uses a material with a HCP crystal structure, whose mobility laws are substantially more complex than those of FCC or BCC materials.
 
 In 3D DDD one must account for dislocation-twin boundary (TB) interactions. These may be obtained via geometric considerations, MD, and experimental evidence \cite{twinning2,twinning3,twinning4,twinning5}. We must have information regarding how dislocations are transmitted through a TB such as
 \begin{inparaenum}[\itshape 1\upshape)]
@@ -543,9 +542,9 @@ In 3D DDD one must account for dislocation-twin boundary (TB) interactions. Thes
 \end{inparaenum}
 All this obviously depends on the twinning plane, so in order to study more realistic scenarios one must have all the necessary knowledge to properly account for all dislocation-TB interactions. Furthermore, it is possible that certain dislocations may leave behind twinning dislocations that end up as TB steps, whose movement can lead to TB migration and twin growth \cite{twinning6, twinning7}.
 
-\Citet{twinning} modelled four scenarios in order to deconvolute the effects that twins and grain boundaries have on the mechanical behaviour of a cubic crystal. They modelled
+\Citet{twinning} modelled four scenarios in order to deconvolve the effects that twins and grain boundaries have on the mechanical behaviour of a cube-shaped crystal. They modelled
 \begin{inparaenum}[\itshape 1\upshape)]
-    \item a cubic twinned polycrustal with two TBs and GBs on the edges of the cube,
+    \item a twinned polycrystal with two TBs and GBs on the edges of the cube,
     \item a single crystal with no TBs or GBs,
     \item a polycrystal with no TBs but GBs,
     \item a twinned crystal with TBs but not GBs.
@@ -557,7 +556,7 @@ It is worth noting that the effects of twin growth in plasticity were not accoun
         \theta_{\rvar{TG}} & = -\dfrac{\rvar{d}}{\rvar{d}\epsilon} \left[E \epsilon_{\rvar{twin}}^{\rvar{p}} \right] = -E \bar{m} \gamma_{\rvar{twin}} \dfrac{\rvar{d}}{\rvar{d} \epsilon} \left[f_{\rvar{twin}}\right]\label{seq:tg}\,,
     \end{align}
 \end{subequations}
-where $ \theta_{\rvar{TG}} $ is the hardening rate due to twin growth, $ \bar{m} $ the mean Schmid factor of the participating twins $ \gamma_{\rvar{twin}} $ the characteristic twinning shear and $ \dfrac{\rvar{d}}{\rvar{d} \epsilon} \left[f_{\rvar{twin}}\right] $ is the change in the change in the twin volume fraction with respect to applied strain. These parameters must be empirically obtained.
+where $ \theta_{\rvar{TG}} $ is the hardening rate due to twin growth, $ \bar{m} $ the mean Schmid factor of the participating twins $ \gamma_{\rvar{twin}} $ the characteristic twinning shear and $ \dfrac{\rvar{d}}{\rvar{d} \epsilon} \left[f_{\rvar{twin}}\right] $ is the rate of change of the twin volume fraction with respect to the applied strain. These parameters must be empirically obtained.
 
 With their model, \citet{twinning} managed to qualitatively reproduce experimental observations, including the concave shape of strain-stress curves that arises from the competing hardening effect of TBs restricting dislocation motion (\cref{f:twinning}), and the softening produced by twin growth as obtained from \cref{seq:tg}.
 \begin{figure}[t]
@@ -567,14 +566,10 @@ With their model, \citet{twinning} managed to qualitatively reproduce experiment
     \label{f:twinning}
 \end{figure}
 
-Twin boundaries in 3D are analogous to grain boundaries in 2D, given that they are coherent, narrow boundaries rather than messy, often incoherent grain boundaries. Consequently, grain boundaries are much harder to treat in 3D; instead, the community focuses on multiphase models where the details of dislocation transmission between phases are ignored or simplified as mentioned in \cref{sss:inclusions}.
+Twin boundaries in 3D are analogous to grain boundaries in 2D, given that they are coherent, narrow boundaries rather than messy, often incoherent grain boundaries. Consequently, grain boundaries are much harder to treat in 3D; instead, the community focuses on multiphase models where the details of dislocation transmission between phases are ignored or simplified as expanded upon in \cref{sss:inclusions}.
 
 \subsubsection{Inclusions}
 \label{sss:inclusions}
-
-Inclusions have been modelled using the three methods described in \cref{ss:ddd_fem}. However, they have gone about it differently. The SM and DCM apply their formulations heirarchically to allow for dislocation motion into and out of the inclusion. Furthermore, being coupled DDD-FEM problems, the inclusions must also be appropriately meshed, oftentimes this means inclusion geometries are limited to the mesh type. However, FEM allows for the calculation of coherency stresses which are seen by the dislocations and cause dislocation localisation and forresting in the vicinity of inclusions, just as experimentally observed \cite{sm_incl, dcm_incl}.
-
-The level set method, having never been coupled to FEM, takes a different approach. Where the particles can be modelled as a region where dislocations experience a user-defined force. Coherency stresses have so far been neglected, but their effects may be modelled with the use of functions akin to diffuse orbital functions used in theoretical and computational quantum chemistry. Within this framework the inclusions may be arbitrarily defined to have any smooth shape, especially if one were to use piecewise parametric fourier curves.
 
 Dislocation-permeable inclusions have been simulated via the SM \cite{sm_incl}. As mentioned in \cref{sss:superposition}, there is a need to calculate polarisation stresses due to differences in the elasticity of both phases. Using the same notation as \cref{sss:superposition} this can be done by breaking up the image stress into,
 \begin{subequations}
@@ -585,7 +580,7 @@ Dislocation-permeable inclusions have been simulated via the SM \cite{sm_incl}. 
 \end{subequations}
 where $ \rvar{m},~\rvar{p} $ denote whether a variable belongs to the matrix or precipitate respectively and $ \tns{C} $ is the elastic stiffness tensor.
 
-\Citet{sm_incl} not only modelled a cuboid inclusion, but bimetallic interfaces in 3D. They found that under the right conditions, dislocations can pass from one phase to the other. When a dislocation passes into a different phase, it leaves an antiphase boundary on the slip plane. Therefore, in order for a dislocation to move from one phase to another, it needs excess energy equal to the antiphase (APB) energy of the area it sweeps within the precipitate. This means that as a node passes from one phase to another, it feels a repulsive force $ F_{b} $. The next dislocation moving along the same APB will then feel an attractive force $ F_{b} $ to dissolve the APB. Once both dislocations move into the new matrix, they form a superdislocation bound by the APB energy \cite{apb}. However, as the dislocation length increases with respect to the precipitate's volume, the production of Orowan loops around it becomes more energetically favourable than moving into the new phase \cite{sm_incl, apb}. Both of these behaviours have been observed when using the superposition method.
+\Citet{sm_incl} not only modelled a cuboid inclusion, but bimetallic interfaces in 3D. They found that under the right conditions, dislocations can pass from one phase to the other. When a dislocation passes into a different phase, it leaves an antiphase boundary on the slip plane. Therefore, in order for a dislocation to move from one phase to another, it needs excess energy equal to the antiphase boundary (APB) energy of the area it sweeps within the precipitate. This means that as a node passes from one phase to another, it feels a repulsive force $ F_{b} $. The next dislocation moving along the same APB will then feel an attractive force, $ F_{b} $ to dissolve the APB. Once both dislocations move into the new matrix, they form a superdislocation bound by the APB energy \cite{apb}. However, as the dislocation length increases with respect to the precipitate's volume, the production of Orowan loops around it becomes more energetically favourable than moving into the new phase \cite{sm_incl, apb}. Both of these behaviours have been observed when using the superposition method.
 
 The eigenstrain method \cite{eigenstrain_incl} as described in \cref{sss:discrete_continuum} has been shown to be a viable solution to this problem. One can compute the stresses and displacements produced by the dislocation ensemble on the inclusions' surfaces via DCM or SM. The SM method however needs to calculate polarisation stresses \cite{bdd}, an operation that significantly increases the number of calculations necessary to solve the problem.
 
@@ -597,9 +592,9 @@ The DCM method has been used to simulate multiphase materials where the simulate
     \label{f:coherency}
 \end{figure}
 
-The level set method has also been successfully used to model inclusions. In contrast to the aforementioned methods, they are assumed to be regions in space where dislocations experience a repelling force, instead of a region in space with distinct characteristics to the matrix. The force profile can be very simply defined to depend on the radial distance from the dislocation to a point in the ``inclusion's'' volume \cite{ddd_inclusion_as_force}. It can also be modulated depending on the nature of the inclusion by making the force a radial function, thus avoiding many of the numerical issues facing DDD-FEM couplings (see \cref{ss:ddd_fem,ss:analytic_forces}). It is also possible to make the inclusions impermeable or semi-permeable depending on the magnitude and steepness of the force gradient as presented in \cite{ddd_inclusion_as_force}. Arbitrarily shaped may also be possible if one were to also use angular components to the force function, or even through the use of spherical harmonics.
+The level set method has also been successfully used to model inclusions. In contrast to the aforementioned methods, they are assumed to be regions in space where dislocations experience a repelling force, instead of a region in space with distinct characteristics to the matrix. The force profile can be very simply defined to depend on the radial distance from the dislocation to a point in the ``inclusion's'' volume \cite{ddd_inclusion_as_force}. It can also be modulated depending on the nature of the inclusion by making the force a radial function, thus avoiding many of the numerical issues facing DDD-FEM couplings (see \cref{ss:ddd_fem,ss:analytic_forces}). It is also possible to make the inclusions impermeable or semi-permeable depending on the magnitude and steepness of the force gradient, as presented in \cite{ddd_inclusion_as_force}. Arbitrarily shaped inclusions are also possible if one were to also use angular components in the force function, through the use of spherical harmonics and even piecewise-parametric fourier series. This is a simple and versatile method that can be applied to DDD as well.
 
-Though mathematically appealing, the level set method is far from representing the reality of dislocation-inclusion interactions. More realistic scenarios require use of more commonplace DDD-FEM coupling methods. Implementing arbitrarily shaped particles is not impossible in DDD---particularly if they can be discretised. Aside from the significantly lower computational requirements, one of the biggest advantages of DDD is that one can find tractions and displacements natively through either the DCM or SM, whereas the level set method requires the force to be user-defined and displacements on the inclusion are completely ignored. Furthermore, if the inclusion is a different crystal or a twin of the same material as in \cite{twinning}, it is possible to use the DCM or SM to study the transmission of dislocations from one phase to the other; something that is not yet possible to do with the level set method.
+Though mathematically appealing, such an approach is far from representing the reality of dislocation-inclusion interactions. More realistic scenarios require the use of more commonplace DDD-FEM coupling methods. Implementing arbitrarily-shaped particles is not impossible in DDD---particularly if they can be discretised. Aside from the significantly lower computational requirements of the time evolution and dislocation-dislocation interactions compared to the level set method, one of the biggest advantages of using the SM and DCM methods is that everything, from tractions and displacements on the inclusions, to the coherence stresses on the matrix, can be natively computed from experimentally obtained values. Besides, the method for treating inclusions as functions is still viable. On the other hand, the level set method is so far limited to this approach. Furthermore, if the inclusion is a different crystal or a twin of the same material, as in \cite{twinning}, it is possible to use the DCM or SM to study the transmission of dislocations from one phase to the other; something that is not yet possible with the level set method.
 
 \subsection{Parallelising discrete dislocation dynamics}
 \label{ss:parallel_ddd}
@@ -644,5 +639,5 @@ This project applies such techniques to accelerate and improve the ease with whi
 Much of the work presented herein has already proven useful in the simulation of complex simulations such as nano-indentation \cite{YU2018} and several other research projects within the Tarleton group. Here we showcase the new capabilities, findings and methods; improvements, fixes and redesign of the codebase; as well as a showcase of relatively simple, yet formerly inaccessible simulations resulting from this work. Finally, we present an ambitious proposal for future work resulting from the insights gained during the project.
 \savearabiccounter
 
-% 8894 written words.
-% 6047 edited
+% 8772 written words.
+% 7904 edited
