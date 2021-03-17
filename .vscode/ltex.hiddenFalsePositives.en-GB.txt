@@ -26,3 +26,6 @@
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qgpu_ddd investigated some of the more computationally intensive parts of DDD in DDLab \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q, a freely available DD code for Matlab.\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qgpu_ddd realised that the segment-segment interaction calculation can be done via \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q parallelism, where single pairs of dislocation segments are sent to a single thread, and then globally reduced.\\E$"}
 {"rule":"POSSESSIVE_APOSTROPHE","sentence":"^\\QIf anything should be clear from the present work, is that materials science is far from being solved.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qtwinning modelled four scenarios in order to deconvolve the effects that twins and grain boundaries have on the mechanical behaviour of a cube-shaped crystal.\\E$"}
+{"rule":"AGREEMENT_SENT_START","sentence":"^\\QMaterials challenges in nuclear energy\\E$"}
+{"rule":"POSSESSIVE_APOSTROPHE","sentence":"^\\QIf anything should be clear from the present work, is that materials science is far from solved.\\E$"}

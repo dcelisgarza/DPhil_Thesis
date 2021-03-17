@@ -49,7 +49,7 @@ Despite the fact that checking all possible collisions for the minimum distance 
 % todo #13
 For a given iteration the time-evolution of the network used to be performed before any topological changes. This was very sub-optimal for a couple of reasons.
 
-The fundamental reason is that by doing so, the time evolution erroneously accounts for complex structures that should have dissipated into lower energy ones as per the quasi-static principle our model is based on. In other words, high energy structures in the network mean large stress gradients. These break the assumption that a node and its neighbours experience similar conditions. These locality assumptions lead to \label{eq:nodeVel}, which is what all our mobility laws are based on.
+The fundamental reason is that by doing so, the time evolution erroneously accounts for complex structures that should have dissipated into lower energy ones as per the quasi-static principle our model is based on. In other words, high energy structures in the network mean large stress gradients. These break the assumption that a node and its neighbours experience similar conditions. These locality assumptions lead to \cref{eq:nodeVel}, which is what all our mobility laws are based on.
 
 The practical reason is that by leaving these structures around when they should have been removed, the computational complexity increases by virtue of having more nodes and segments that would otherwise not be there.
 
