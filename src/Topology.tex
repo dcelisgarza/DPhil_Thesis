@@ -36,13 +36,13 @@ In the same vein as \cref{ss:hinges}, two-line collisions were being improperly 
 \begin{figure}
     \centering
     \includegraphics[width=0.9\linewidth]{collisionDist.pdf}
-    \caption[Dislocation segments inside different collision radii.]{Multiple dislocation segments inside the same collision radius. Resolving all collisions at once leads to 3 different structures, 6 total but half are degenerate. Circles represent collision radii for the corresponding colour and line-style of a dislocation segment.}
+    \caption[Dislocation segments inside different collision radii.]{Multiple dislocation segments inside the same collision radius. Resolving all collisions at once leads to 3 different structures, 6 total but half are degenerate. Circles represent collision radii for the segments with corresponding line style and colour.}
     \label{f:collisionRadius}
 \end{figure}
 
-The actual algorithm is more sophisticated because it accounts for complete segments, as well as their velocities relative to each other. It returns the points along the segments that give minimise the distance between segments. These points are then used to decide how the nodes should be merged.
+The actual algorithm is more sophisticated because it accounts for whole segments, as well as their relative velocities. It returns the points along the segments that minimise the distance between segments. These points are then used to decide which nodes and how they should be merged.
 
-The problem was that as soon as a viable collision was found, the function returned. So in a scenario like \cref{f:collisionRadius}, if the code was looking for a collision on $s_1$, and it came across $s_3$ first, it would flag that as the collision, disregarding the fact that not only was $s_2$ closer, but $s_2$ and $s_3$ are also closer; and perhaps the true minimal distance was not even between $s_1$ and another segment, but between $s_2$ and $s_3$. The same fix was applied to hinge collisions.
+The problem was that as soon as a viable collision was found, the function returned. So in a scenario like \cref{f:collisionRadius}, if the code was looking for a collision on $s_1$, and it came across $s_3$ first, it would flag that as the collision, disregarding the fact that not only was $s_2$ closer, but $s_2$ and $s_3$ are also closer; and perhaps the true minimal distance was not even between $s_1$ and another segment, but between $s_2$ and $s_3$. We had to apply the same fix to hinge collisions. Admittedly, it matters less in that case as they tend to be rarer, plus their size is limited anyway, but still ensures a more correct solution.
 
 The original algorithm had $\mathcal{O}(N^2)$, $\mathcal{\Theta}(N^2/4)$ and $\mathcal{\Omega}(1)$ for its upper, average, and lower bounds respectively for fixed $N$, where $N$ is the number of segments. The new one is always $\mathcal{O}(N^2)$. However, $N^2/4 \to N^2$ as $N\to\infty$, so as simulations grow larger, the performance hit gets lower. Moreover, the algorithm is quite cheap compared to other processes, and the improved accuracy is very much worth the small cost.
 
@@ -89,4 +89,4 @@ Part of the increase in running speed is down to the fact that quasi-static cond
 
 With these improvements, simulations that used to be computationally intractible within a reasonable timeframe are now very doable. Large, complex simulations with high dislocation densities are still slow by virtue of how topologically active they are. They are simultaneously more accurate and faster by multiple orders of magnitude (sometimes 5 or more) than before.
 \savearabiccounter
-%1864
+%2366 words
