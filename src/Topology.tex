@@ -151,7 +151,7 @@ This was originally hard-coded for cantilever bending, but a general solution ca
 \begin{align}\label{eq:signedDist}
     D & = \hat{\vec{n}} \cdot (\vec{x_0} - \vec{x_n})\,,
 \end{align}
-where $D$ is the signed distance from the point $\vec{x_0}$ to a plane with unit normal $\hat{\vec{n}}$ which passes through the point $\vec{x_n}$. $D$ is positive if point $\vec{x_0}$ is on the side $\hat{\vec{n}}$ points towards and negative otherwise. We can identify nodes that have exited from these surfaces by using their surface normal, a point on them, and whether $D$ is positive. They can then be moved back to the surface and pinned.
+where $D$ is the signed distance from the point, $\vec{x_0}$, to a plane with unit normal, $\hat{\vec{n}}$, which passes through the point, $\vec{x_n}$. $D$ is positive if point $\vec{x_0}$ is on the side $\hat{\vec{n}}$ points towards and negative otherwise. We can identify nodes that have exited from these surfaces by using their surface normal, a point on them, and whether $D$ is positive. They can then be moved back to the surface and pinned.
 
 This is an imperfect solution, but works quite well and removes these nodes from the mobility calculation. Perhaps a better solution would be to flag those nodes such that Peach-K\"{o}ler forces, tractions, displacements, and surface remeshing criteria no longer apply to them. However, this will have to be implemented and tested as part of future improvements to the code.
 
