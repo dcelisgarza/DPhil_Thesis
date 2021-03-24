@@ -1,9 +1,53 @@
 \chapter{Improved tolopogical operations}
 \label{c:topology}
 
+Throughout this chapter we will refer to various subroutines by what they perform.
+\begin{enumerate}
+    \item Time evolution: solve the differential equation governing dislocation motion.
+    \item Separation: separate high energy, highly connected nodes into lower energy nodes with fewer connections.
+    \item Collision detection: detect collisions between segments, i.e. which segments collide, where they collide, what nodes are involved.
+    \item Collision resolution: resolve collisions between segments, i.e. where they collide, what nodes to merge and where to do so.
+    \item Remeshing: ensuring the network has the appropriate resolution. Broken into 3 main parts:
+          \begin{enumerate}
+              \item Virtual: nodes that have exited the finite volume need to be tracked so the slip step and displacements can be properly accounted for. Virtual-surface segments, and virtual-virual segments are considered external and do not interact with internal segments in any way.
+              \item Surface: nodes that exit the finite volume need a node on the surface to keep track of where they connect to the internal network. Surface-internal nodes are considered internal, so they interact with other internal segments.
+              \item Internal: nodes that are internal to the finite volume.
+          \end{enumerate}
+\end{enumerate}
+
+\section{Introduction}
+
 In 2D, dislocations are parametrised as points on a surface. Therefore, aside from annihilation, interactions with grain boundaries \cite{grain_size_eff1, grain_size_eff2}, and perhaps the creation of superdislocations, topological changes in the dislocation network can be mostly ignored. However, in 3D, dislocations are parametrised as lines in a volume. This gives rise to extra complexities that result from multiple dislocations coming into contact with one another. These reactions ultimately lead to the formation of many secondary structures with their own properties that affect the rest of the network.
 
 The local dislocation density at these interaction sites, particularly arround sessile (immobile) junctions, tends to increase with time. Therefore, so do the local stress gradients, and with increasing stress gradients come increasing velocity gradients, which lead to global decreases in timestep. But a smaller timestep is not the only consequence, increases in dislocation density also mean higher probabilities of dislocation-dislocation interactions, so the phenomenon is autocatalytic and self-perpetuating. So properly accounting for these changes is of the utmost importance, particularly for simulations with high dislocation densities such as nanoindentation. This chapter details these improvements.
+
+\section{Non-commutativity of topological changes}\label{s:nonCommutativity}
+
+For a given iteration, the time-evolution and topological changes used to be performed in the following order:
+\begin{enumerate}
+    \item time-evolution,
+    \item separate highly connected nodes,
+    \item detect and resolve collisions, and
+    \item remesh network.
+\end{enumerate}
+This ordering was problematic. Fundamentally, it means the time evolution erroneously accounts for complex structures that should have dissipated into lower energy ones as per the quasi-static principle the model is based on. In other words, detecting and resolving collisions, generates highly connected structures that are high energy and thus produce large local stress gradients. The assumption that a node and its neighbours experience similar conditions breaks down near these highly connected nodes. Moreover, the assmumption that the network is at thermodynamic equilibrium at every time step breaks down when there are highly connected nodes that would otherwise be broken up by separation. Both of these lead to \cref{eq:nodeVel} not holding, which is the fundamental assumption behind our mobility laws.
+
+Moreover, the order in which topological changes were carried out was also very sub-optimal from a practical aspect. Colliding after separating would sometimes result in nodes being separated only to immediately collide again. Remeshing only at the end meant the input network for the topological operations could have contained segments whose lengths were outside the bounds defined by the input file. Meaning the network may not have been properly discretised, leading to unecessarily complex structures that may not have had the required resolution. The solution was to simply remesh the network after its time evolution and before topological functions.
+
+The other problem with this ordering was the combinatorial complexity of the separation subroutine. The consequence of the old ordering is that as simulations advanced, collisions tend to become more common. A higher collision rate means more highly connected nodes. The role of separation is to break these high energy, highly connected nodes into lower energy nodes with fewer connections. However, splitting nodes is a combinatorial problem, so the gross computational complexity is functionally $\mathcal{O}(N!)$, which is pretty much the worst possible scaling barring special cases such as tetration. \Cref{s:separation} contains a more detailed explanation as well as resolution of the problem.
+
+Aside from the order of operations, a very large number of changes, fixes and improvements needed to be made to practically all topological operations. Here we detail only the ones this project had a major hand in fixing, namely collision detection and resolution, separation, and part of the surface remeshing. The rest were led by Bruce Bromage as part of his project, and the one preventing the formation of superdislocations by Haiyang Yu.
+
+The end result of all this work is the new order of operations:
+\begin{enumerate}
+    \item time-evolution,
+    \item remesh,
+    \item collision detection and resolution + separation loop,
+    \item mobilise highly connected immobile nodes,
+    \item separate highly connected nodes,
+    \item remesh.
+\end{enumerate}
+This ensures the time evolution and topological functions are all fed a network that is as clean and well-resolved as the input parameters say it should be. Although this incurs a computational cost, the benefits of having a cleaner network for the other functions to work with vastly outweigh the increased cost of calling the cheap remeshing subroutine more times.
 
 \section{Collision}\label{s:collision}
 
@@ -50,7 +94,7 @@ Better collision detection tends to result in faster simulations because the res
 
 We must also bear in mind that \cref{f:collisionRadius} shows a minimal example for a case where three collision radii overlap, and the resulting structures are not dissimilar to one another. In fact, if the final junction formed is glissile, they should evolve similarly. However, as the code was now able to handle and evolve larger numbers of dislocations further than before, it became apparent that the collision algorithms needed to be improved. After all, as the number of candidate collisions increased, so did the chance for the code to pick the wrong one and for that to have a deleterious effect on the code.
 
-\section{Separation}
+\section{Separation}\label{s:separation}
 
 One of the larger problems with high dislocation densities, is the computational complexity of the separation function. Its role is to take high energy, highly connected structures and break them apart into lower energy, lower connection ones. The separation criteria is the power dissipation of the split configuration, compared to the power dissipation of the unseparated structure. The power dissipation is given by
 \begin{align}\label{eq:powerDiss}
@@ -82,29 +126,34 @@ This can lead to collisions being checked more than once, but in keeping with th
 
 It is worth noting that nodes labelled as immobile (an artificial construct to mimic pinning) are not split by separation. Which means they sometimes become very highly connected, and as a result can create an impassable obstacle for other nodes. As a result, they get `unpinned' when they reach a critical level of connectivity. Separation is performed after this check to break them apart, and also because nodes may need separating despite there being no collisions during the timestep.
 
-\section{Non-commutativity of topological changes}\label{s:nonCommutativity}
+It is worth noting that the power dissipation criterion has not been used in \cref{c:simulations} as this change was completed some time after the simulations started running. Instead, they use an out-dated method that simply checks whether the pre-collision and post-separation networks have the same number of nodes and segments. If they do, then the network and auxiliary matrices are not updated and the colliding segments get added to \texttt{s1Skip} and \texttt{s2Skip}, otherwise the buffers are emptied and the collision-separation is allowed to happen. This can miss some collisions, so after the collision-separation loop, we collide the rest of the nodes and exit. The outer call to separation deals with these as it sees fit.
 
-For a given iteration, the time-evolution and topological changes were performed in the following order:
-\begin{enumerate}
-    \item time-evolution,
-    \item separate highly connected nodes,
-    \item detect and resolve collisions, and
-    \item remesh network.
-\end{enumerate}
-This ordering is problematic. Fundamentally, this means the time evolution erroneously accounts for complex structures that should have dissipated into lower energy ones as per the quasi-static principle our model is based on. In other words, detecting and resolving collisions, generates highly connected structures that are high energy and thus produce large local stress gradients. The assumption that a node and its neighbours experience similar conditions breaks down near these highly connected nodes. Moreover, the assmumption that the network is at thermodynamic equilibrium at every time step breaks down when there are highly connected nodes that otherwise be broken up by separation. Both of these lead to \cref{eq:nodeVel} not holding, which is the fundamental assumption behind our mobility laws.
+This is an imperfect solution as a node may be separated into a different configuration than it was initially. It also can create highly connected nodes, but nowhere near as many or as highly connected as before. However, this was the method available to us at the time and was still a huge improvement over the previous one.
 
-Moreover, the order in which topological changes were carried out was also very sub-optimal. Colliding after separating would result in nodes being separated only to immediately collide again. Remeshing only at the end also meant the input network for separation may contain segments that were either larger or smaller than the minimum allowable length. Meaning the network was not properly discretised before separations and collisions were performed, leading to incorrect structures. The solution to this problem is to also remesh the network after evolving it in time, ensuring the separation and collision subroutines were fed an appropriately discretised network.
+\section{Surface remeshing}
 
-The new order of operations, accounting for the improvements in collision and separation previously described is as follows:
-\begin{enumerate}
-    \item time-evolution,
-    \item remesh,
-    \item collision-separation loop,
-    \item mobilise highly connected immobile nodes,
-    \item separate highly connected nodes,
-    \item remesh.
-\end{enumerate}
-This ensures the time evolution and topological functions are all fed a network that is as clean and well-resolved as the input parameters say it should be. Although this incurs a computational cost, the benefits of having a cleaner network for the other functions to work with vastly outweigh the increased cost of calling the cheap remeshing subroutine more times.
+Most of the improvements to remeshing subroutines were done by Bruce Bromage, including the surface remeshing. His work on dislocation displacements necessitated the surface and virtual remeshing to be accurate. Among these requirements is the need to prevent dislocations from exiting out of surfaces with fixed displacements. If we take \cref{f:tensileSetupTop}, which describes the displacement boundary conditions for \cref{c:simulations}, we see two surfaces upon which displacements are specified.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{tensileSetup.pdf}
+    \caption[Displacement boundary conditions for dislocation plasticity modelling of single crystal, micro-tensile tests.]{Displacement boundary conditions for dislocation plasticity modelling of single crystal, micro-tensile tests.}
+    \label{f:tensileSetupTop}
+\end{figure}
+Having dislocations exit those surfaces creates a slip step on them. This leads to very high stresses because the FEM essentially has to push the slip step back in order to make it conform to the displacement boundary conditions as in \cref{f:slipStep}. This is unphysical, as in reality the dislocations simply move into the bulk of the material, which is not modelled. In the bulk, they stop experiencing the Peach-K\"{o}hler forces, as the bulk is not subject to the forces or displacements of the experiment, so they pile up as the only forces they experience are those from themselves and other dislocations.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{slipStep.pdf}
+    \caption{Slip step created by a dislocation exiting the volume has to be moved back to enforce displacement boundary conditions.}
+    \label{f:slipStep}
+\end{figure}
+
+This was originally hard-coded for cantilever bending, but a general solution can be found with \cref{eq:signedDist},
+\begin{align}\label{eq:signedDist}
+    D & = \hat{\vec{n}} \cdot (\vec{x_0} - \vec{x_n})\,,
+\end{align}
+where $D$ is the signed distance from the point $\vec{x_0}$ to a plane with unit normal $\hat{\vec{n}}$ which passes through the point $\vec{x_n}$. $D$ is positive if point $\vec{x_0}$ is on the side $\hat{\vec{n}}$ points towards and negative otherwise. We can identify nodes that have exited from these surfaces by using their surface normal, a point on them, and whether $D$ is positive. They can then be moved back to the surface and pinned.
+
+This is an imperfect solution, but works quite well and removes these nodes from the mobility calculation. Perhaps a better solution would be to flag those nodes such that Peach-K\"{o}ler forces, tractions, displacements, and surface remeshing criteria no longer apply to them. However, this will have to be implemented and tested as part of future improvements to the code.
 
 \section{Conclusions}
 
@@ -112,8 +161,8 @@ Discrete dislocation dynamics is a stiff and chaotic dynamical system. It is ver
 
 The increase in accuracy is obvious; detecting all the collsions that should be detected; resolving them in a manner more keeping with the quasi-static assumption yielding the mobility law; and ensuring the network resolution is what it should be; make for more accurate simulations.
 
-Part of the increase in running speed is down to the fact that quasi-static conditions are better met than before, so the timsetep can be greater. The other huge benefit to running speed is down to the asymptotic scaling and high proportionality constant of the algorithms we use; $\mathcal{O}(N^2)$ for seg-seg forces and collisions; $\mathcal{O}(C_i!)$ for a single separation; $\mathcal{O}(M N)$ for tractions. Where $N$ is the number of segments, $C_i$ the number of connections, and $M$ the number of surface elements. Simply put, the fewer things to calculate have a disproportionately large impact on how many operations need to be performed every time any of these functions is run.
+Part of the increase in running speed is down to the fact that quasi-static conditions are better met than before, so the timsetep can be greater. The other huge benefit to running speed is down to the asymptotic scaling and high scaling constants of the algorithms we use; $\mathcal{O}(N^2)$ for seg-seg forces and collisions; $\mathcal{O}(C!)$ for a single separation; $\mathcal{O}(M N)$ for tractions. Where $N$ is the number of segments, $C$ the number of connections, and $M$ the number of surface elements. Simply put, we disproportionately benefit from having fewer items these expensive functions operate over.
 
-With these improvements, simulations that used to be computationally intractible within a reasonable timeframe are now very doable. Large, complex simulations with high dislocation densities are still slow by virtue of how topologically active they are. They are simultaneously more accurate and faster by multiple orders of magnitude (sometimes 5 or more) than before.
+With these improvements, simulations that used to be computationally intractible within a reasonable timeframe are now very doable. Large, complex simulations with high dislocation densities are still slow by virtue of how topologically active they can be and due to the high cost of segment-segment forces, but they are simultaneously more accurate and faster by multiple orders of magnitude (sometimes 5 or more) than before.
 \savearabiccounter
-%2651 words
+%3485 words
