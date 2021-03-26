@@ -3,7 +3,7 @@
 
 EasyDD can be found in \href{https://github.com/TarletonGroup/EasyDD}{\texttt{https://github.com/TarletonGroup/EasyDD}}.
 
-As mentioned in \cref{s:objectives}, this project aims to integrate multidisciplinary skills for creating increasingly faithful recreations of reality in a user friendly way. This chapter details the software engineering that moved us closer to this goal and yielded a much improved version of EasyDD.
+As mentioned in \cref{s:objectives}, this project aims to integrate multidisciplinary skills for creating increasingly faithful recreations of reality in a user-friendly way. This chapter details the software engineering that moved us closer to this goal and yielded a much improved version of EasyDD.
 
 \section{Bug fixes}
 \label{s:bugs}
@@ -11,15 +11,15 @@ As mentioned in \cref{s:objectives}, this project aims to integrate multidiscipl
 \subsection{Correct time-adaptive integrator}
 \label{ss:integrator}
 
-The first obvious hurdle to overcome when making more complex simulations possible was the tremendously long computational time taken for a dislocation plasticity simulation to sufficiently advance past the elastic regime. A simple microcantilever bending simulation with a few frank reed sources would take a whole night to reach the plastic regime, some early simulations by Bruce Bromage took days to get there.
+The first obvious hurdle to overcome when making more complex simulations possible was the unreasonably long computational time taken for a dislocation plasticity simulation to sufficiently advance past the elastic regime. A simple microcantilever bending simulation with a few frank reed sources would take a whole night to reach the plastic regime, some early simulations by Bruce Bromage took days to get there.
 
-The unacceptable slowness prompted a closer examination of the adaptive-time integration method found in algorithm 10.2 and described by equations (10.42, 10.45 and 10.46) found in \cite[p.~214--216]{ddlab}, an explicit Euler-trapezoid predictor-corrector solver. These are \cref{alg:trapezoid} and \cref{eq:trapezoid},
+The unacceptable slowness prompted a closer examination of the adaptive-time Euler-trapezoid predictor-corrector solver described in algorithm 10.2 and equations (10.42, 10.45 and 10.46) in \cite[p.~214--216]{ddlab}, reproduced here by \cref{alg:trapezoid,eq:trapezoid},
 \begin{align}\label{eq:trapezoid}
     \vec{r}_i^{\rvar{P}}(t + \Delta t) & = \vec{r}_i(t) + \vec{g}_i\left(\left\{ \vec{r}_j(t) \right\}\right) \Delta t\,,                                                                     \\
     \vec{r}_i(t + \Delta t)            & = \vec{r}_i + \dfrac{\vec{g}_i(\left\{\vec{r}_j(t)\right\}) + \vec{g}_i\left(\left\{\vec{r}_i^{\rvar{P}}(t + \Delta t)\right\}\right)}{2}\Delta t\,, \\
     \vec{v}_i                          & \coloneqq \dfrac{\rvar{d}\vec{r}_i}{\rvar{d}t} = \vec{g}_i\left(\left\{\vec{r}_j\right\}\right)\,,
 \end{align}
-where $\vec{r}_i$ are nodal coordinates, $\vec{v}_i$ are nodal velocities, $\vec{g}_i$ is the function that uses the mobility model and nodal forces to compute the nodal velocities, and the superscript $\rvar{P}$ denotes the predictor. This solver is fast and accurate for a small enough timestep $\Delta t$. Two free parameters $\Delta t_{\rvar{max}}$ and $\epsilon$ denote the maximum allowed timestep and accuracy.
+where $\vec{r}_i$ are nodal coordinates, $\vec{v}_i$ are nodal velocities, $\vec{g}_i$ is the function that uses the mobility model and nodal forces to compute the nodal velocities, and the superscript $\rvar{P}$ denotes the predictor. This solver is fast and accurate for a small enough timestep $\Delta t$. The algorithm contains two free parameters, $\Delta t_{\rvar{max}}$ and $\epsilon$, which respectively denote the maximum allowed timestep and accuracy.
 \begin{algorithm}
     \caption{Adaptive Euler-trapezoid predictor-corrector algorithm.}
     \label{alg:trapezoid}
@@ -34,7 +34,11 @@ where $\vec{r}_i$ are nodal coordinates, $\vec{v}_i$ are nodal velocities, $\vec
     \end{enumerate}
 \end{algorithm}
 
-The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a different way of calculating the error but other than that they were the same. Unfortunately, this only increases the time step after converging to a satisfactory answer and advancing the time. So if anything caused the timestep to decrease, such as a collision or dislocation reaction, the time step would only increase very little every subsequent step, thus eading to unecessarily small time steps in most cases. The original implementation of this is found in commit \href{https://github.com/TarletonGroup/EasyDD/blob/780a6c41b35687b443d3241674af7393d2140639/int_trapezoid.m}{\texttt{65907b0}} under the name \texttt{int\_trapezoid.m}. An improved algorithm is described in \cref{alg:trapezoid_improved}. This algorithm takes close to the maximum allowed time step for the maximum allowable accuracy, ($\epsilon_{\rvar{max}}$, $\upsilon_{\rvar{max}}$), maximum and minimum timestep, ($\Delta t_{\rvar{max}}$, $\Delta t_{\rvar{min}}$) and number of iterations, $\rvar{iter}_{\rvar{max}}$. It also uses a better error heuristic and more conservative timestep increase. It can be found in the most current version of \href{https://github.com/TarletonGroup/EasyDD/blob/master/src/int_trapezoid.m}{\texttt{int\_trapezoid.m}}.
+The original, supposed implementation of this is found in commit \href{https://github.com/TarletonGroup/EasyDD/blob/780a6c41b35687b443d3241674af7393d2140639/int_trapezoid.m}{\texttt{65907b0}} under the name \texttt{int\_trapezoid.m}.
+
+However, this was not the case. There were a number of problems with the implementation. Firstly, it only used $\Delta t_\rvar{max}$ only on the first timestep. It also only increased the timestep once every timestep. Ideally, an adaptive time algorithm should increase the time step to the maximum that is still under the error criteria. The way the old version of the integrator worked meant that the time step would take multiple steps to ramp back up after decreasing. Take for example, a case where the time step had to decrease once for two consecutive steps, $\Delta t = \Delta t_0/4$ would have taken $\lceil\log_1.2(4)\rceil = 8$ subsequent time steps to surpass what it was originally, $\Delta t_0$. In general, $N$ time step halvings, would require $\log_b(2^N)$ steps get back to the original value, using $b$ as the time-step increase factor. Since only one increase in time step was allowed per simulation step, simulations were taking many more timesteps than necessary.
+
+An improved algorithm is described in \cref{alg:trapezoid_improved}. This algorithm maximises the time step given absolute and relative error criteria, ($\epsilon_{\rvar{max}}$, $\upsilon_{\rvar{max}}$), absolute maximal and minimal timesteps, ($\Delta t_{\rvar{max}}$, $\Delta t_{\rvar{min}}$) and number of iterations, $\rvar{iter}_{\rvar{max}}$. It also uses a modulated timestep increase by how far under the absolute accuracy criteria we are. It also fixes a bug that made the error calculation only account for the largest magnitude of a single component of the 3D vectors, rather than the largest norm. The new implementation can be found in the most current version of \href{https://github.com/TarletonGroup/EasyDD/blob/master/src/int_trapezoid.m}{\texttt{int\_trapezoid.m}}.
 \begin{algorithm}
     \caption{Improved adaptive timestep algorithm.}
     \label{alg:trapezoid_improved}
@@ -52,15 +56,18 @@ The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a
         \State $\rvar{flag} \gets \rvar{true}$
         \State $\rvar{iter} \gets \rvar{iter} + 1$
         \State $\Delta t \gets \max\left(\gamma \Delta t,\, \Delta t_\rvar{max}\right)$
-        \Else
-        \If{$\rvar{flag} == \rvar{true}$}
+        \ElsIf{$\rvar{flag} == \rvar{true}$}
         \State $\Delta t \gets \Delta t_{\rvar{valid}}$
         \State $\rvar{iter} \gets \rvar{iter}_\rvar{max}$
+        \ElsIf{$\Delta t < \Delta t_\rvar{min}$}
+        \State $\Delta t \gets \Delta t / 2$
+        \State $\rvar{iter} \gets \rvar{iter} + 1$
+        \ElsIf{$\Delta t == \Delta t_\rvar{min}$}
+        \State $\rvar{iter} \gets \rvar{iter}_\rvar{max} + 1$
         \Else
         \State $\Delta t \gets \Delta t / 2$
         \EndIf
-        \EndIf
-        \If{$\rvar{iter} > \rvar{iter}_{\rvar{max}}$ or $\Delta t == \Delta t_{\rvar{max}}$ or $\Delta t < \Delta t_\rvar{min}$}
+        \If{$\rvar{iter} > \rvar{iter}_{\rvar{max}}$ or $\Delta t == \Delta t_{\rvar{max}}$}
         \State $\rvar{Convergent} \gets \rvar{true}$
         \EndIf
         \EndWhile
@@ -69,7 +76,7 @@ The algorithm being used was not exactly this \cref{alg:trapezoid}, as it used a
     \end{algorithmic}
 \end{algorithm}
 
-\Cref{alg:trapezoid_improved} is more computationally expensive per iteration, but can increase the timestep much more rapidly than \cref{alg:trapezoid} without going through the rest of the simulation, which involves computationally expensive procedures. This improvement by itself let the early version of the software move through the elastic regime of our simulations orders of magnitude times faster than before. Simulations that took hours to days to reach the plastic regime, started doing so in minutes to hours. It also narrowed the gap between using different loading conditions, as the simulations could now effectively adjust the timestep to match the error tolerances much more easily than before. Both of which were a great boon to the usability of the code and to the research group's output capacity. This was the first major bottleneck to be fixed, which allowed us to identify and resolve previously unknown issues downstream.
+\Cref{alg:trapezoid_improved} is more computationally expensive per iteration, but can increase the timestep more rapidly, optimally and is more robust than \cref{alg:trapezoid}. The original algorithm also wasn't correctly implemented. Together, these changes let the new version of the software move through the elastic regime of our simulations orders of magnitude times faster than before. Simulations that took hours to days to reach the plastic regime, started doing so in minutes to hours. It also narrowed the gap between different loading conditions, as simulations were now more capable of effectively adjusting the timestep to more efficiently match the error tolerances. However, as discussed in \cref{c:simulations}, there is still a danger of overloading simulations. Fixing the integrator was the first major bottleneck we fixed, allowing us to identify and resolve downstream issues that were previously unkown.
 
 \subsection{Matrix conditioning}
 \label{ss:matrix}
