@@ -30,3 +30,15 @@
 {"rule":"AGREEMENT_SENT_START","sentence":"^\\QMaterials challenges in nuclear energy\\E$"}
 {"rule":"POSSESSIVE_APOSTROPHE","sentence":"^\\QIf anything should be clear from the present work, is that materials science is far from solved.\\E$"}
 {"rule":"WORD_CONTAINS_UNDERSCORE","sentence":"^\\QDislocation Based Modelling of Fusion Relevant Materials ox_brand_cmyk_pos.eps hmc.eps Daniel Celis Garza University of Oxford Harris-Manchester Materials Edmund Tarleton Angus Wilkinson Doctor in Philosophy Hilary Term 2021\\E$"}
+{"rule":"PUNCTUATION_PARAGRAPH_END","sentence":"^\\Q\\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q \\E(?:Dummy|Ina|Jimmy-)[0-9]+$"}
+{"rule":"ENGLISH_WORD_REPEAT_RULE","sentence":"^\\QFortunately, matlab MATLAB does not truly have object-oriented capabilities, so it forces either a procedural or data-driven approach.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qmatlab MATLAB has an old method of doing so using matlab feval(), where the first argument is the name of the file whose function is being called, and subsequent arguments are passed on to the function.\\E$"}
+{"rule":"EACH_OTHERS","sentence":"^\\QIf experts within the same research group find it difficult to incorporate each others' additions to our work, there is little hope for the general user.\\E$"}
+{"rule":"COMMA_COMPOUND_SENTENCE_2","sentence":"^\\QThe introduction of regressions makes it so code must be thoroughly and exhaustively tested before merging two people's work.\\E$"}
+{"rule":"WHETHER","sentence":"^\\QAnd since it is generic, we can choose whether or not to use it by changing an input file rather than messing with the source code.\\E$"}
+{"rule":"ENGLISH_WORD_REPEAT_RULE","sentence":"^\\QTiming the equivalent of allocating a \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q mesh in matlab MATLAB 2020b takes on the order of 70 (for x86 CPU architectures), which is in-line to what it costs in C C. Deallocating memory takes about \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q longer.\\E$"}
+{"rule":"COMMA_PARENTHESIS_WHITESPACE","sentence":"^\\QIn a function that otherwise takes a few , adding another 400 of spurious allocation is a significant overhead that can be easily remedied.\\E$"}
+{"rule":"ENGLISH_WORD_REPEAT_RULE","sentence":"^\\QHowever, matlab MATLAB has a special form of it that exploits sparsity.\\E$"}
+{"rule":"EN_GB_SIMPLE_REPLACE","sentence":"^\\QIt is not only the cost of allocating, but also the cost of garbage collection (GC) \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q i.e. automatically freeing memory based on a set of criteria can be significantly higher.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qmatlab MATLAB is infamous for the way it will happily dynamically grow an array when going out of bounds.\\E$"}
+{"rule":"ENGLISH_WORD_REPEAT_RULE","sentence":"^\\QThis is now done automatically on a need-to-compile basis and has a fallback in case no CUDA CUDA compiler is found.\\E$"}
