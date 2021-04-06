@@ -329,13 +329,12 @@ In aggregate these changes have given us the ability to use $15 \times$ more nod
 
 \subsection{Misc quality of life improvements}\label{s:qol}
 
-Formerly, initialising a simulation would involve a series of non-obvious steps, particularly when initially compiling the C and CUDA code used for accelerating simulations. This is now done automatically on a need-to-compile basis and has a fallback in case no \mintinline{CUDA}{CUDA} compiler is found.
+Formerly, initialising a simulation would involve a series of non-obvious steps, particularly when compiling the C and CUDA code for the first time. This is now done automatically on a need-to-compile basis and has a fallback in case no \mintinline{CUDA}{CUDA} compiler is found.
 
 There was also a recurring problem with simulations suddenly failing when a function was called with an undefined argument. This extremely common scenario is unbecoming of good software, especially if the failure happened a few minutes after starting a simulation. This has been remedied with the automatic calculation of a set of reasonable defaults for each and every undefined variable, aside from the arrays defining a dislocation network. Any new developments get added to this very simple, yet much needed script.
 
 \section{Conclusions}
 
-Scientific modelling is inherently an interdisciplinary skill. EasyDD is now faster, more efficient and more capable than ever before, in large part thanks to the work---ongoing or otherwise---described within this chapter. Subsequent chapters explore aspects more specific to discrete dislocation dynamics. However, it is important not to overlook the work that enables the obtention of results. Modern academia deems the final result to be paramount. But what is a result if it cannot be scrutinised because nobody can understand how it came about? Moreover, by developing good software, we allow others to partake in the obtention of results. We deem this to be one of the main contributions of the present project. We feel safe our ability to claim that we now have the capacity for providing more faithful recreations of reality in a less user-unfriendly way. And without so much as a glancing touch on dislocation dynamics.
+Scientific modelling is inherently an interdisciplinary skill. EasyDD is now faster, more efficient and more capable than ever before, in large part thanks to the work---ongoing or otherwise---described within this chapter. Subsequent chapters explore aspects more specific to discrete dislocation dynamics. However, it is important not to overlook the work that enables the obtention of results. Modern academia deems the final result to be paramount. But what is a result if it cannot be scrutinised because nobody can understand how it came about? Moreover, by developing good software, we bring others into the fold. We deem this to be one of the main contributions of the present project. We feel safe our ability to claim that we now have the capacity for providing more faithful recreations of reality in a less user-unfriendly way\ldots{} and without so much as a glancing touch on dislocation dynamics.
 \savearabiccounter
-% 2963 edited
-% 5135 words
+% 5445 words
