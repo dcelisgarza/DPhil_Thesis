@@ -295,7 +295,7 @@ as opposed to,
     bar = 2;
     genericFunction(foo, bar);
 \end{minted}
-which are not dissimilar, but the latter is more performant and easier to follow. Generic functions were already in use for dislocation mobility, but there are now functions for calculating numeric and analytic tractions (see \cref{c:tractions}), loading conditions (multi-stage loading, constant loading, cyclic loading), post-processing functions, boundary conditions, and various miscelaneous functions that support different simulation types.
+which are not dissimilar, but the latter is more performant, easier to follow, can be returned as part of a \mintinline{matlab}{struct} (thus providing a poor-man's way of making classes), and can be nested. Generic functions were already in use for dislocation mobility, but there are now functions for calculating numeric and analytic tractions (see \cref{c:tractions}), loading conditions (multi-stage loading, constant loading, cyclic loading), post-processing functions, boundary conditions, and various miscelaneous functions that support different simulation types.
 
 The main advantage of generic functions is reducing the need for direct source code modification. Changing source code, especially when there are no automated tests to speak of, is a dangerous proposition. It greatly increases the probability of introducing regressions (new bugs) and code divergeance between researchers. Regressions are always problematic, but code divergeance is a big issue that still affects the Tarleton Group. If experts within the same research group find it difficult to incorporate each others' additions to our work, there is little hope for the general user.
 
@@ -309,25 +309,23 @@ The introduction of regressions makes it so code must be thoroughly and exhausti
 
 \subsubsection{Spurious memory allocation}
 
-\mintinline{matlab}{MATLAB} is infamous for the way it will happily dynamically grow an array when going out of bounds. This \emph{terrible} practice is even fundmental to the operation of \texttt{EasyDD}. However, changing this fundamental part of the codebase requires a complete rewrite and not deemed worthwhile, there are worse bottlenecks. However, there were many instances of memory reallocated or arrays grown every cycle that were completely unecessary.
+\mintinline{matlab}{MATLAB} is infamous for the way it will happily grow an array dynamically when going out of bounds. This \emph{terrible} practice is even fundmental to the operation of \texttt{EasyDD}. However, changing this fundamental part of the codebase requires a complete rewrite and not deemed worthwhile, there are worse bottlenecks. However, there quite a few low-hanging fruit that have been picked.
 
 For example, the amount of memory unecessarily reallocated in the function that couples DDD and FEM was $12(N_x + 1)(N_y + 1)(N_z + 1)$ double precision floating point numbers, where $N_i$ is the number of elements in dimension $i$ of the finite domain. The cubic scaling is a performance killer at larger mesh sizes. In a simulation with hundreds or thousands of steps and a mesh with a few thousand FE nodes, the cost added up.
 
-It is not only the cost of allocating, but also the cost of garbage collection (GC) \cite{hanson1990fast} i.e. automatically freeing memory based on a set of criteria can be significantly higher. Timing the equivalent of allocating a $20 \times 20 \times 20$ mesh in \mintinline{matlab}{MATLAB 2020b} takes on the order of \SI{70}{\micro\sec} (for x86 CPU architectures), which is in-line to what it costs in \mintinline{C}{C}. Deallocating memory takes about $5 \times$ longer. In a function that otherwise takes a few \si{\milli\sec}, adding another \SI{400}{\micro\sec} of spurious allocation is a significant overhead that can be easily remedied.
-
+More memory allocation also means more garbage collection (GC) \cite{hanson1990fast} i.e. automatically freeing memory, based on a set of criteria. The cost of GC can be significantly higher than that of memory allocation. Timing the equivalent of allocating a $20 \times 20 \times 20$ mesh in \mintinline{matlab}{MATLAB 2020b} takes on the order of \SI{70}{\micro\sec} on x86 CPU architectures, which is in-line with what it costs in \mintinline{C}{C}. However, deallocating memory takes about $5 \times$ longer. In a function that otherwise takes a few \si{\milli\sec}, adding almost \SI{0.5}{\milli\sec} because of spurious allocation is a significant overhead that can be easily remedied.
 
 \subsubsection{Finite element optimisation}
 
-The use of sparse arrays is a must when working with finite elements, where matrices often take structured sparse forms will significantly reduce memory footprint and computational expense. The code already used these special data structures and Cholesky factorisation for faster solution of linear systems. However, \mintinline{matlab}{MATLAB} has a special form of it that exploits sparsity. This reduced the time required for the factorisation by around $50\times$, reduced the memory footprint of the final sparse arrays by a similar amount, and reduced the memory footprint of the actual factorisation procedure by approximately $10 \times$. The whole point of this factorisation is to make solving linear systems faster, in this case the calculation of the corrective displacements, $\vec{\hat{u}}$ on the free boundaries, $S_U$ of freedom as a result of the forces acting upon them,
+The use of sparse arrays is a must when working with finite elements, where matrices often take structured sparse forms. Taking advantage of this sparsity significantly reduces memory footprint and computational expense. The code already used these special data structures, along with Cholesky factorisation for faster solves of linear systems. However, \mintinline{matlab}{MATLAB} has a special form of it that exploits sparsity. This reduced the time required for the factorisation by around $50\times$, reduced the memory footprint of the final sparse arrays by a similar amount, and reduced the memory footprint of the actual factorisation procedure by approximately $10 \times$. The whole point of this factorisation is to make solving linear systems faster, in this case the calculation of the corrective displacements, $\vec{\hat{u}}$ on the free boundaries, $S_T$, as a result of the forces acting upon them,
 \begin{align}
-    \vec{\hat{u}} = \mtx{K}^{-1} \vec{f}\quad \text{on } S_U\,.
+    \vec{\hat{u}} = \mtx{K}^{-1} \vec{f}\quad \text{on } S_T\,.
 \end{align}
-
 It improved solution speed by a factor of 3, thus reducing the cost of coupling DDD to FEM to be dominated by the computation of dislocation-induced tractions and displacements.
 
 The final two optimisations also deal with memory. The first, removes unecessary allocations in the calculation of the global stiffness matrix and the introduction of a reduced stiffness matrix such that it only includes relevant degrees of freedom.
 
-In aggregate these changes have given us the ability to use $15 \times$ more nodes as well as letting us build meshes over two orders of magnitude faster, mostly down to improved memory access patterns inside the mesh building loops.
+In aggregate these changes have given us the ability to use $15 \times$ more nodes than previously, as well as letting us build meshes over two orders of magnitude faster, mostly thanks to improved memory access patterns inside the mesh building loops.
 
 \subsection{Misc quality of life improvements}\label{s:qol}
 
