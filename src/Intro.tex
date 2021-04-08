@@ -191,7 +191,7 @@ Special cases, such as having a parallel dislocation line segment to a surface, 
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{async.pdf}
+    \includegraphics[width=\linewidth]{async.pdf}
     \caption[GPU and CPU asynchronous execution.]{GPU and CPU code run independent of each other. This can lead to state ambiguities if both sides need to be aware of one another \cite{nvidia}.}
     \label{f:async_gpu_cpu}
 \end{figure}
@@ -200,7 +200,7 @@ One of the advantages of GPU-CPU independence is that both can work concurrently
 The reason why code branching is bad for GPU parallelisation is down to the fact that they work like software-customisable vector machines. As in vector processors, collections of threads all carry out the same operation on different pieces of data at the same time. The threads essentially behave as one, operating on different data. This is advantageous to a GPU because it means more energy and space can be used for computation rather than logic and scheduling. However, this eliminates the ability of code to branching within each collection of threads. This means that every branch of an \texttt{if} or \texttt{switch-case} statement will be executed whether a condition is met or not\footnote{If the branch can be resolved at compile time, it is possible for the compiler to prune it as part of compile time optimisation. However, this can be unreliable and depends on how transparent the optimsation is to the compiler, how agressive the optimisation setting is, and how the compiler is implemented. Therefore, relying on compile time optimisation to prune branches is not recommended.}. Only data storage depends on whether a condition is true or false, as illustrated in \cref{f:code_branching}.
 \begin{figure}
     \centering
-    \begin{subfigure}[t]{0.48\textwidth}
+    \begin{subfigure}[t]{0.48\linewidth}
         \centering
         \begin{minted}{c}
 if (y == 0){
@@ -216,7 +216,7 @@ else{
         \caption{CPU code will only execute if the condition is met. This is called code branching.}
     \end{subfigure}
     ~
-    \begin{subfigure}[t]{0.48\textwidth}
+    \begin{subfigure}[t]{0.48\linewidth}
         \centering
         \begin{minted}{cuda}
 p = (y == 0);

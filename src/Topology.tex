@@ -131,6 +131,7 @@ It is worth noting that the power dissipation criterion has not been used in \cr
 This is an imperfect solution as a node may be separated into a different configuration than it was initially. It also can create highly connected nodes, but nowhere near as many or as highly connected as before. However, this was the method available to us at the time and was still a huge improvement over the previous one.
 
 \section{Surface remeshing}
+\label{c:surfRem}
 
 Most of the improvements to remeshing subroutines were done by Bruce Bromage, including the surface remeshing. His work on dislocation displacements necessitated the surface and virtual remeshing to be accurate. Among these requirements is the need to prevent dislocations from exiting out of surfaces with fixed displacements. If we take \cref{f:tensileSetupTop}, which describes the displacement boundary conditions for \cref{c:simulations}, we see two surfaces upon which displacements are specified.
 \begin{figure}
@@ -139,7 +140,7 @@ Most of the improvements to remeshing subroutines were done by Bruce Bromage, in
     \caption[Displacement boundary conditions for dislocation plasticity modelling of single crystal, micro-tensile tests.]{Displacement boundary conditions for dislocation plasticity modelling of single crystal, micro-tensile tests.}
     \label{f:tensileSetupTop}
 \end{figure}
-Having dislocations exit those surfaces creates a slip step on them. This leads to very high stresses because the FEM essentially has to push the slip step back in order to make it conform to the displacement boundary conditions as in \cref{f:slipStep}. This is unphysical, as in reality the dislocations simply move into the bulk of the material, which is not modelled. In the bulk, they stop experiencing the Peach-K\"{o}hler forces, as the bulk is not subject to the forces or displacements of the experiment, so they pile up as the only forces they experience are those from themselves and other dislocations.
+Having dislocations exit those surfaces creates a slip step on them. This leads to very high stresses because the FEM essentially has to push the slip step back in order to make it conform to the displacement boundary conditions as in \cref{f:slipStep}. This is unphysical, as in reality the dislocations simply move into the bulk of the material, which is not modelled. In the bulk, they stop experiencing the Peach-K\"{o}hler force, because it is not subject to the forces or displacements of the experiment, so they pile up as the only forces they experience are those from themselves and other dislocations.
 \begin{figure}
     \centering
     \includegraphics[width=0.5\linewidth]{slipStep.pdf}

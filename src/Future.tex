@@ -19,11 +19,17 @@ It is our belief that we are currently in a renaissance of programming languages
     \item Interoperability: calling other languages from \mintinline{julia}{Julia} is seamless, so the use of external libraries or languages is as easy as calling a \mintinline{julia}{Julia} function. However, \mintinline{julia}{Julia} is so powerful and performant that most of its packages are mono-language. A feature often shared by other modern languages such as \mintinline{go}{Go}, \mintinline{rust}{Rust}, \mintinline{swift}{Swift} and \mintinline{elixir}{Elixir}.
 \end{enumerate}
 
-The code can be found here \href{https://github.com/dcelisgarza/DDD.jl}{\texttt{https://github.com/dcelisgarza/DDD.jl}}. Of note are the banners at the top of the README, those point to the documentation; automated, remote testing; test coverage i.e. which lines of code have been hit during testing and how many times; and an interactive Jupyter notebook on Binder. It is the result of the lessons learned while working on EasyDD. Its design avoids the same pitfalls and has a clear vision for usability, modularity, and extensibility, without sacrificing performance.
+The code can be found here \href{https://github.com/dcelisgarza/DDD.jl}{\texttt{https://github.com/dcelisgarza/DDD.jl}}. Of note are the banners at the top of the README, from left to right they link to
+\begin{inparaenum}
+    \item the documentation;
+    \item automated, remote testing;
+    \item two test coverage reports i.e. which lines of code have been hit during testing and how many times; and
+    \item an interactive Jupyter notebook on Binder, which runs on a browser and has no external dependancies.
+\end{inparaenum}
 
-As this has been a didactic, after hours project to escape the anxieties of the pandemic and resolve the frustrations with some fundamental aspects of EasyDD, it is nowhere near feature complete. Nevertheless, we can provide a small show of current capabilities. For an interactive demo go to the repository and click the Binder banner (rightmost banner) at the top of the README, it will launch an interactive session that runs on the browser.
+It is the result of the lessons learned while working on EasyDD. Its design avoids the same pitfalls and has a clear vision for usability, modularity, and extensibility, without sacrificing performance. It has been a didactic, after hours project to escape the anxieties of the pandemic and ease the frustrations with some fundamental design aspects of EasyDD (many carried over from DDLab). But it has also been an attempt to understand how EasyDD can be improved without all the clutter, risk, and technical debt (some solutions were even trialed in DDD.jl and backported to EasyDD). It is therefore not feature-complete. Nevertheless, it has turned into a promising weekend project for which we can provide a sample of current capabilities.
 
-\section{Next-Gen 3D discrete dislocation dynamics}
+\section{DDD.jl: next-Gen 3D discrete dislocation dynamics}
 
 As with every simulation, there are parameters that need to be defined. For dislocation plasticity simulations, the number of parameters is quite large, which is why encapsulation (see \cref{ss:encapsulation}) can be so helpful. However, there are also certain relationships between parameters that must be maintained. This is a problem for usability, as it is very easy for one to use non-sensical parameters and be completely unaware of it until a simulation presents unexpected behaviour. We have ``solved'' this issue in EasyDD (see \cref{s:qol}), but it is clunky, unelegant and opaque. Here we solve both issues in a single stroke and offer greater flexibility.
 
@@ -191,14 +197,14 @@ boundaryP, forceDispP = Boundaries(femParamsP, meshP);
     \label{f:pillarLoad}
 \end{figure}
 
-\subsection{Generation of dislocation sources}
+\subsection{Generating dislocations}
 
 Generating dislocation sources is also quite easy. We can use some information from the simulation parameters to generate two types of dislocations,
 \begin{inparaenum}
     \item prismatic loop with 8 sides, 8 nodes and 8 segments with $\vec{b} = [1\, 1\, 1]$ and $n = [\overline{1}\, 1\, 0]$,
     \item and a shear loop with 5 sides, 10 nodes and 10 segments with $b = [1\, 1\, \overline{1}]$ and $n = [1\, \overline{1}\, 0]$.
 \end{inparaenum}
-Both structures represent 5 loops with segment lengths of \mintinline{julia}{segLen}, which will be random uniformly distributed $x = [0,\, dx]$, $y = [0,\, dy]$, $z = [0,\, dz]$.
+Both structures represent 5 loops with segment lengths equal to \mintinline{julia}{segLen}, which will generate random uniformly distributed loops in $x = [0,\, dx]$, $y = [0,\, dy]$, $z = [0,\, dz]$.
 \begin{minted}[frame=lines, linenos]{julia}
 # Julia supports multiple assignments in a single line
 # Assign the domain size and length scale for the dislocation
@@ -240,161 +246,133 @@ When the loops are generated, only one of each is made, and they are centred abo
     \caption{Template loops for network generation.}
     \label{f:templateLoops}
 \end{figure}
+How the loops are distributed is down to the \mintinline{julia}{dist} field, there are currently a zero-distribution (loops centered at the origin), random uniform, and random normal distributions. New ones can be quickly and easily added by subtyping the distribution type and making a function that dispatches on it.\footnote{This can also be achieved with \mintinline{julia}{eval()}, but it is unsafe because \mintinline{julia}{eval()} can execute whatever code it is given.} The loop generation source code does not have to be modified for this to happen.
 
-The buffer is defined relative to the average segment length and is only used to space the loops out when calculating their positions from the distribution and range. Currently there are zero, random uniform and random normal distributions, but new ones can be quickly and easily added by subtyping the distribution type and making a function that dispatches on it. The loop generation source code does not have to be modified.
+A nice feature of strongly typed languages is the intrinsic safety they offer via types. One of the ways in which this can be enforced is through the use of enumerated types for categorial variables. In 3D discrete dislocation dynamics we can have different types of nodes with different behaviours. We can safeguard our model against regressions (bugs introduced through further development) and reduce the memory requirements through the use of such types. To find out what they are and represent we can query the documentation for dislocation node type, \mintinline{julia}{nodeTypeDln}.
+\begin{minted}[frame=lines]{julia}
+julia>?nodeTypeDln
+search: nodeTypeDln nodeTypeFE
 
-The type \mintinline{julia}{nodeTypeDln} only has a limited number of values, each of them with a specific meaning. This provides a safeguard against regressions and useful information to users and developers. For example, by looking at the loop's labels we see that they are \mintinline{julia}{intMobDln}, i.e. internal mobile dislocation nodes. Each node type behaves differently and the values are limited to the types of nodes the code supports. A similar technique is used to denote node sets on the finite element side.
-\begin{minted}[frame=lines, linenos]{julia}
-julia> prismOct.label
-8-element Array{nodeTypeDln,1}:
- intMobDln::nodeTypeDln = 1
- intMobDln::nodeTypeDln = 1
- intMobDln::nodeTypeDln = 1
- intMobDln::nodeTypeDln = 1
- intMobDln::nodeTypeDln = 1
- intMobDln::nodeTypeDln = 1
- intMobDln::nodeTypeDln = 1
- intMobDln::nodeTypeDln = 1
+  @enum nodeTypeDln begin
+      noneDln = 0    # Undefined node, value at initialisation
+      intMobDln = 1  # Internal mobile node
+      intFixDln = 2  # Internal fixed node
+      srfMobDln = 3  # Mobile surface node
+      srfFixDln = 4  # Fixed surface node
+      extDln = 5     # External node
+      tmpDln = 6     # Temporary flag, used during topological operations
+  end 
 \end{minted}
+Node labels cannot have values other than these, unless the type is expanded, meaning the change has to be deliberate and thought out.
 
-We can visualise the loop using a myriad of plotting backends but we will use an interactive one similar to \mintinline{matlab}{MATLAB}'s\footnote{\mintinline{matlab}{MATLAB} uses a modified version of this backend.}
-\begin{figure}
-    \centering
-    \includegraphics[trim={5cm 1cm 5cm 3cm},clip,width=0.5\linewidth]{prismOct.pdf}
-    \caption[Sample 8-sided prismatic BCC dislocation loop.]{Sample 8-sided prismatic BCC dislocation loop with slip plane $ \vec{n} = [\overline{1}\, 1\, 0] $, and Burgers vector $\vec{b} = [1\, 1\, 1]$.}
-\end{figure}
-
+There are multiple ways of generating dislocation networks, but the preferred way is to use the loops already generated. Bespoke networks can be generated manually and developers can leverage multiple dispatch to do create new methods for the \mintinline{julia}{DislocationNetwork} function. Since we have loops that we've already generated, we can create the network from them. The function automatically allocates $N\log_2N$ places for $N$ total nodes and segments in the network, which leaves room for expansion without having to dynamically allocate memory every time a node is created. The topological operations also use this heuristic when the network needs to be expanded beyond its currently allocated memory.\footnote{It does not yet remove excess allocated memory, but will do in the future.}
 \begin{minted}[frame=lines, linenos]{julia}
-using Plots
-plotlyjs()
-
-fig = plotNodes(
-    prismOct,
-    m = 1,
-    l = 3,
-    linecolor = :blue,
-    marker = :circle,
-    markercolor = :blue,
-    legend = false,
-)
-\end{minted}
-
-We can create a prismatic loop in the same way by changing the \mintinline{julia}{loopType} to the shear type, and visualise in the same space by mutating\footnote{By convention, functions that mutate their arguments are denoted by adding an \texttt{!} at the end of the function name.} the figure. This time we will create 10 and distribute them random normally in the domain.
-\begin{figure}
-    \centering
-    \includegraphics[trim={5cm 1cm 5cm 3cm},clip,width=0.5\linewidth]{shearOct.pdf}
-    \caption[Sample 8-sided shear prismatic BCC dislocation loop.]{Adding 10, 8-sided shear BCC dislocation loop with slip plane $ \vec{n} = [\overline{1}\, 1\, 0] $, and Burgers vector $\vec{b} = [1\, 1\, 1]$.}
-\end{figure}
-\begin{minted}[frame=lines, linenos]{julia}
-shearOct = DislocationLoop(;
-    loopType = loopShear(),
-    numSides = 8,
-    nodeSide = 1,
-    numLoops = 10,
-    segLen = segLen * ones(8),
-    slipSystemIdx = 1,
-    slipSystem = slipSystems,
-    label = nodeTypeDln.(ones(Int, 8)),
-    buffer = 0,
-    range = [
-                0 dx; 
-                0 dy;
-                0 dz
-            ],
-    dist = Rand(),
-)
-plotNodes!(
-    fig,
-    shearOct,
-    m = 1,
-    l = 3,
-    linecolor = :red,
-    marker = :circle,
-    markercolor = :red,
-    legend = false,
-)
-\end{minted}
-As both loops have the same BCC slip system, they are orthogonal to one another.
-
-The \mintinline{julia}{DislocationLoop} structure only denotes dislocation loops, it does not represent the network. The number of loops in the structure, \mintinline{julia}{numLoops}, is what determines how many will be generated. The values of \mintinline{julia}{buffer}, \mintinline{julia}{range} and \mintinline{julia}{dist} determine how they are distributed.
-
-Dislocation networks can be generated manually by specifying all their relevant fields, giving flexibility for the generation of bespoke networks or by using the \mintinline{julia}{DislocationLoop} structure. The latter is easier and more convenient. If certain types of bespoke structures, such as mixed-slip system loops, jogs or kinks, it would be prudent to utilise multiple dispatch and define a specific \mintinline{julia}{DislocationLoop()} function for the purpose. Making the network is quick and painless. There are also default arguments that change things such as how much memory to allocate to allow for the network to expand and the maximum number of connections a node in the network is allowed to have. The default is to allocate $N\log_2N$ places for $N$ total nodes and segments in the network. The topological operations also use this heuristic when the network needs to be expanded further.
-\begin{minted}[frame=lines, linenos]{julia}
-network = DislocationNetwork([prismOct, shearOct])
-\end{minted}
-
-We could view the network like this, but where's the fun in that? We'll first generate the mesh. And while we're at it we can make the boundary conditions according to \mintinline{julia}{matParams} and \mintinline{julia}{femParams}. We specified in the creation of \mintinline{julia}{femParams} that we would like to model a \mintinline{julia}{CantileverLoad()} dispatching on a \mintinline{julia}{DispatchRegularCuboidMesh()} with elements of order \mintinline{julia}{LinearElement()}. All this ensures the mesh is built of the correct order and type. Adding mesh types only requires the definition of the appropriate types and the mesh generation function. Users do not need to worry about calling different functions.
-\begin{minted}[frame=lines, linenos]{julia}
-regularCuboidMesh = buildMesh(matParams, femParams)
-cantileverBC, forceDisplacement = Boundaries(
-                                    femParams, 
-                                    regularCuboidMesh
-                                )
-\end{minted}
-In \cref{f:feNodeSet} we can visualise the node sets generated by \mintinline{julia}{buildMesh()}. These are used to very easily generate the boundary conditions without knowing the details of how the FE mesh builder works. This greatly expedites the process of defining the boundary conditions for different scenarios. They define which finite element nodes belong to corners, edges and faces. Those not labelled are internal. These are all generated by the mesh builder and is a requirement that forces developers to make the sensible decision of creating node sets so their work is usable by others simply by looking at which nodes belong to which set.
-
-\begin{minted}[frame=lines, linenos]{julia}
-plotFEDomain(regularCuboidMesh)
-\end{minted}
-
-Now that we have our FE mesh and network we can see what they look like.
-\begin{figure}
-    \centering
-    \includegraphics[trim={5cm 0cm 5cm 1.5cm},clip,width=0.5\linewidth]{sampleDomain.pdf}
-    \caption[Sample network and domain.]{Dislocation network and domain.}
-\end{figure}
-\begin{minted}[frame=lines, linenos]{julia}
-plotNodes(
-    regularCuboidMesh,
+network = DislocationNetwork((prismOct, shearPent))
+# Plot network pre-remeshing.
+networkFEFig = plotNodes(
+    meshC,
     network,
-    m = 1,
+    m = 2,
     l = 3,
     linecolor = :blue,
-    marker = :circle,
+    markershape = :circle,
     markercolor = :blue,
     legend = false,
+    camera = camera = (-15, 25)
 )
 \end{minted}
 
-Since we decided to randomly distribute 10 relatively large loops in the domain, there are some segments that are poking out. We can fix that by using the surface remeshing. However, the function requires nodal velocities to work because we need a vector to define the intersection with the surface of the volume.
+\subsection{Current capabilities}
 
-As of the time of writing, the surface remeshing has not been thoroughly tested and the currently implemented mobility function is out-dated. So instead, we use a random velocity as a stand-in for the real and updated velocities. However, this surface remeshing works for any convex hull regardless of mesh type. It also does not require a surface tasselation because defining the convex hull (using the vertices and a \mintinline{julia}{JuliaGeometry} library), surface normals, and mid-points is enough to exactly determine how to project external nodes. Moreover, the value used to decide how far the nodes should be projected is not hard-coded and is in fact the scale of the FE domain ($\sqrt[3]{\Delta x \Delta y \Delta z}$), ensuring there is always an appropriate closure point for calculating dislocation displacements no matter the domain's aspect ratio.
-\begin{minted}[frame=lines, linenos]{julia}
-numSeg = network.numSeg[1]
-network.nodeVel[:, 1:numSeg] = rand(3, numSeg)
-network = remeshSurfaceNetwork!(regularCuboidMesh,  network)
+\Cref{f:networkPrePost} shows the network pre- and post- surface and internal remeshing. The surface remeshing algorithm uses nodal velocities to find where the dislocation would have intersected the volume if it were moving with constant velocity. It also incorporates the correction described in \cref{c:surfRem}.
+\begin{minted}[frame=lines, linenos, mathescape]{julia}
+# Compute total force on segments = 
+# Peach-Koehler force (zero because there is no $\vec{\hat{u}}$)
+# + Self force
+# + Remote force
+calcSegForce!(dlnParams, matParams, meshC, forceDispC, network)
+# Compute nodal mobilities
+dlnMobility!(dlnParams, matParams, network)
+# Remesh the surface
+network = remeshSurfaceNetwork!(meshC, boundaryC, network)
+# Coarsen the internal network
+network = coarsenNetwork!(dlnParams, matParams, meshC, 
+                forceDispC, network)
+# Refine the internal network
+network = refineNetwork!(dlnParams, matParams, meshC, 
+                forceDispC, network)
+# Plot remeshed network
+remFEFig = plotNodes(
+    meshC,
+    network,
+    m = 2,
+    l = 3,
+    linecolor = :blue,
+    markershape = :circle,
+    markercolor = :blue,
+    legend = false,
+    camera = (-15, 25)
+)
+# Find all surface nodes (both mobile and fixed)
+idx = findall(x -> x ∈ (3, 4), network.label)
+# Plot surface nodes on the same figure as red circles.
+scatter!(network.coord[1, idx], network.coord[2, idx], network.coord[3, idx], m = 2, markercolor = :red)
 \end{minted}
-This showcases one of the quirks of immutable structures in \mintinline{julia}{julia}. Immutable structures are faster and more easily optimised. But arrays inside them cannot be expanded and the values of non-array fields cannot be changed. However, the values of elements inside arrays can be changed. So to keep track of the number of nodes and segments they are vectors of length 1. Also, any function with the potential for resizing the arrays of an immutable structure, has to return the structure, else the new array entries get lost and garbage collected later. Since \mintinline{julia}{remeshSurfaceNetwork!()} can change the values inside the arrays of \mintinline{julia}{network} as well as resize them, its return value gets reassigned to \mintinline{julia}{network}. After running this we get a properly internal network with a bunch of surface nodes.
 \begin{figure}
     \centering
-    \includegraphics[trim={5cm 0cm 5cm 1.5cm},clip,width=0.5\linewidth]{remeshedSurf.pdf}
-    \caption[Sample network and domain with remeshed surface.]{Sample network and domain with remeshed surface.}
+    \begin{subfigure}[t]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{preremnet.pdf}
+        \caption{Pre remeshed network.}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[t]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{postremnet.pdf}
+        \caption{Post remeshing network.}
+    \end{subfigure}
+    \caption[Network pre and post remeshing.]{Network pre and post remeshing. The boundary conditions require the $yz$ plane at $x=0$ to be impenetrable to stop a slip step from forming in the surface with fixed displacement boundary conditions as explained in \cref{c:surfRem}.}
+    \label{f:networkPrePost}
 \end{figure}
+The code can also now compute dislocation induced displacements by \citet{bromage2018calculating}, \cref{f:dlnDisp} plots them scaled 20 times.
+\begin{minted}[frame=lines, linenos]{julia}
+# Dislocation displacements.
+calc_uTilde!(forceDispC, meshC, boundaryC, matParams, network)
+# Copy structure to another variable.
+deformedMesh = deepcopy(meshC)
+# Add 20 times the displacements to the dislocation displacement boundaries.
+deformedMesh.coord[reshape(boundaryC.uDofsDln, :, 3)'] += 
+    20 * forceDispC.uTilde[reshape(boundaryC.uDofsDln, :, 3)']
+plotBoundaries(boundaryC, deformedMesh; camera = (-20, 20))
+\end{minted}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\linewidth]{dispBound.pdf}
+    \caption{DDD.jl calculates dislocation induced displacements.}
+    \label{f:dlnDisp}
+\end{figure}
+We're also able to calculate field point stresses (for numeric tractions), detect and resolve collisions, and calculate lazy numeric tractions for a single gauss quadrature point. However, resolving collisions and numeric tractions have not been tested yet.
 
-As previously stated, this has been mostly a didactic exercise. However, as of the time of writing, the code has the following capabilities.
+\subsection{Performance remarks}
+
+\mintinline{julia}{Julia} was built as a language for scientific computing. Its primary goal is to be high performance, generic, and easy to use. It should come as no surprise that DDD.jl is substantially faster than the \mintinline{matlab}{MATLAB} portions of EasyDD. It is however, somewhat surprising that even C-accelerated portions of EasyDD perform better in DDD.jl and not by an insignificant amount.
 \begin{enumerate}
-    \item IO,
-    \item loop and network generation,
-    \item regular cuboid mesh generation,
-    \item boundary conditions for cantilever bending,
-    \item internal remeshing,
-    \item surface remeshing,
-    \item dislocation displacements,
-    \item forces on segments,
-    \item field point stresses,
-    \item outdated BCC mobility function,
-    \item time integration.
+    \item The $\mathcal{O}(N^2)$ segment-segment (remote force) calculation is 10\% faster than its equivalent \mintinline{c}{C} function. It is also CPU-parallelised in DDD.jl, which was almost trivial to do, which is definitely not the case for \mintinline{c}{C}. For large numbers of dislocations (1000+ segments) it offers linear scaling with number of threads.
+    \item The self-forces and Peach-K\"{o}hler forces as a result of the dislocations being inside a cuboid mesh are both $10\times$ faster than their \mintinline{matlab}{MATLAB} counterparts.
+    \item DDD.jl's mesh refinement uses a better heuristic than dynamically sizing arrays every time a new node is added to the network, so it is about as slow as \mintinline{matlab}{MATLAB}'s when it needs to allocate memory. When it does not need to allocate memory, it is $>100\times$ faster. Mesh coarsening is $3\times$ faster.
+    \item The calculation of field point stresses for numeric tractions is $30\%$ faster than its \mintinline{c}{C} counterpart.
+    \item Building the FE mesh is $>10\times$ faster.
+    \item The outdated mobility law is $>30\times$ faster and in all the tests has not required dampening the matrix inversion.
+    \item The dislocation displacement calculation is $>10\times$ faster.
+    \item The cholesky factorisation of the stiffness matrix for free degrees of freedom is $20\times$ faster and uses a substantially smaller amount of memory.
 \end{enumerate}
+Collision detection has not yet been compared to its EasyDD counterpart (which is written in \mintinline{c}{C}), and neither have the untested procedures. However, numeric tractions should be substantially faster as the field point stress calculation is faster in DDD.jl, and the DDD.jl version allocates no memory. If the trend holds, the rest of the functions should also see large increases in speed.
 
-All of which are faster than what is offered by EasyDD---even those accelerated by \mintinline{c}{C}. The $\mathcal{O}(N^2)$ segment-segment calculation is 10\% faster than its equivalent \mintinline{c}{C} function and has already been CPU-parallelised; for large numbers of dislocations it offers linear scaling with number of threads. The self-forces and Peach-K\"{o}hler forces as a result of the dislocations being inside a cuboid mesh are both $10\times$ faster than their \mintinline{matlab}{MATLAB} counterparts. Since the mesh refinement uses a better heuristic than dynamically sizing arrays every time a new node is added to the network, it is about as slow as \mintinline{matlab}{MATLAB}'s when it needs to allocate memory, but when it does not it is $>100\times$ faster. Mesh coarsening is $3\times$ faster. The calculation of field point stresses for numeric tractions is $30\%$ faster than its \mintinline{c}{C} counterpart. Building the FE mesh is $>10\times$ faster. The outdated mobility law is $>30\times$ faster and in all the tests has not required dampening the matrix inversion. The dislocation displacement calculation is $>10\times$ faster. The cholesky factorisation is $20\times$ faster and uses a substantially smaller amount of memory.
+The memory footprint is also \emph{a lot} smaller. Care has been taken to do things as optimally as possible, and \mintinline{julia}{Julia}'s typesystem lets sparse arrays be treated in \emph{exactly} the same way as dense ones, which is not always the case in \mintinline{matlab}{MATLAB}, which has thwarted efforts at sparsifying various arrays that would benefit from it.
 
-The memory footprint is also \emph{a lot} lower. Care has been taken to do things as optimally as possible and \mintinline{julia}{Julia}'s typesystem lets sparse arrays be treated in \emph{exactly} the same way as dense ones, which is not always the case in \mintinline{matlab}{MATLAB}, which has thwarted efforts at sparsifying various arrays that would benefit from it.
+The total number of lines of code so far is $\sim 3300$ with many duplicates due to mutating and non-mutating forms of functions\footnote{Mutating functions don't allocate memory so tend to be faster.}. Some refactoring of common code should put it at $\sim 1800$ lines, which is about the same number of lines in the remote force calculation written in \mintinline{c}{C}.
 
-The total number of lines of code so far, $\sim 3200$ are the equivalent of $\sim 4500$ \emph{without} counting input files and the many different loop generation functions. However this accounts for mutating and non-mutating functions, which are essentially the same implementation only non mutating functions allocate a return value while mutating ones change their arguments. Mutating functions tend to be faster because of the lack of heap allocation, but we decided to make both as only the indexing changes. Accounting only for single versions of mutating or non-mutating functions yields $\sim 1800$ unique lines of code, which is about the same number of lines in the segment-segment \mintinline{c}{C} function.
-
-Moreover, doing the equivalent of what we have shown on EasyDD requires a substantially larger amount of code and a not insignificant amount of knowledge of its inner workings. From generating the network, to defining values for its parameters---which, despite the fact that EasyDD provides a reasonable set of defaults, users can easily define derived parameters incorrectly and be none the wiser. The barrier to entry and potential for error are quite high. Even us, who use the code all the time and have worked on it, sometimes miss things only to catch them after a simulation does something unexpected.
-
-The one knock on \mintinline{julia}{Julia} is its JIT-compiled nature. Which leads to a notoriously long time to first plot and means functions are slow the first time they are run during a session because they need to be compiled. However this is quickly improving and can be solved by keeping a precompiled system image of the offending packages. There is also the conspicuously poor performance of the \texttt{spy()} function, even with the \mintinline{julia}{UnicodePlots} backend. Having said that, the power, flexibility and ease of use of \mintinline{julia}{Julia} greatly outweighs such small issues.
+Moreover, doing the equivalent of what we have shown on EasyDD requires a substantially larger amount of code and a not insignificant amount of knowledge of its inner workings. From generating the network, to defining values for its parameters---which, despite the fact that EasyDD provides a reasonable set of defaults, users can easily define derived parameters incorrectly and be none the wiser until things break. The barrier to entry and potential for error are quite high. Even us, who use the code all the time and have worked to greatly improve it, regularly miss things only to catch them after a simulation does something unexpected. The other unfortunate side effect of the slowness of EasyDD is how long it takes to see whether a simulation is working. Even after all the improvements we've made, it takes multiple hours for a simulation to reach a point where we can see whether it will work.
 
 \section{Conclusions and proposal}\label{s:concProp}
 
