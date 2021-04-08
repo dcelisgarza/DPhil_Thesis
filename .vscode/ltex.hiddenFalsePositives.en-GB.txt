@@ -42,3 +42,4 @@
 {"rule":"EN_GB_SIMPLE_REPLACE","sentence":"^\\QIt is not only the cost of allocating, but also the cost of garbage collection (GC) \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q i.e. automatically freeing memory based on a set of criteria can be significantly higher.\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qmatlab MATLAB is infamous for the way it will happily dynamically grow an array when going out of bounds.\\E$"}
 {"rule":"ENGLISH_WORD_REPEAT_RULE","sentence":"^\\QThis is now done automatically on a need-to-compile basis and has a fallback in case no CUDA CUDA compiler is found.\\E$"}
+{"rule":"EN_A_VS_AN","sentence":"^\\QDocumentation is written as Markdown docstrings within the source and the standard library documentation package will automatically generate the documentation, which can be hooked up to a remote testing service and hosted as a HTML page on your git webhosting service of choice.\\E$"}
