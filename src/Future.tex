@@ -14,9 +14,9 @@ It is our belief that we are currently in a renaissance of programming languages
     \item Multiple dispatch: methods are dispatched and compiled based on the types of their arguments. Types propagate their way through child functions. This lets the compiler generate optimal code for the platform being used.
     \item Type system: its type system is based on set theory, where types are arranged in a genealogical tree with broader types giving way to narrower ones, e.g. \mintinline{julia}{Float64 <: AbstractFloat <: Real <: Number <: Any == true}. Structures can be parametric on type. These features let developers create generic code without bothering with type annotations, and the behaviour will be appropriate for whatever types are used. This kind of code greatly improves modularity and allows for ``magic'' such as automatic differentiation by only defining the basic arithmetic rules for dual numbers. It also allows for zero-cost abstractions, letting users represent mathematical equations as they are written without incurring a performance cost.
     \item CPU and GPU Parallelisation: parallelising loops is trivial. The \href{https://llvm.org/}{\texttt{LLVM}} compiler is platform-agnostic and creates custom, optimal code for almost all CPU and GPU architectures. This means users get platform-specific optimisations for free, and it means the software can remain a single language with no detriment.
-    \item Metaprogramming: one of the most powerful and esoteric features of \mintinline{julia}{Julia}. Much like \mintinline{lisp}{Lisp}, code is an object that can be manipulated by the language itself. This allows code to write and modify code. This can be used to autoparallelise functions on different without rewriting. It lets developers precompute values like an extremely powerful C-preprocessor. It even lets developers design custom syntax and perform mathematical transformations on code itself.
-    \item Modern features: \mintinline{julia}{Julia} has all the features of a modern programming language. From a booming and quickly growing fully-integrated package ecosystem with standard and registered libraries, some of which are now best in class. Integrated testing and documentation generation systems. Extremely powerful code introspection tools, e.g. one can check type stability, call trees, and different stages of compilation all the way down to machine instructions. Plus it sports all the interactivity and unicode features we have come to expect from modern interpreted languages.
-    \item Interoperability: calling other languages from \mintinline{julia}{Julia} is seamless, so the use of external libraries or languages is as easy as calling a \mintinline{julia}{Julia} function. However, \mintinline{julia}{Julia} is so powerful and performant that most of its packages are mono-language. A feature often shared by other modern languages such as \mintinline{go}{Go}, \mintinline{rust}{Rust}, \mintinline{swift}{Swift} and \mintinline{elixir}{Elixir}.
+    \item Metaprogramming: one of the most powerful and esoteric features of \mintinline{julia}{Julia}. Much like \mintinline{lisp}{Lisp}, code is an object that can be manipulated by the language itself. This allows code to write and modify code. This can be used to autoparallelise functions on different architectures without rewriting. It lets developers precompute values like an extremely powerful C-preprocessor. It even lets developers design custom syntax and perform mathematical transformations on code itself, such as symbolic and automatic differentiation.
+    \item Modern features: \mintinline{julia}{Julia} has all the features of a modern programming language. From a booming and quickly growing fully-integrated package ecosystem with standard and registered libraries, some of which are now best in class. Integrated testing and documentation generation systems. Extremely powerful code introspection tools, e.g. one can check type stability, call trees, and different stages of compilation all the way down to machine instructions. It also has unicode support and sports all the interactivity and useability of modern interpreted languages.
+    \item Interoperability: calling other languages from \mintinline{julia}{Julia} is seamless, so the use of external libraries or languages is as easy as calling a \mintinline{julia}{Julia} function. However, \mintinline{julia}{Julia} is so powerful and performant that most of its packages are single-language. A feature often shared by other modern languages such as \mintinline{go}{Go}, \mintinline{rust}{Rust}, \mintinline{swift}{Swift} and \mintinline{elixir}{Elixir}.
 \end{enumerate}
 
 The code can be found here \href{https://github.com/dcelisgarza/DDD.jl}{\texttt{https://github.com/dcelisgarza/DDD.jl}}. Of note are the banners at the top of the README, from left to right they link to
@@ -260,7 +260,8 @@ search: nodeTypeDln nodeTypeFE
       srfMobDln = 3  # Mobile surface node
       srfFixDln = 4  # Fixed surface node
       extDln = 5     # External node
-      tmpDln = 6     # Temporary flag, used during topological operations
+      tmpDln = 6     # Temporary flag, used during topological 
+                     # operations
   end 
 \end{minted}
 Node labels cannot have values other than these, unless the type is expanded, meaning the change has to be deliberate and thought out.
@@ -316,7 +317,8 @@ remFEFig = plotNodes(
 # Find all surface nodes (both mobile and fixed)
 idx = findall(x -> x ∈ (3, 4), network.label)
 # Plot surface nodes on the same figure as red circles.
-scatter!(network.coord[1, idx], network.coord[2, idx], network.coord[3, idx], m = 2, markercolor = :red)
+scatter!(network.coord[1, idx], network.coord[2, idx], 
+    network.coord[3, idx], m = 2, markercolor = :red)
 \end{minted}
 \begin{figure}
     \centering
@@ -340,7 +342,8 @@ The code can also now compute dislocation induced displacements by \citet{bromag
 calc_uTilde!(forceDispC, meshC, boundaryC, matParams, network)
 # Copy structure to another variable.
 deformedMesh = deepcopy(meshC)
-# Add 20 times the displacements to the dislocation displacement boundaries.
+# Add 20 times the displacements to the dislocation 
+# displacement boundaries.
 deformedMesh.coord[reshape(boundaryC.uDofsDln, :, 3)'] += 
     20 * forceDispC.uTilde[reshape(boundaryC.uDofsDln, :, 3)']
 plotBoundaries(boundaryC, deformedMesh; camera = (-20, 20))
@@ -357,7 +360,7 @@ We're also able to calculate field point stresses (for numeric tractions), detec
 
 \mintinline{julia}{Julia} was built as a language for scientific computing. Its primary goal is to be high performance, generic, and easy to use. It should come as no surprise that DDD.jl is substantially faster than the \mintinline{matlab}{MATLAB} portions of EasyDD. It is however, somewhat surprising that even C-accelerated portions of EasyDD perform better in DDD.jl and not by an insignificant amount.
 \begin{enumerate}
-    \item The $\mathcal{O}(N^2)$ segment-segment (remote force) calculation is 10\% faster than its equivalent \mintinline{c}{C} function. It is also CPU-parallelised in DDD.jl, which was almost trivial to do, which is definitely not the case for \mintinline{c}{C}. For large numbers of dislocations (1000+ segments) it offers linear scaling with number of threads.
+    \item The $\mathcal{O}(N^2)$ remote force computation is 10\% faster than its equivalent \mintinline{c}{C} function. DDD.jl also has a CPU parallelisation. It was almost trivial to implement, which is definitely not the case for \mintinline{c}{C}. For large numbers of dislocation segments ($>500$), it offers linear scaling with number of threads on an AMD Ryzen 7 1700 \@ 3.0 GHz.
     \item The self-forces and Peach-K\"{o}hler forces as a result of the dislocations being inside a cuboid mesh are both $10\times$ faster than their \mintinline{matlab}{MATLAB} counterparts.
     \item DDD.jl's mesh refinement uses a better heuristic than dynamically sizing arrays every time a new node is added to the network, so it is about as slow as \mintinline{matlab}{MATLAB}'s when it needs to allocate memory. When it does not need to allocate memory, it is $>100\times$ faster. Mesh coarsening is $3\times$ faster.
     \item The calculation of field point stresses for numeric tractions is $30\%$ faster than its \mintinline{c}{C} counterpart.
@@ -368,11 +371,11 @@ We're also able to calculate field point stresses (for numeric tractions), detec
 \end{enumerate}
 Collision detection has not yet been compared to its EasyDD counterpart (which is written in \mintinline{c}{C}), and neither have the untested procedures. However, numeric tractions should be substantially faster as the field point stress calculation is faster in DDD.jl, and the DDD.jl version allocates no memory. If the trend holds, the rest of the functions should also see large increases in speed.
 
-The memory footprint is also \emph{a lot} smaller. Care has been taken to do things as optimally as possible, and \mintinline{julia}{Julia}'s typesystem lets sparse arrays be treated in \emph{exactly} the same way as dense ones, which is not always the case in \mintinline{matlab}{MATLAB}, which has thwarted efforts at sparsifying various arrays that would benefit from it.
+The memory footprint is also \emph{much} smaller. Care has been taken to do things as optimally as possible, and \mintinline{julia}{Julia}'s typesystem lets sparse arrays be treated in \emph{exactly} the same way as dense ones, which is not always the case in \mintinline{matlab}{MATLAB}, which has thwarted efforts at sparsifying various arrays that would benefit from it.
 
 The total number of lines of code so far is $\sim 3300$ with many duplicates due to mutating and non-mutating forms of functions\footnote{Mutating functions don't allocate memory so tend to be faster.}. Some refactoring of common code should put it at $\sim 1800$ lines, which is about the same number of lines in the remote force calculation written in \mintinline{c}{C}.
 
-Moreover, doing the equivalent of what we have shown on EasyDD requires a substantially larger amount of code and a not insignificant amount of knowledge of its inner workings. From generating the network, to defining values for its parameters---which, despite the fact that EasyDD provides a reasonable set of defaults, users can easily define derived parameters incorrectly and be none the wiser until things break. The barrier to entry and potential for error are quite high. Even us, who use the code all the time and have worked to greatly improve it, regularly miss things only to catch them after a simulation does something unexpected. The other unfortunate side effect of the slowness of EasyDD is how long it takes to see whether a simulation is working. Even after all the improvements we've made, it takes multiple hours for a simulation to reach a point where we can see whether it will work.
+Moreover, doing the equivalent of what we have shown on EasyDD requires a substantially larger amount of code and a not insignificant amount of knowledge of its inner workings. From generating the network, to defining values for its parameters---which, despite the fact that EasyDD provides a reasonable set of defaults, users can easily define derived parameters incorrectly and be none the wiser until things break. The barrier to entry and potential for error are quite high. We use the code all the time, and have worked to greatly improve it. Yet we miss things regularly only to catch them after a simulation does something unexpected hours later. Even when everything is in order, seeing whether a simulation is well-callibrated can take hours. Often, multiple iterations of a simulation need to be run to find an appropriate callibration which reproduces an experiment---i.e. tuning the source size, number of sources, slip systems, loading rate, Poisson ratio, etc. Having to wait for hours or days before being able to see whether a simulation is properly callibrated is quite unproductive.
 
 \section{Conclusions and proposal}\label{s:concProp}
 
@@ -380,5 +383,5 @@ What started as a side project to learn and escape from the world during the las
 
 A tool is only as good as the craftsman who weilds it. We aspire to be among those elite craftsmen. Why then, should we not use as good a tool as we can? During the course of this project, the whole Tarleton group have made gigantic strides with EasyDD. It has indeed come a \emph{very} long way, but we can do better.
 
-Some issues are so deeply intertwined with how the software was originally designed that they cannot be separated from how it fundamentally operates. To fix them, a fresh new start is needed. Given the extremely encouraging results of what amounts to a pandemic hobby, we think it worthwhile to continue this as a research software engineering project post-DPhil. We think it is better to do so now rather than wait until there is no more juice left to squeeze out of \mintinline{matlab}{MATLAB}. Not only so the shackles of proprietary software can be broken; but also so the full, ambitious vision of EasyDD can be realised.
-% 3644 words
+Some issues are so deeply intertwined with how the software was originally designed that they cannot be separated from how it fundamentally operates. To fix them, a fresh new start is needed. Given the extremely encouraging results of what amounts to a pandemic hobby, it seems worthwhile to continue this as a research software engineering project post-DPhil. We think it's better to do so now rather than wait until there is no more juice left to squeeze out of \mintinline{matlab}{MATLAB}. Not only so the shackles of proprietary software can be broken; but also so the full, ambitious vision of EasyDD can be realised.
+% 4066 words
