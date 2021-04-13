@@ -358,15 +358,15 @@ We're also able to calculate field point stresses (for numeric tractions), detec
 
 \subsection{Performance remarks}
 
-\mintinline{julia}{Julia} was built as a language for scientific computing. Its primary goal is to be high performance, generic, and easy to use. It should come as no surprise that DDD.jl is substantially faster than the \mintinline{matlab}{MATLAB} portions of EasyDD. It is however, somewhat surprising that even C-accelerated portions of EasyDD perform better in DDD.jl and not by an insignificant amount.
+\mintinline{julia}{Julia} was built as a language for scientific computing. Its primary goal is to be high performance, generic, and easy to use. It should come as no surprise that DDD.jl is substantially faster than the \mintinline{matlab}{MATLAB} portions of EasyDD. It is however, somewhat surprising that even C-accelerated portions of EasyDD perform better in DDD.jl and not by an insignificant amount. All of the preliminary performance comparisons were done on an AMD Ryzen 7 1700 \@ 3.0 GHz.
 \begin{enumerate}
-    \item The $\mathcal{O}(N^2)$ remote force computation is 10\% faster than its equivalent \mintinline{c}{C} function. DDD.jl also has a CPU parallelisation. It was almost trivial to implement, which is definitely not the case for \mintinline{c}{C}. For large numbers of dislocation segments ($>500$), it offers linear scaling with number of threads on an AMD Ryzen 7 1700 \@ 3.0 GHz.
+    \item The $\mathcal{O}(N^2)$ remote force computation is 10\% faster than its equivalent \mintinline{c}{C} function. DDD.jl also has a CPU parallelisation. It was almost trivial to implement, which is definitely not the case for \mintinline{c}{C}. For large numbers of dislocation segments ($>500$), it offers linear scaling with number of threads used (at least on the aforementioned processor).
     \item The self-forces and Peach-K\"{o}hler forces as a result of the dislocations being inside a cuboid mesh are both $10\times$ faster than their \mintinline{matlab}{MATLAB} counterparts.
     \item DDD.jl's mesh refinement uses a better heuristic than dynamically sizing arrays every time a new node is added to the network, so it is about as slow as \mintinline{matlab}{MATLAB}'s when it needs to allocate memory. When it does not need to allocate memory, it is $>100\times$ faster. Mesh coarsening is $3\times$ faster.
     \item The calculation of field point stresses for numeric tractions is $30\%$ faster than its \mintinline{c}{C} counterpart.
     \item Building the FE mesh is $>10\times$ faster.
-    \item The outdated mobility law is $>30\times$ faster and in all the tests has not required dampening the matrix inversion.
-    \item The dislocation displacement calculation is $>10\times$ faster.
+    \item The outdated mobility law is $>30\times$ faster, and has not required dampening the inversion during any tests.
+    \item The dislocation-induced displacement calculation is $>10\times$ faster.
     \item The cholesky factorisation of the stiffness matrix for free degrees of freedom is $20\times$ faster and uses a substantially smaller amount of memory.
 \end{enumerate}
 Collision detection has not yet been compared to its EasyDD counterpart (which is written in \mintinline{c}{C}), and neither have the untested procedures. However, numeric tractions should be substantially faster as the field point stress calculation is faster in DDD.jl, and the DDD.jl version allocates no memory. If the trend holds, the rest of the functions should also see large increases in speed.
