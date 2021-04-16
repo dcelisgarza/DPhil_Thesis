@@ -1,14 +1,38 @@
 \chapter{Simulations}\label{c:simulations}
 
-% In this chapter we present three different simulations. Two of which have an accompaning experimental data for micro tensile loading in the $[1\, 0\, 0]$ and $[1\, 1\, 0]$ directions of a single crystal Zn micropillar provided by Alan Xu from ANSTO Sidney. The third is is a proof of concept for a techinque developed by Jicheng Gong to cyclicly load a cantilever in opposing directions. However, this technique was developed on Ti microcantilevers and the HCP mobility law requires some adaptation before it is ready for general use. Instead we use the BCC law developed in-house by Bruce Bromage that as mentioned in the footnotes of \cref{ss:matrix}.
+This chapter details the attempts at reproducing micropillar tensile tests on single crystal Ni, performed by Alan Xu and Dhriti Bhattacharyya at ANSTO Sydney.
 
-\section{Nickel tensile micropillar}\label{s:nickelTensile}
+\section{Methodology}
 
-10 dislocations per square micron.
+\subsection{Experimental setup}
 
-Square cross-section.
-\subsection{Introduction}
-\subsection{Methodology}
+In total, eight loading tests were carried out.
+\begin{enumerate}
+    \item Loading in the $\langle 1\, 0\, 0 \rangle$:
+          \begin{enumerate}
+              \item Two tests with a loading rate of $\SI{5}{\nano\metre\per\second}$
+              \item Two tests with a loading rate of $\SI{500}{\nano\metre\per\second}$.
+          \end{enumerate}
+    \item Loading in the $\langle 1\, 1\, 0 \rangle$:
+          \begin{enumerate}
+              \item Two tests with a loading rate of $\SI{5}{\nano\metre\per\second}$
+              \item Two tests with a loading rate of $\SI{500}{\nano\metre\per\second}$.
+          \end{enumerate}
+\end{enumerate}
+
+The cross-section of the micropillars was well-known at $\SI{12}{\micro\metre} \times \SI{12}{\micro\metre}$, however the length was postulated to be $\sim \SI{30}{\micro\metre}$.
+
+The initial dislocation configuration was not well known but was postulated to be approximately 10 dislocations per square micron. Furthermore, the Frank-Reed (FR) source length was unknown. The length of the FR source influences the dislocation's yield stress via,
+\begin{align}
+    \sigma_\rvar{y} & = \dfrac{\mu b}{l}\,,
+\end{align}
+where $\sigma_\rvar{y}$ is the FR source yield stress, $\mu$ is the shear modulus, $b = \lVert \vec{b} \rVert$, and $l$ the dislocation line length. The total length of mobile dislocations influences how much plasticity we observe. Both of these parameters had to be estimated and refined by running probing simulations.
+
+\subsection{Dislocation plasticity setup}\label{s:nickelTensile}
+
+Preliminary simulations showed the assumed dislocation density was too high, instead it was dropped to a single seed loop per active slip system. For the $\langle 1\, 0\, 0 \rangle$ loading direction this was 8 loops, and for $\langle 1\, 1\, 0 \rangle$ it was only 4.
+
+For the simulations, the pillar length was taken as $\SI{36}{\micro\metre}$, or $3\times$ the length of one of the sides of the square cross-section. The reason for this is to simulate dislocations moving into the bulk where they pile up, in the simulation, they stick to the end of the cantilever as per \cref{c:surfRem}.
 
 We define surface node sets $\left\{\forall (x, y, z) \in [0,\, 1] \vert S_{xyz} \in \partial \hat{V}\right\}$, where $\hat{V}$ is a unit volume such that $S_{000}$ denotes the node at the origin, $S_{x00}$ the $x$-axis spanning edge at $y,\, z=0$, and $S_{xy0}$ the $xy$-plane at $z=0$. We use these node sets to define our neuman (displacement) boundary conditions as follows.
 \begin{subequations}
