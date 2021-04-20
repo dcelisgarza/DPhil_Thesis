@@ -958,7 +958,7 @@ There are $6*3*8 + 6*8 = 192$ bytes of information in each unit problem: 6 nodes
 Realistically, this is extremely difficult to achieve, particularly in dynamic, non-conservative simulations such as discrete dislocation dynamics. So we also came up with two heuristics that aim to utilise as many computational resources as effectively as possible,
 \begin{align}\label{eq:numThreads}
     b            & = 192                                                     \\
-    T_\rvar{max} & = \min(T_\rvar{block}, floor(M_\rvar{block}/b))           \\
+    T_\rvar{max} & = \min(T_\rvar{block}, \left\lfloor M_\rvar{block}/b \right\rfloor)  \\
     T            & = 32 \left\lceil (n \mod{T_{\rvar{max}}})/32 \right\rceil \\
     G            & = \left\lceil (n + T - 1) / T \right\rceil\,.
 \end{align}
