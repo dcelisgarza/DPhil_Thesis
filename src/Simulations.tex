@@ -98,8 +98,9 @@ We used prismatic loops with four sides as Frank-Reed sources to seed the domain
         \bottomrule
     \end{tabular}
 \end{table}
+To minimise computation expenditure, we only included these active slip systems in our simulations. This obviously does not fully represent reality, but it saves simulations from having to resolve as many collisions and topological operations as would otherwise occur. Regardless of this decision, the simulations still managed to do an unexpectedly great job at quantitatively, and qualitatively reproducing the experimentally measured load displacement curves as discussed in \cref{sc:NiResults}.
 
-The pillar length was defined as $\SI{36}{\micro\metre}$, or $3\times$ the length of one of the sides of the square cross-section. The extra length acts as a buffer zone for simulating dislocations moving into the bulk, where they pile up. In the simulation, they stick to the end of the cantilever, as per \cref{c:surfRem}.
+The pillar length was defined as $\SI{36}{\micro\metre}$, or $3\times$ the length of one of the sides of the square cross-section. The extra length acts as a buffer zone for simulating dislocations moving into the bulk, where they pile up. In the simulation, they stick to the end of the cantilever, as per \cref{c:surfRem}. The initial FR sources were random-uniformly distributed within the central $80\%$ of the domain, i.e. $x \in [0.1X, 0.9X]$, where $x$ is a point along dimension $X$. Given the fact that the number of sources was quite low, various distributions were generated until we arrived at one that spanned the whole domain, rather than clustered about a region.
 
 We define surface node sets $\left\{\forall (x, y, z) \in [0,\, 1] \vert S_{xyz} \in \partial \hat{V}\right\}$, where $\hat{V}$ is a unit volume such that $S_{000}$ denotes the node at the origin, $S_{x00}$ the $x$-axis spanning edge at $y,\, z=0$, and $S_{xy0}$ the $xy$-plane at $z=0$. We use these node sets to define our Neuman (displacement) boundary conditions as follows.
 \begin{subequations}
@@ -126,48 +127,52 @@ In EasyDD, time is defined in units of shear modulus \cref{eq:timeConversion},
 \end{align}
 where $B \coloneqq 1 \times 10^{-4}[\si{\pascal}][\si{\second}]$ is the dislocation mobility and $\mu \coloneqq [\si{\pascal}]$ is the shear modulus.\footnote{The shear modulus is normalised to 1, we use its magnitude to scale the values of the results accordingly. The edge dislocation mobility is also normalised to 1, other mobilities are defined as multiples of this.}
 
-The experimental loading rates were $\SI{5}{\nano\metre/\second}$ and $\SI{500}{\nano\metre/\second}$, which when converted to simulation time, give loading rates that are far too low for the timescales we can simulate. As mentioned in \cref{ss:matrix}, it is important that a quasistatic condition is met for the mobility functions to hold. We therefore chose a loading rate that enabled simulations advance sufficiently without overloading the system. We settled on multiplying the converted value\footnote{The converted value used in the simulations is: $\left(\SI{5e-3}{\micro\metre}/a\right) \times \left(B /  \mu \right)$, where $a$ is the lattice parameter in micrometers, $B$ the dislocation mobility and $ \mu $ the magnitude of the shear modulus from \cref{eq:timeConversion}.} of the $\SI{5}{\nano\metre/\second}$ loading rate by a factor of $5 \times 10^6$. Any higher and the yield point increased massively, any lower and the simulations took much longer to advance without a significant drop in yield point.
+The experimental loading rates were $\SI{5}{\nano\metre\per\second}$ and $\SI{500}{\nano\metre\per\second}$, which when converted to simulation time, give loading rates that are far too low for the timescales we can simulate. As mentioned in \cref{ss:matrix}, it is important that a quasistatic condition is met for the mobility functions to hold. We therefore chose a loading rate that enabled simulations to advance sufficiently, without overloading the system. We settled on multiplying the converted value\footnote{The converted value used in the simulations is: $\left(\SI{5e-3}{\micro\metre}/a\right) \times \left(B /  \mu \right)$, where $a$ is the lattice parameter in micrometers, $B$ the dislocation mobility and $ \mu $ the magnitude of the shear modulus from \cref{eq:timeConversion}.} of the $\SI{5}{\nano\metre\per\second}$ loading rate by a factor of $5 \times 10^6$, which corresponds to a loading rate of $\SI{2.5}{\centi\metre\per\second}$. Any higher and the yield point increased massively, any lower and the simulations took much longer to advance without a significant drop in yield point.
 
 \subsection{Results and discussion}
+\label{sc:NiResults}
 
+The experimental measurements go up to fracture, much beyond the domain of dislocation plasticity (see \cref{f:NiStrainStress}). They also discard the elastic region, and the early onset of plasticity. Conversely, dislocation plasticity simulations are limited only to small strains, i.e. the part of the curves that typically fall below the experimental limit of detection. However, they can elucidate dislocation mechanisms behind plasticity. Here, dislocation plasticity serves as a bridge between the elastic and plastic regimes and lets us explore the mechanisms behind the differences in strain-stress curves between the $\langle 1\,0\,0 \rangle$ and $\langle 1\,1\,0 \rangle$ loading directions.
+
+\Cref{sf:Ni100,sf:Ni110} show the experimental strain stress curves for the $\langle 1\,0\,0 \rangle$ and $\langle 1\,1\,0 \rangle$, respecively. As expected, higher loading rates mean higher stresses overall, and different loading directions produce very different graphs. However, there is quite a large variation between samples even within similar loading rates. This points at dislocations having quite a large effect on the outcome of the experiment. The difference in shape between graphs of both loading directions also point to different slip systems activating at different points and behaving quite differently from each other.
+
+Looking at \cref{sf:Ni100}, both curves at the lower displacement rate are quite similar for most of their domain, however, one of the samples yields close to $\SI{140}{\mega\pascal}$ and fails at $30\%$ strain, while the other yields at around $\SI{180}{\mega\pascal}$ and fails closer to $35\%$. These are not insignificant differences, especially at small scales. Those of higher loading rates are even more different, one even yields at approximately the same point as one of the low loading rate curves.
 \begin{figure}
     \centering
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{../data/Ni100.pdf}
         \caption[Tensile loading of Ni in the $\langle 1\, 0\, 0 \rangle$ direction.]{Tensile loading of Ni in the $\langle 1\, 0\, 0 \rangle$ direction.}
-        \label{sc:Ni100}
+        \label{sf:Ni100}
     \end{subfigure}
     ~
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{../data/Ni110.pdf}
         \caption[Tensile loading of Ni in the $\langle 1\, 1\, 0 \rangle$ direction.]{Tensile loading of Ni in the $\langle 1\, 1\, 0 \rangle$ direction.}
-        \label{sc:Ni110}
+        \label{sf:Ni110}
     \end{subfigure}
 
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{../data/Ni100_DDD.pdf}
         \caption[Dislocation-Plasticity simulation of tensile loading of Ni in the $\langle 1\, 0\, 0 \rangle$ direction.]{Dislocation-Plasticity simulation of tensile loading of Ni in the $\langle 1\, 0\, 0 \rangle$ direction.}
-        \label{sc:Ni100_DDD}
+        \label{sf:Ni100_DDD}
     \end{subfigure}
     ~
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{../data/Ni110_DDD.pdf}
         \caption[Dislocation-Plasticity simulation of tensile loading of Ni in the $\langle 1\, 1\, 0 \rangle$ direction.]{Dislocation-Plasticity simulation of tensile loading of Ni  in the $\langle 1\, 1\, 0 \rangle$ direction.}
-        \label{sc:Ni110_DDD}
+        \label{sf:Ni110_DDD}
     \end{subfigure}
+    \caption{Experimental and simulated strain-stress curves of Ni micropillar tensile tests.}
+    \label{f:NiStrainStress}
 \end{figure}
 
 \subsection{Conclusions}
 
-\section{Tungsten cyclic loading and unloading cantilever}\label{s:tungstenCyclic}
-\subsection{Introduction}
-\subsection{Methodology}
-\subsection{Results and discussion}
-\subsection{Conclusions}
+
 
 % 310
 
