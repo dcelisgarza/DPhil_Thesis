@@ -1,5 +1,7 @@
-%%
 close all
+clear all
+%%
+
 % 100
 Ni100 = readtable('Ni100.csv', 'PreserveVariableNames', false);
 Ni100 = table2array(Ni100(2:end, 1:5));
@@ -93,8 +95,8 @@ set(fig4, 'PaperPositionMode', 'Auto', 'PaperUnits', 'Inches', 'PaperSize', [pos
 print(fig4, 'Ni110_pca.pdf', '-dpdf', '-r300')
 
 %%
-close all
-clear all
+
+
 
 addpath 'D:\DPhil\OneDrive - Nexus365\EasyDD\src'
 Ni100a_ini = load('initial_11-Mar-2021_8_tensile_ni_100_0.mat');
@@ -155,8 +157,6 @@ print(fig5, 'Ni100_DDD.pdf', '-dpdf', '-r300')
 % 
 % pca([F100a_i' F100aN_i'])
 %%
-close all
-clear all
 
 Ni100b_ini = load('initial_16-Mar-2021_8_tensile_ni_100_0.mat');
 Ni100b = load('16-Mar-2021_8_tensile_ni_100_141200.mat');
@@ -198,4 +198,4 @@ set(fig6, 'Units', 'Inches');
 pos = get(fig6, 'Position');
 set(fig6, 'PaperPositionMode', 'Auto', 'PaperUnits', 'Inches', 'PaperSize', [pos(3), pos(4)])
 print(fig6, 'Ni110_DDD.pdf', '-dpdf', '-r300')
-
+%%

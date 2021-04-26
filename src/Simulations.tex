@@ -23,7 +23,7 @@ In total, eight loading tests were carried out.
 
 The cross-section of the micropillars was well-known at $\SI{12}{\micro\metre} \times \SI{12}{\micro\metre}$, however the length was postulated to be $\sim \SI{30}{\micro\metre}$.
 
-The initial dislocation configuration was not well known but was postulated to be approximately 10 dislocations per square micron. The total length of mobile dislocations influences how much plasticity we observe. Furthermore, the Frank-Reed (FR) source length was unknown. A dislocation line's yield stress is inversely proportional to its length,
+The initial dislocation configuration was not well known but was postulated to be approximately 10 dislocations \si{\micro\metre^{-1}}. The total length of mobile dislocations influences how much plasticity we observe. Furthermore, the Frank-Reed (FR) source length was unknown. A dislocation line's yield stress is inversely proportional to its length,
 \begin{align}\label{eq:yieldStress}
     \sigma_\rvar{y} & = \dfrac{\mu b}{l}\,,
 \end{align}
@@ -210,7 +210,9 @@ Qualitatively and quantitatively, the simulations do a surprisingly good job at 
 
 That said, we must be aware that the loading rate is 5 million times higher than $\SI{5}{\nano\meter\per\second}$. As previously mentioned, this loading rate was arrived at by finding the highest loading rate that would not exponentially increase the yield point. However, this does not mean lower loading rates do not decrease the yield point, they do, just not very drastically. They are also impractically slow for our needs.
 
-It is also interesting to note that this was achieved with a very small number of initial sources, only one per active slip system. Contrary to the originally assumed 10 dislocations per square micron. They were also all uniform in size, shape and are all prismatic. These are not wholly unreasonable assumptions, but they are definitely not strictly true. And yet, they did a remarkable job.
+It is also interesting to note that this was achieved with a very small number of initial sources, only one per active slip system, contrary to the originally assumed 10 dislocations \si{\micro\metre^{-2}}. They were also all prismatic, uniform in both size and shape. These are not wholly unreasonable assumptions, but they are definitely not strictly true, yet they did a remarkable job.
+
+However, the appeal of dislocation plasticity is correlating dislocation dynamics to plastic behaviour. To that end, we show snapshots of the simulations at various points and their corresponding strain-stress curves in \cref{f:dislocationPlasticity}.
 
 \subsection{Conclusions}
 
