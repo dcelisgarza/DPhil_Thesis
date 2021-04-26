@@ -141,6 +141,19 @@ set(fig5, 'PaperPositionMode', 'Auto', 'PaperUnits', 'Inches', 'PaperSize', [pos
 print(fig5, 'Ni100_DDD.pdf', '-dpdf', '-r300')
 
 
+% [Ni100_pca,Ni100_score,Ni100_latent,Ni100_tsquared,Ni100_explained,Ni100_mu] = pca(Ni100(:, 2:end));
+% 
+% hi = min([max(Usim100a); max(Usim100aN)]*amag/(dx*amag));
+% xq = linspace(0, hi, curstep100a);
+% 
+% F100a_i = interp1(Usim100a(1:curstep100a)*amag/(dx*amag),Fsim100a(1:curstep100a)*(amag*1e-6)^2*mumag/(dz*amag*1e-6*dy*amag*1e-6),xq);
+% F100aN_i = interp1(Usim100aN(1:curstep100aN)*amag/(dx*amag),Fsim100aN(1:curstep100aN)*(amag*1e-6)^2*mumag/(dz*amag*1e-6*dy*amag*1e-6),xq);
+% hold on
+% plot(xq, F100a_i)
+% plot(xq, F100aN_i)
+% hold off
+% 
+% pca([F100a_i' F100aN_i'])
 %%
 close all
 clear all

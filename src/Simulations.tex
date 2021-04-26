@@ -24,7 +24,7 @@ In total, eight loading tests were carried out.
 The cross-section of the micropillars was well-known at $\SI{12}{\micro\metre} \times \SI{12}{\micro\metre}$, however the length was postulated to be $\sim \SI{30}{\micro\metre}$.
 
 The initial dislocation configuration was not well known but was postulated to be approximately 10 dislocations per square micron. The total length of mobile dislocations influences how much plasticity we observe. Furthermore, the Frank-Reed (FR) source length was unknown. A dislocation line's yield stress is inversely proportional to its length,
-\begin{align}
+\begin{align}\label{eq:yieldStress}
     \sigma_\rvar{y} & = \dfrac{\mu b}{l}\,,
 \end{align}
 where $\sigma_\rvar{y}$ is the yield stress, $\mu$ the shear modulus, $b =  \vec{b} $, and $l$ the dislocation line length. Both of these parameters had to be estimated and refined by running probing simulations.
@@ -98,7 +98,7 @@ We used prismatic loops with four sides as Frank-Reed sources to seed the domain
         \bottomrule
     \end{tabular}
 \end{table}
-To minimise computation expenditure, we only included these active slip systems in our simulations. This obviously does not fully represent reality, but it saves simulations from having to resolve as many collisions and topological operations as would otherwise occur. Regardless of this decision, the simulations still managed to do an unexpectedly great job at quantitatively, and qualitatively reproducing the experimentally measured load displacement curves as discussed in \cref{sc:NiResults}.
+To minimise computation expenditure, we only included these active slip systems in our simulations. This obviously does not fully represent reality, but it saves simulations from having to resolve as many collisions and topological operations as would otherwise occur. Regardless of this decision, the simulations still managed to do an unexpectedly great job at quantitatively, and qualitatively reproducing the experimentally measured strain-stress curves as discussed in \cref{sc:NiResults}.
 
 The pillar length was defined as $\SI{36}{\micro\metre}$, or $3\times$ the length of one of the sides of the square cross-section. The extra length acts as a buffer zone for simulating dislocations moving into the bulk, where they pile up. In the simulation, they stick to the end of the cantilever, as per \cref{c:surfRem}. The initial FR sources were random-uniformly distributed within the central $80\%$ of the domain, i.e. $x \in [0.1X, 0.9X]$, where $x$ is a point along dimension $X$. Given the fact that the number of sources was quite low, various distributions were generated until we arrived at one that spanned the whole domain, rather than clustered about a region.
 
@@ -129,8 +129,12 @@ where $B \coloneqq 1 \times 10^{-4}[\si{\pascal}][\si{\second}]$ is the dislocat
 
 The experimental loading rates were $\SI{5}{\nano\metre\per\second}$ and $\SI{500}{\nano\metre\per\second}$, which when converted to simulation time, give loading rates that are far too low for the timescales we can simulate. As mentioned in \cref{ss:matrix}, it is important that a quasistatic condition is met for the mobility functions to hold. We therefore chose a loading rate that enabled simulations to advance sufficiently, without overloading the system. We settled on multiplying the converted value\footnote{The converted value used in the simulations is $\left(\SI{5e-3}{\micro\metre}/a\right) \times \left(B /  \mu \right)$, where $a$ is the lattice parameter in micrometers, $B$ the dislocation mobility and $ \mu $ the magnitude of the shear modulus from \cref{eq:timeConversion}.} of the $\SI{5}{\nano\metre\per\second}$ loading rate by a factor of $5 \times 10^6$, which corresponds to a loading rate of $\SI{2.5}{\centi\metre\per\second}$. Any higher and the yield point increased massively, any lower and the simulations took much longer to advance without a significant drop in yield point.
 
+Furthermore, two source segment lengths were trialed. For the $\langle 1\, 0\, 0 \rangle$ loading direction we assumed two values for $\sigma_\rvar{y} = \SI{183, 142}{\mega\pascal}$ and for the $\langle 1\, 1\, 0 \rangle$ direction $\sigma_\rvar{y} = \SI{158, 101}{\mega\pascal}$. The assumptions came from experimental values suggested by Alan and Dhriti and had to be adjusted to account for the simulation higher loading rate. We also did not directly use \cref{eq:yieldStress}, but $l = 2 \mu b / \sigma_\rvar(y)$, to account for the sources being at an angle with respect to the loading direction\footnote{Perhaps it would be more accurate to drop the factor of two and use the critically resolved shear stress instead of the yield stress directly, $\tau = \cos(\phi)\cos(\lambda) \sigma_\rvar{y}$, where $\phi$ and $\lambda$ are the angles between the applied stress, glide plane normal, and glide direction respectively. However, a lot of much stronger assumptions and adjustments had already been made, and this worked satisfactorily.}.
+
 \subsection{Results and discussion}
 \label{sc:NiResults}
+
+The experimental measurements go up to fracture, much beyond the domain of dislocation plasticity; they also discard the elastic region, and the early onset of plasticity as shown in \cref{sf:Ni100,sf:Ni110}. Conversely, dislocation plasticity simulations are limited only to small strains, i.e. the part of the curves that typically fall below the experimental limit of detection as shown in \cref{sf:Ni100_DDD,sf:Ni110_DDD}. However, they can elucidate dislocation mechanisms behind plasticity. Here, dislocation plasticity serves as a bridge between the elastic and plastic regimes and lets us explore the mechanisms behind the differences in strain-stress curves between the $\langle 1\,0\,0 \rangle$ and $\langle 1\,1\,0 \rangle$ loading directions.
 
 \begin{figure}
     \centering
@@ -151,21 +155,19 @@ The experimental loading rates were $\SI{5}{\nano\metre\per\second}$ and $\SI{50
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{../data/Ni100_DDD.pdf}
-        \caption[Dislocation-Plasticity simulation of tensile loading of Ni in the $\langle 1\, 0\, 0 \rangle$ direction.]{Dislocation-Plasticity simulation of tensile loading of Ni in the $\langle 1\, 0\, 0 \rangle$ direction.}
+        \caption[Dislocation-Plasticity simulation of tensile loading of Ni in the $\langle 1\, 0\, 0 \rangle$ direction.]{Dislocation-Plasticity simulation of tensile loading of Ni in the $\langle 1\, 0\, 0 \rangle$ direction. (a) and (b) use the same distribution of small sources, (c) uses a different distribution of larger ones. (a) uses analytic tractions and (b) numeric ones.}
         \label{sf:Ni100_DDD}
     \end{subfigure}
     ~
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{../data/Ni110_DDD.pdf}
-        \caption[Dislocation-Plasticity simulation of tensile loading of Ni in the $\langle 1\, 1\, 0 \rangle$ direction.]{Dislocation-Plasticity simulation of tensile loading of Ni  in the $\langle 1\, 1\, 0 \rangle$ direction.}
+        \caption[Dislocation-Plasticity simulation of tensile loading of Ni in the $\langle 1\, 1\, 0 \rangle$ direction.]{Dislocation-Plasticity simulation of tensile loading of Ni  in the $\langle 1\, 1\, 0 \rangle$ direction. (a) uses small sources, (b) uses a different distribution of larger ones.}
         \label{sf:Ni110_DDD}
     \end{subfigure}
     \caption{Experimental and simulated strain-stress curves of Ni micropillar tensile tests.}
     \label{f:NiStrainStress}
 \end{figure}
-
-The experimental measurements go up to fracture, much beyond the domain of dislocation plasticity (see \cref{f:NiStrainStress}). They also discard the elastic region, and the early onset of plasticity. Conversely, dislocation plasticity simulations are limited only to small strains, i.e. the part of the curves that typically fall below the experimental limit of detection. However, they can elucidate dislocation mechanisms behind plasticity. Here, dislocation plasticity serves as a bridge between the elastic and plastic regimes and lets us explore the mechanisms behind the differences in strain-stress curves between the $\langle 1\,0\,0 \rangle$ and $\langle 1\,1\,0 \rangle$ loading directions.
 
 \Cref{sf:Ni100,sf:Ni110} show the experimental strain stress curves for the $\langle 1\,0\,0 \rangle$ and $\langle 1\,1\,0 \rangle$, respecively. As expected, higher loading rates mean higher stresses overall, and different loading directions produce very different graphs. However, there is quite a large variation between samples even within similar loading rates. This points at dislocations having quite a large effect on the outcome of the experiment. The difference in shape between graphs of both loading directions also point to different slip systems activating at different points and behaving quite differently from each other.
 
@@ -194,19 +196,27 @@ Conversely, the high loading rate curves in, (c) and (d) in \cref{sf:Ni100}, are
 
 Unfortunately, dislocation plasticity simulations cannot probe such high strains and low loading rates, but it would be interesting to investigate the dislocation mechanisms behind this increased plasticity. One has to wonder whether this is a result of kinetic processes that are typically ignored in dislocation dynamics. However, it may also be the fact that the number of samples is quite limited, so the differences may be due to heterogeneity between samples.
 
-Sadly, sophisticated statistical analyses cannot be performed due to the low number of samples, but we can at least perform a principal component analysis and plot the dominant components, as shown in \cref{sf:Ni100_pca}, to see whether the differences between low and high loading rates---respectively denoted by blue triangles (\textcolor{matlabBlue}{$\blacktriangle$}) and orange circles (\textcolor{matlabOrange}{$\bullet$})---are significant. With so few data points, a clustering analysis would not yield quality information.
+Sadly, sophisticated statistical analyses cannot be performed due to the low number of samples, but we can at least perform a principal component analysis (PCA) and plot the dominant components, as shown in \cref{sf:Ni100_pca}, to see whether the differences between low and high loading rates---respectively denoted by blue triangles (\textcolor{matlabBlue}{$\blacktriangle$}) and orange circles (\textcolor{matlabOrange}{$\bullet$})---are significant. With so few data points, a clustering analysis would not yield quality information.
 
 As expected, the low loading rate measurements cluster together, hinting at similar behaviour. Moreover, the higher loading rates have a larger spread. The Eucledian distance from one of them is even smaller to both low loading rate measurements, than it is to its high loading rate counterpart. More measurements are needed to draw conclusions as to why this is the case. Regardless, it is relatively safe to assume the loading rate has a noticeable effect when loading the $\langle 1\, 0\, 0 \rangle$ direction for these specific rates. Such information is relevant for our simulations, as their loading rates were much higher than these, so we must expect those curves to behave accordingly, and our conclusions must be extrapolated with this in mind.
 
-The story is much different in the $\langle 1\, 1\, 0 \rangle$ loading direction. All graphs in \cref{sf:Ni110} look quite similar. They are markedly different to those of \cref{sf:Ni100}, but among each other there does not seem to be large differences between low loading rate curves, (a) and (b), and high loading rate ones, (c) and (d). Having said that, curves (c) and (d) consistently experience higher stresses than (a) and (b). With so few samples, it is hard to say whether there is a notable difference.
+The story is much different for the $\langle 1\, 1\, 0 \rangle$ loading direction. All graphs in \cref{sf:Ni110} look quite similar. They are markedly different to those in \cref{sf:Ni100}, but among themselves there do not seem to be large differences between low loading rate curves, (a) and (b), and high loading rate ones, (c) and (d). Having said that, curves (c) and (d) consistently experience higher stresses than (a) and (b). With so few samples, it is hard to say whether there is a notable difference.
 
 \Cref{sf:Ni110_pca} confirms this, the Eucledian distance between both low loading rate curves (\textcolor{matlabBlue}{$\blacktriangle$}) is much smaller to one another than that between both high loading rate curves (\textcolor{matlabOrange}{$\bullet$}). With only two data points for each measurement, it is very difficult to assert whether there is a relationship between the first and second principal components that can be used to correlate a curve to its loading rate. We therefore cannot draw satisfacotry conclusions whether such differences in loading rate have much of an effect. Conventional wisdom is that it will, but we cannot quantify how much, so we must tread with care.
+
+Given the computational expense of simulations we cannot perform a meaningful PCA and compare the results to the experimental measurements as we do not have enough samples, and their maximal strains are well below the experimentally measured ones.
+
+Qualitatively and quantitatively, the simulations do a surprisingly good job at reproducing the experimental strain-stress curves. Comparing the yield points and features of \cref{sf:Ni100,sf:Ni110} tith those of \cref{sf:Ni100_DDD,sf:Ni110_DDD} shows remarkable agreement between them. While the simulations cannot reach the same strains as the experiments, they appear to fall within experimental variation, excepting curve (a) of \cref{sf:Ni110_DDD}.
+
+That said, we must be aware that the loading rate is 5 million times higher than $\SI{5}{\nano\meter\per\second}$. As previously mentioned, this loading rate was arrived at by finding the highest loading rate that would not exponentially increase the yield point. However, this does not mean lower loading rates do not decrease the yield point, they do, just not very drastically. They are also impractically slow for our needs.
+
+It is also interesting to note that this was achieved with a very small number of initial sources, only one per active slip system. Contrary to the originally assumed 10 dislocations per square micron. They were also all uniform in size, shape and are all prismatic. These are not wholly unreasonable assumptions, but they are definitely not strictly true. And yet, they did a remarkable job.
 
 \subsection{Conclusions}
 
 
 
-% 310
+% 1929
 
 
 % TODO
