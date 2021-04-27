@@ -953,13 +953,13 @@ where $a$ is the number of entries, $N$ the number of nodes and $E$ the number o
     \label{f:parallel_exec}
 \end{figure}
 
-There are $6*3*8 + 6*8 = 192$ bytes of information in each unit problem: 6 nodes with 3 coordinates each, all 8 bytes each (double precision), plus 6 pointers of 8 bytes each\footnote{Therea are 6 arrays where the are stored, each array needs a pointer, each pointer is 8 bytes in x64 architecture}. We must consider this when computing the number of threads because GPUs have a finite amount of shared memory per block. If we go above this threshold the GPU will error, which under normal circumstances is fine because the error causes a crash, but when \mintinline{matlab}{MATLAB} interfaces with GPUs, the error does not get reported back and the programme keeps running without having calculated anything.
+There are $6\times 3\times 8 + 6\times 8 = 192$ bytes of information in each unit problem: 6 nodes with 3 coordinates each, each of 8 bytes (double precision), plus 6 pointers of 8 bytes each\footnote{The nodes are stored in arrays, each array needs a pointer, which pointer is 8 bytes in x64 architecture}. We must consider this when computing the number of threads because GPUs have a finite amount of shared memory per block. If we go above this threshold the GPU will error, which under normal circumstances is fine because the error causes a crash, but when \mintinline{matlab}{MATLAB} interfaces with GPUs, the error does not get reported back and the programme keeps running without having calculated anything.
 
 Realistically, this is extremely difficult to achieve, particularly in dynamic, non-conservative simulations such as discrete dislocation dynamics. So we also came up with two heuristics that aim to utilise as many computational resources as effectively as possible,
 \begin{align}\label{eq:numThreads}
-    b            & = 192                                                     \\
-    T_\rvar{max} & = \min(T_\rvar{block}, \left\lfloor M_\rvar{block}/b \right\rfloor)  \\
-    T            & = 32 \left\lceil (n \mod{T_{\rvar{max}}})/32 \right\rceil \\
+    b            & = 192                                                               \\
+    T_\rvar{max} & = \min(T_\rvar{block}, \left\lfloor M_\rvar{block}/b \right\rfloor) \\
+    T            & = 32 \left\lceil (n \mod{T_{\rvar{max}}})/32 \right\rceil           \\
     G            & = \left\lceil (n + T - 1) / T \right\rceil\,.
 \end{align}
 Where $b$ is the total number of bytes per unit problem; $T_\rvar{max}$ is the maximum number of threads the computation can use without exceeding the shared memory per block; $T_\rvar{block}$ is the maximum number of threads a block can have if they do not exceed the shared memory; $M_\rvar{block}$ is the shared memory per block; $T$ is the number of threads per block that exactly fills as many warps as possible, without exceeding the shared memory per block; $n$ is the number of unit problems; $G$ is the number of blocks that distributes the computation most evenly. This ensures any GPU that runs the computation will always perform optimally for a given number of unit problems. The heuristic was also added to the GPU parallelisation of the remote force calculation, where the unit problem size is the same.
