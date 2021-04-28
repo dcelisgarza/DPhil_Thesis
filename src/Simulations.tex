@@ -210,25 +210,27 @@ That said, we must be aware that the loading rate is 5 million times higher than
 
 It is also interesting to note that this was achieved with a very small number of initial sources, only one per active slip system, contrary to the originally assumed 10 dislocations \si{\micro\metre^{-2}}. They were also all prismatic, uniform in both size and shape. These are not wholly unreasonable assumptions, but they are definitely not strictly true, yet they did a remarkable job.
 
-The appeal of dislocation plasticity is correlating dislocation dynamics to plastic behaviour. In general, stresses are relaxed as the total internal dislocation length increases. The ``bumpy'' quality of the strain-stress curves in $\langle 1\, 0\, 0 \rangle$, as shown in \cref{sf:Ni100,sf:Ni100_DDD}, is the result of how quickly the internal dislocations grow. \Cref{f:Ni100_bumps} shows the dislocation structures and corresponding strain-stress curve for simulation (a) in \cref{sf:Ni100_DDD}. It can be observed that the slope of the peaks and valleys of the ``bumps'' correspond to how quickly the total internal dislocation length is growing. Upward slopes correspond to rapidly decreasing internal dislocation length. Conversely, downward slopes correspond rapidly increasing internal dislocation length. Of course, exited dislocations contribute to the relaxation of stresses via the creation of slip steps, but once they have left the simulation domain, their contributions remain static.
+The appeal of dislocation plasticity is correlating dislocation dynamics to plastic behaviour. In general, stresses are relaxed as the total internal dislocation length increases.
+
+The ``bumpy'' quality of the strain-stress curves in $\langle 1\, 0\, 0 \rangle$, as shown in \cref{sf:Ni100,sf:Ni100_DDD}, is the result of how quickly the internal dislocations grow. \Cref{f:Ni100_bumps} shows the dislocation structures and corresponding strain-stress curve for simulation (a) in \cref{sf:Ni100_DDD}. It can be observed that the slope of the peaks and valleys of the ``bumps'' correspond to how quickly the total internal dislocation length is growing. Upward slopes correspond to rapidly decreasing internal dislocation length. Conversely, downward slopes correspond rapidly increasing internal dislocation length. Of course, exited dislocations contribute to the relaxation of stresses via the creation of slip steps, but once they have left the simulation domain, their contributions remain static.
 \begin{figure}
     \centering
     \begin{subfigure}[t]{\linewidth}
         \centering
-        \includegraphics[width=0.5\linewidth]{example-image-a}
+        \includegraphics[trim={1.75cm 5cm 2.5cm 5.5cm},clip,width=\linewidth]{../data/11-Mar-2021_8_tensile_ni_100_0.pdf}
         \caption{Initial structure.}
     \end{subfigure}
 
     \begin{subfigure}[t]{\linewidth}
         \centering
-        \includegraphics[width=0.5\linewidth]{example-image-b}
-        \caption{Upward slope.}
+        \includegraphics[trim={1.75cm 5cm 2.5cm 5.5cm},clip,width=\linewidth]{../data/11-Mar-2021_8_tensile_ni_100_60000.pdf}
+        \caption{Downward slope.}
     \end{subfigure}
 
     \begin{subfigure}[t]{\linewidth}
         \centering
-        \includegraphics[width=0.5\linewidth]{example-image-b}
-        \caption{Downward slope.}
+        \includegraphics[trim={1.75cm 5cm 2.5cm 5.5cm},clip,width=\linewidth]{../data/11-Mar-2021_8_tensile_ni_100_120000.pdf}
+        \caption{Upward slope.}
     \end{subfigure}
     \caption[Dislocation structure with corresponding load displacement curves of tensile loading in $\langle 1\, 0\, 0 \rangle$.]{Dislocation structure with corresponding load displacement curves of tensile loading in $\langle 1\, 0\, 0 \rangle$. Corresponds to curve (a) in \cref{sf:Ni100_DDD}.}
     \label{f:Ni100_bumps}
@@ -239,64 +241,68 @@ On the other hand, the $\langle 1\, 1\, 0 \rangle$ loading direction does not ex
     \centering
     \begin{subfigure}[t]{\linewidth}
         \centering
-        \includegraphics[width=0.5\linewidth]{example-image-a}
+        \includegraphics[trim={1.75cm 5cm 2.5cm 5.5cm},clip,width=\linewidth]{../data/16-Mar-2021_4_tensile_ni_110_0.pdf}
         \caption{Initial structure.}
     \end{subfigure}
 
     \begin{subfigure}[t]{\linewidth}
         \centering
-        \includegraphics[width=0.5\linewidth]{example-image-b}
-        \caption{Upward slope.}
+        \includegraphics[trim={1.75cm 5cm 2.5cm 5.5cm},clip,width=\linewidth]{../data/16-Mar-2021_4_tensile_ni_110_5400.pdf}
+        \caption{Start of plasticity.}
     \end{subfigure}
 
     \begin{subfigure}[t]{\linewidth}
         \centering
-        \includegraphics[width=0.5\linewidth]{example-image-c}
-        \caption{Downward slope.}
+        \includegraphics[trim={1.75cm 5cm 2.5cm 5.5cm},clip,width=\linewidth]{../data/16-Mar-2021_4_tensile_ni_110_225000.pdf}
+        \caption{End of simulation.}
     \end{subfigure}
-    \caption[Dislocation structure with corresponding load displacement curves of tensile loading in $\langle 1\, 1\, 0 \rangle$.]{Dislocation structure with corresponding load displacement curves of tensile loading in $\langle 1\, 1\, 0 \rangle$. Corresponds to curve (a) in \cref{sf:Ni110_DDD}.}
+    \caption[Dislocation structure with corresponding load displacement curves of tensile loading in $\langle 1\, 1\, 0 \rangle$.]{Dislocation structure with corresponding load displacement curves of tensile loading in $\langle 1\, 1\, 0 \rangle$. Corresponds to curve (b) in \cref{sf:Ni110_DDD}.}
     \label{f:Ni110_bumps}
 \end{figure}
 
 We have also produced \texttt{mp4} videos of all our useable simulations. These behaviours can be confirmed by watching them. The videos are found in the following link \href{https://github.com/dcelisgarza/DPhil_Thesis/tree/master/data}{https://github.com/dcelisgarza/DPhil\_Thesis/tree/master/data}.
 
-Curves (a) and (b) in \cref{sf:Ni100_DDD} represent the same initial conditions, except for the fact that (a) uses analytic tractions, and (b) numeric ones (see \cref{c:tractions}). At a glance, it is clear the numeric tractions did a very good job at reproducing the load displacement curve. However, a comparison of the aforementioned videos will make it clear the dislocation structures can be quite different. We cannot compare exactly equivalent points in the simulation because the integrator is adaptive, but we can at least get somewhat close. \Cref{f:analyticNumericStruct} shows a few roughly equivalent points in strain, yet they all have visibly different dislocation structures.
+Curves (a) and (b) in \cref{sf:Ni100_DDD} represent the same initial conditions, except for the fact that (a) uses analytic tractions, and (b) numeric ones (see \cref{c:tractions}). At a glance, it is clear the numeric tractions did a very good job at reproducing the load displacement curve, until its curve started diverging from the analytic tractions quite significantly. A comparison of the aforementioned videos will make the chaotic nature of dislocation dynamics quite clear. The structures produced from both methods diverge very quickly, though the load displacement curve does diverge much not change until later.
+
+In this case, the numeric tractions managed to get further than the analytic ones, this is not always true. Moreover, the numeric tractions consistently yield higher stresses as simulations advance, regardless of loading conditions. With an FCC structure, uniform strain, and few sources, the consequences of this aren't immediately obvious. However, when cross-slip is allowed like in a BCC mobility law, or when the strain is not uniform such as in nanoindentation or cantilever bending, the numeric instability of the numeric tractions is often problematic, and can seriously slow simulations down.
+
+We cannot compare exactly equivalent points in the simulation because the integrator is adaptive, but we can at least get somewhat close. \Cref{f:analyticNumericStruct} shows a few roughly equivalent points in strain, yet they all have visibly different dislocation structures, except for the initial distribution.
 \begin{figure}
     \centering
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{example-image-a}
-        \caption{Numeric tractions at x strain.}
+        \includegraphics[trim={1.75cm 6.75cm 15.75cm 6.75cm},clip,width=\linewidth]{../data/11-Mar-2021_numT_8_tensile_ni_100_0.pdf}
+        \caption{Numeric tractions at 0\% strain.}
     \end{subfigure}
     ~
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{example-image-b}
-        \caption{Analytic tractions at x strain.}
+        \includegraphics[trim={1.75cm 6.75cm 15.75cm 6.75cm},clip,width=\linewidth]{../data/11-Mar-2021_8_tensile_ni_100_0.pdf}
+        \caption{Analytic tractions at 0\% strain.}
     \end{subfigure}
 
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{example-image-c}
-        \caption{Numeric tractions at y strain.}
+        \includegraphics[trim={1.75cm 6.75cm 15.75cm 6.75cm},clip,width=\linewidth]{../data/11-Mar-2021_numT_8_tensile_ni_100_81600.pdf}
+        \caption{Numeric tractions at 0.1491\% strain.}
     \end{subfigure}
     ~
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{example-image-a}
-        \caption{Analytic tractions at y strain.}
+        \includegraphics[trim={1.75cm 6.75cm 15.75cm 6.75cm},clip,width=\linewidth]{../data/11-Mar-2021_8_tensile_ni_100_60000.pdf}
+        \caption{Analytic tractions at 0.1454\% strain.}
     \end{subfigure}
 
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{example-image-b}
-        \caption{Numeric tractions at z strain.}
+        \includegraphics[trim={1.75cm 6.75cm 15.75cm 6.75cm},clip,width=\linewidth]{../data/11-Mar-2021_numT_8_tensile_ni_100_98400.pdf}
+        \caption{Numeric tractions at 0.1552\% strain.}
     \end{subfigure}
     ~
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{example-image-c}
-        \caption{Analytic tractions at z strain.}
+        \includegraphics[trim={1.75cm 6.75cm 15.75cm 6.75cm},clip,width=\linewidth]{../data/11-Mar-2021_8_tensile_ni_100_120000.pdf}
+        \caption{Analytic tractions at 0.1558\% strain.}
     \end{subfigure}
     \caption[Differences in dislocation structures when using numeric or analytic tractions with the same initial conditions.]{Differences in dislocation structures when using numeric or analytic tractions with the same initial conditions. Loading in $\langle 1\, 0\, 0 \rangle$, analytic and numeric tractions respectively correspond to curves (a) and (b) of \cref{sf:Ni100_DDD}.}
     \label{f:analyticNumericStruct}
@@ -336,5 +342,5 @@ The final aspect of reproducing experimental results with dislocation plasticity
 The slip steps are obviously not the same magnitude, nor are they in the same place, but they're very similar. It's hard to compare how many there are given the resolution of the SEM images, and the fact that the simulations have not reached anywhere near the strains shown in the experiments. However, it is evident that we can observe the phenomenology behind experimental observations in such fine detail thanks to dislocation plasticity.
 
 \section{Conclusions}
-% 2502
+% 2629
 
