@@ -46,7 +46,7 @@ C is a weak, statically typed language; \emph{statically typed} means that types
 \begin{figure}
     \centering
     \includegraphics[width=0.5\linewidth]{cdesc.pdf}
-    \caption{C descriptor with rank \texttt{r} being cast into one with unspecified rank. C looses track of exactly how large the object is, but given the value of the rank element \texttt{r}, the size of a single element of \texttt{dim} and the information contained within the \texttt{dim} member variables, the object can be fully explored.}
+    \caption[C descriptor with rank \texttt{r} being cast into one with unspecified rank.]{C descriptor with rank \texttt{r} being cast into one with unspecified rank. C looses track of exactly how large the object is, but given the value of the rank element \texttt{r}, the size of a single element of \texttt{dim} and the information contained within the \texttt{dim} member variables, the object can be fully explored.}
     \label{f:cast}
 \end{figure}
 As a result, developers are \emph{strongly} advised to use the standard functions and---if need be---create their own, more complex ones if they want to manipulate the C object.
