@@ -232,7 +232,7 @@ The ``bumpy'' quality of the strain-stress curves in $\langle 1\, 0\, 0 \rangle$
         \includegraphics[trim={1.75cm 5cm 2.5cm 5.5cm},clip,width=\linewidth]{../data/11-Mar-2021_8_tensile_ni_100_120000.pdf}
         \caption{Upward slope.}
     \end{subfigure}
-    \caption[Dislocation structure with corresponding load displacement curves of tensile loading in $\langle 1\, 0\, 0 \rangle$.]{Dislocation structure with corresponding load displacement curves of tensile loading in $\langle 1\, 0\, 0 \rangle$. Corresponds to curve (a) in \cref{sf:Ni100_DDD}.}
+    \caption[Dislocation structure with corresponding load displacement curves of tensile loading in $\langle 1\, 0\, 0 \rangle$.]{Dislocation structure with corresponding load displacement curves of tensile loading in $\langle 1\, 0\, 0 \rangle$. Corresponds to (a) in \cref{sf:Ni100_DDD}.}
     \label{f:Ni100_bumps}
 \end{figure}
 
@@ -256,7 +256,7 @@ On the other hand, the $\langle 1\, 1\, 0 \rangle$ loading direction does not ex
         \includegraphics[trim={1.75cm 5cm 2.5cm 5.5cm},clip,width=\linewidth]{../data/16-Mar-2021_4_tensile_ni_110_225000.pdf}
         \caption{End of simulation.}
     \end{subfigure}
-    \caption[Dislocation structure with corresponding load displacement curves of tensile loading in $\langle 1\, 1\, 0 \rangle$.]{Dislocation structure with corresponding load displacement curves of tensile loading in $\langle 1\, 1\, 0 \rangle$. Corresponds to curve (b) in \cref{sf:Ni110_DDD}.}
+    \caption[Dislocation structure with corresponding load displacement curves of tensile loading in $\langle 1\, 1\, 0 \rangle$.]{Dislocation structure with corresponding load displacement curves of tensile loading in $\langle 1\, 1\, 0 \rangle$. Corresponds to (b) in \cref{sf:Ni110_DDD}.}
     \label{f:Ni110_bumps}
 \end{figure}
 
@@ -264,9 +264,9 @@ We have also produced \texttt{mp4} videos of all our useable simulations. These 
 
 Curves (a) and (b) in \cref{sf:Ni100_DDD} represent the same initial conditions, except for the fact that (a) uses analytic tractions, and (b) numeric ones (see \cref{c:tractions}). At a glance, it is clear the numeric tractions did a very good job at reproducing the load displacement curve, until its curve started diverging from the analytic tractions quite significantly. A comparison of the aforementioned videos will make the chaotic nature of dislocation dynamics quite clear. The structures produced from both methods diverge very quickly, though the load displacement curve does diverge much not change until later.
 
-In this case, the numeric tractions managed to get further than the analytic ones, this is not always true. Moreover, the numeric tractions consistently yield higher stresses as simulations advance, regardless of loading conditions. With an FCC structure, uniform strain, and few sources, the consequences of this aren't immediately obvious. However, when cross-slip is allowed like in a BCC mobility law, or when the strain is not uniform such as in nanoindentation or cantilever bending, the numeric instability of the numeric tractions is often problematic, and can seriously slow simulations down.
+In this case, the numeric tractions managed to get further than the analytic ones, this is not always true. Moreover, the numeric tractions consistently yield higher stresses as simulations advance, regardless of loading conditions. With an FCC structure, uniform strain, and few sources, the consequences of this aren't immediately obvious. However, when cross-slip is allowed like in a BCC mobility law, or when the strain is not uniform such as in nanoindentation or cantilever bending, the numeric instability of the numeric tractions is often problematic as it tends to cause more cross-slip---and therefore more topological operations---which can dramatically slow simulations down. As mentioned in \cref{c:topology,c:tractions}, we have found the analytic tractions to be much more robust and reliable in comparison, so the recommendation is to use them if available.
 
-We cannot compare exactly equivalent points in the simulation because the integrator is adaptive, but we can at least get somewhat close. \Cref{f:analyticNumericStruct} shows a few roughly equivalent points in strain, yet they all have visibly different dislocation structures, except for the initial distribution.
+We cannot compare exactly equivalent points in the simulations using numeric vs analytic tractions because the integrator is adaptive, but we can at least try to get as close as possible. \Cref{f:analyticNumericStruct} shows a few roughly equivalent points in strain, yet they all have visibly different dislocation structures, except for the initial distribution.
 \begin{figure}
     \centering
     \begin{subfigure}[t]{0.45\linewidth}
@@ -304,43 +304,57 @@ We cannot compare exactly equivalent points in the simulation because the integr
         \includegraphics[trim={1.75cm 6.75cm 15.75cm 6.75cm},clip,width=\linewidth]{../data/11-Mar-2021_8_tensile_ni_100_120000.pdf}
         \caption{Analytic tractions at 0.1558\% strain.}
     \end{subfigure}
-    \caption[Differences in dislocation structures when using numeric or analytic tractions with the same initial conditions.]{Differences in dislocation structures when using numeric or analytic tractions with the same initial conditions. Loading in $\langle 1\, 0\, 0 \rangle$, analytic and numeric tractions respectively correspond to curves (a) and (b) of \cref{sf:Ni100_DDD}.}
+    \caption[Differences in dislocation structures when using numeric or analytic tractions with the same initial conditions.]{Differences in dislocation structures when using numeric or analytic tractions with the same initial conditions. Tensile loading in $\langle 1\, 0\, 0 \rangle$, analytic and numeric tractions respectively correspond to curves (a) and (b) of \cref{sf:Ni100_DDD}.}
     \label{f:analyticNumericStruct}
 \end{figure}
 
-We were fortunate that the differences in dislocation structure did not significantly impact the simulation. However, different source distributions, crystal structures, mobility functions, and loading conditions may not work so favourably with the inherent instability of the numeric tractions. As mentioned in \cref{c:tractions,c:topology}, we have found the analytic tractions to be much more robust and reliable in comparison, so the recommendation is to use them if available.
-
-The final aspect of reproducing experimental results with dislocation plasticity is to see what the slip steps look like. Again, given the time scales and small strains we can simulate with dislocation plasticity, we will not see slip steps that are as large as those experimentally observed. Each exited dislocation with Burgers vector $\vec{b}$ will create a corresponding slip step with the same vector and magnitude. As more loops generated by the FR source keep exiting the domain, the slip step grows by $b$ each time one of them exits the surface. Using the displacement plot by \citet{bromage2018calculating}, we can compare simulation to experiment in \cref{f:slipSteps}.
+The final aspect of reproducing experimental results with dislocation plasticity is to see what the slip steps look like. Again, given the time scales and small strains we can simulate with dislocation plasticity, we will not see slip steps that are as large as those experimentally observed. Each exited dislocation with Burgers vector $\vec{b}$ will create a corresponding slip step with the same vector and magnitude. As more loops generated by the FR source keep exiting the domain, the slip step grows by $b$ each time one of them exits the surface. Using the displacement plot by \citet{bromage2018calculating}, we can see what the slip steps of the simulation look like \cref{f:slipSteps}.
 \begin{figure}
     \centering
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{example-image-a}
-        \caption[SEM image of tensile loading in $\langle 1\, 0\, 0 \rangle$.]{SEM image of tensile loading in $\langle 1\, 0\, 0 \rangle$. Corresponds to sample in curve (a) in \cref{sf:Ni100}.}
+        \includegraphics[width=\linewidth]{../data/11-Mar-2021_8_tensile_ni_100_196800_disp.pdf}
+        \caption{Tensile loading in $\langle 1\, 0\, 0 \rangle$. Corresponds to (a) in \cref{sf:Ni100_DDD} (analytic tractions).}
+        \label{sf:Ni100a_disp}
     \end{subfigure}
     ~
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{example-image-b}
-        \caption[Simulated displacements of tensile loading in $\langle 1\, 0\, 0 \rangle$.]{Simulated displacements of tensile loading in $\langle 1\, 0\, 0 \rangle$. Corresponds to curve (c) in \cref{sf:Ni100_DDD}.}
+        \includegraphics[width=\linewidth]{../data/11-Mar-2021_numT_8_tensile_ni_100_168600_disp.pdf}
+        \caption{Tensile loading in $\langle 1\, 0\, 0 \rangle$. Corresponds to (b) in \cref{sf:Ni100_DDD} (numeric tractions).}
+        \label{sf:Ni100aN_disp}
     \end{subfigure}
 
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{example-image-a}
-        \caption[SEM image of tensile loading in $\langle 1\, 1\, 0 \rangle$.]{SEM image of tensile loading in $\langle 1\, 1\, 0 \rangle$. Corresponds to sample in curve (a) in \cref{sf:Ni100}.}
+        \includegraphics[width=\linewidth]{../data/16-Mar-2021_8_tensile_ni_100_214400_disp.pdf}
+        \caption{Tensile loading in $\langle 1\, 0\, 0 \rangle$. Corresponds to (c) in \cref{sf:Ni100_DDD}.}
+        \label{sf:Ni100b_disp}
     \end{subfigure}
     ~
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{example-image-b}
-        \caption[Simulated displacements of tensile loading in $\langle 1\, 1\, 0 \rangle$.]{Simulated displacements of tensile loading in $\langle 1\, 1\, 0 \rangle$. Corresponds to curve (b) in \cref{sf:Ni100_DDD}.}
+        \includegraphics[width=\linewidth]{../data/11-Mar-2021_4_tensile_ni_110_205600_disp.pdf}
+        \caption{Tensile loading in $\langle 1\, 1\, 0 \rangle$. Corresponds to (a) in \cref{sf:Ni110_DDD}.}
+        \label{sf:Ni110a_disp}
     \end{subfigure}
-    \caption{Comparison of slip steps between experimental SEM images and simulations. Simulated displacements scaled $x \times$.}
+
+    \begin{subfigure}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{../data/16-Mar-2021_4_tensile_ni_110_225000_disp.pdf}
+        \caption{Tensile loading in $\langle 1\, 1\, 0 \rangle$. Corresponds to (b) in \cref{sf:Ni110_DDD}.}
+        \label{sf:Ni110b_disp}
+    \end{subfigure}
+    \caption{Slip steps normalised to Burgers vector magnitude for the final states of tensile loading simulations. The displacements are scaled $100\times$ for display purposes, the scale bars are accurate.}
     \label{f:slipSteps}
 \end{figure}
-The slip steps are obviously not the same magnitude, nor are they in the same place, but they're very similar. It's hard to compare how many there are given the resolution of the SEM images, and the fact that the simulations have not reached anywhere near the strains shown in the experiments. However, it is evident that we can observe the phenomenology behind experimental observations in such fine detail thanks to dislocation plasticity.
+
+The first thing of note is the fact that the slip steps of simulations with higher strain present larger slip steps than other simulations of the same system. The second thing is that for the $\langle 1\, 0\, 0 \rangle$ loading direction, the numeric tractions (\cref{sf:Ni100aN_disp}) produce one slip step that is much larger than the corresponding one in (\cref{sf:Ni100a_disp}). This is not an artifact of the fact that the numeric tractions achieved a larger strain. In reality, it is due to the increased activity of the source closest to the origin compared to the analytic counterpart. This is readily observed in the aformentioned videos.
+
+Unfortunately we do not have experimental imaging data corresponding to the $\langle 1\, 1\, 0 \rangle$ loading direction, but the slip step patterns of \cref{sf:Ni100a_disp,sf:Ni100aN_disp,sf:Ni100b_disp} are \emph{very} similar to those observed in \cref{f:necking}, including the criss-crossing of slip steps.Granted, the slip steps from the simulations are not remotely of the same magnitude; nor are they in the same places; and likely not with the same distribution as it appears the real dislocations are mostly located near the ends of the pillar, where it starts curving into the bulk; but they are extremely similar. That said, in all plots of \cref{f:slipSteps}, except \cref{sf:Ni110b_disp}, the largest slip steps are also concentrated near the ends of the simulation domain.
+
+With the resolution of the SEM images, it is hard to tell exactly how many slip steps there are in the experimental measurements. Furthermore, the simulations have not reached anywhere near the strains of the experiments. However, it is clearly evident that we can reproduce the phenomenology behind experimental observations in very fine detail thanks to dislocation plasticity, at least at small strains.
 
 \section{Conclusions}
-% 2629
+% 2833
 
