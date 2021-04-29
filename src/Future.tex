@@ -1,6 +1,28 @@
 \chapter{Future work}
 \label{c:future}
 
+\section{EasyDD}
+
+EasyDD is an actively developed research code. Much remains to be done, here we describe some of the more immediate concerns.
+
+\subsection{Modulirisation}
+
+There are still functions with numerous parameters. They can be simplified by adding variables that fall within certain categories into structures. Daniel Hortelano-Roig has been doing a lot of work in this regard on a branch in his fork of EasyDD. Some has been backported to the current version of EasyDD, namely the surface node sets, which were used in \cref{c:simulations} to set the boundary conditions.
+
+\subsection{New capabilities}
+
+Haiyang Yu, Fenxian Liu and Daniel Hortelano-Roig have been working on the effects of hydrogen and nanoindentation, inclusions and diffusion, and HCP simulations respectively. Their work has not yet been integrated into EasyDD. There has to be a coordinated effort, using generic functions and modulirisation to seamlessly integrate these new features into the main branch.
+
+\subsection{Fixes}
+
+The fix to the surface remeshing described in \cref{c:surfRem}, may not be ideal. It could perhaps be improved by creating a new node label such that those nodes are not accounted for in the slip step calculation and not be projected to pseudo-infinity by the surface remeshing. This would require modifying the surface remeshing and displacement calculation to exclude these from such processes; as well as modifying the Peach-K\"{o}hler and self-forces to exclude them from those calculations, but allowing them to participate in the remote force calculation as they would be in the ``bulk''.
+
+\subsection{Performance improvements}
+
+The remote force calculation was broken by an incompatibility between a new version of \mintinline{matlab}{MATLAB} and \mintinline{CUDA}{CUDA}. This was fixed during this project, but it uses a very suboptimal memory access pattern, it only has a cache hit rate of $1/9$. As a result, it takes about an order of magnitude more dislocations than the parallelised tractions to break even with the serial version on our current hardware. Changing the memory access pattern would increase the GPU memory used by $2\times$, but would allow the GPU to access the memory $9\times$ more efficiently than the current implementation. Since as we cannot remotely approach the memory capacity of our current GPU with our current capabilities, the increased memory footprint is a price we can afford in the name of increased performance. It could bring it more in line to the performance of the numeric tractions.
+
+\section{DDD.jl: next-Gen 3D discrete dislocation dynamics}
+
 During the course of this project, it became increasingly clear there are some fundamental issues preventing us from exploring the full breadth of what discrete dislocation dynamics has to offer. \href{http://micro.stanford.edu/wiki/M01_How_to_Obtain_and_Run_DDLab}{DDLab} \cite{ddlab}, the code that EasyDD is based on, made some design decisions that ultimately limit its potential. Namely, the lack of attention paid to the cost of dynamic memory allocation, procedural nature of the code, and choice of programming language. These choices were reasonable upon inception, but as the Tarleton group has increased in size and maturity, it has become evident that it is not enough. We are reaching the upper limits of what can be done with \mintinline{matlab}{MATLAB}. There are more things we can do, more things we are doing. But a constant obstacle in obtaining results is how long they take to get and how difficult it is to add new functionality, even changing boundary conditions presents a non-trivial obstacle that requires intimate knowledge of how the finite element mesh is generated.
 
 The work described in \cref{c:easydd,c:topology,c:tractions} has done much in not only producing more accurate simulations, but doing so faster. Fengxian Liu's work on modelling climb, diffusion and inclusions would greatly benefit from better designed code. Haiyang Yu's work on modelling hydrogen \cite{YU2018} and nanoindentation would also stand to benefit a great deal from a parallelised and faster dislocation separation algorithm. Potential work relevant to modelling dislocation dynamics in nuclear reactors such as post-damage cascade dislocation dynamics \cite{sand2014radiation}, necessitates spontaneous generation of dislocations as a network evolves. Including stochasticity in the form of Langevin dynamics \cite{li2019diffusion} is also highly relevant, especially at higher temperatures.
@@ -29,11 +51,9 @@ The code can be found here \href{https://github.com/dcelisgarza/DDD.jl}{\texttt{
 
 It is the result of the lessons learned while working on EasyDD. Its design avoids the same pitfalls and has a clear vision for usability, modularity, and extensibility, without sacrificing performance. It has been a didactic, after hours project to escape the anxieties of the pandemic and ease the frustrations with some fundamental design aspects of EasyDD (many carried over from DDLab). But it has also been an attempt to understand how EasyDD can be improved without all the clutter, risk, and technical debt (some solutions were even trialed in DDD.jl and backported to EasyDD). It is therefore not feature-complete. Nevertheless, it has turned into a promising weekend project for which we can provide a sample of current capabilities.
 
-\section{DDD.jl: next-Gen 3D discrete dislocation dynamics}
+\subsection{Parameter definition}
 
 As with every simulation, there are parameters that need to be defined. For dislocation plasticity simulations, the number of parameters is quite large, which is why encapsulation (see \cref{ss:encapsulation}) can be so helpful. However, there are also certain relationships between parameters that must be maintained. This is a problem for usability, as it is very easy for one to use non-sensical parameters and be completely unaware of it until a simulation presents unexpected behaviour. We have ``solved'' this issue in EasyDD (see \cref{s:qol}), but it is clunky, unelegant and opaque. Here we solve both issues in a single stroke and offer greater flexibility.
-
-\subsection{Parameter definition}
 
 Setting up simulations is quite easy and there are multiple options.
 \begin{enumerate}
@@ -384,4 +404,5 @@ What started as a side project to learn and escape from the world during the las
 A tool is only as good as the craftsman who weilds it. We aspire to be among those elite craftsmen. Why then, should we not use as good a tool as we can? During the course of this project, the whole Tarleton group have made gigantic strides with EasyDD. It has indeed come a \emph{very} long way, but we can do better.
 
 Some issues are so deeply intertwined with how the software was originally designed that they cannot be separated from how it fundamentally operates. To fix them, a fresh new start is needed. Given the extremely encouraging results of what amounts to a pandemic hobby, it seems worthwhile to continue this as a research software engineering project post-DPhil. We think it's better to do so now rather than wait until there is no more juice left to squeeze out of \mintinline{matlab}{MATLAB}. Not only so the shackles of proprietary software can be broken; but also so the full, ambitious vision of EasyDD can be realised.
-% 4066 words
+\savearabiccounter
+% 4467 words
