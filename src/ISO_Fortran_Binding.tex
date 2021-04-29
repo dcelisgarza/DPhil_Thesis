@@ -1,5 +1,7 @@
 \chapter{Implementation of the standard C descriptors for C-Fortran interoperability}\label{c:isocbinding}
 
+This appendix describes the work carried out as part of the Fusion CDT collaborative project. It has been part of the \texttt{GCC} compiler suite from v7.0 onwards.
+
 Code hosted on \href{https://github.comhttps://github.com/}{\texttt{https://github.com/}}.
 
 \noindent Sourcery Institute: \href{https://github.com/sourceryinstitute/}{\texttt{sourceryinstitute}}
@@ -16,7 +18,7 @@ The Fortran 2018 standard \cite{fortran} defines a standard set of C structures 
 
 \section{Introduction}
 
-Fortran has historically been the de facto language of scientific computing. However, C-type languages such as C/C++ have gained much traction since the 90s due to their popularity in software development. Furthermore, the large degree of compatibility between C and higher level languages such as Python, Java, Objective-C and others have made C the center piece of general purpose computing.
+Fortran has historically been the de facto language of scientific computing. However, C-type languages such as C/C++ have gained much traction since the 90s due to their popularity in software development. Furthermore, the large degree of compatibility between C and higher level languages such as Python, Java, Objective-C and others have made C the center-piece of general purpose computing.
 
 The popularity of C-type languages has resulted in an increase of scientific computing codes written in them, particularly C++ and Python due to their ready-made data structures and algorithms. However, when it comes to high performance computing in numerical applications Fortran still has the edge. In order to get the best of both worlds however, increasing C-Fortran interoperability is of the utmost importance.
 
