@@ -31,7 +31,7 @@ Specifically, a linear-elastic solid $V$ bounded by a surface $S$ is subjected t
     %
      & \left.
     \begin{array}{l}
-        \vec{\tilde{u}} = \vec{U}, \quad t>0\,, \vec{U} \neq \bm{0} \\
+        \vec{\tilde{u}} = \vec{U}, \quad t>0,\, \vec{U} \neq \bm{0} \\
         \vec{\tilde{u}} = \bm{0}, \quad t=0
         \label{eq:utildebc}
     \end{array}
@@ -68,7 +68,7 @@ Once the solutions to both problems are known, their superposition solves the de
     %
      & \left.
     \begin{array}{l}
-        \vec{u} = \vec{U}, \quad t>0\,, \vec{U} \neq \bm{0} \\
+        \vec{u} = \vec{U}, \quad t>0,\, \vec{U} \neq \bm{0} \\
         \vec{u} = \bm{0}, \quad t=0
     \end{array}
     \right\} \quad \textrm{on } S_U\,.
@@ -174,7 +174,26 @@ Although exact, the use of arctangents, hyperbolic arctangents and logarithmic f
 
 In simulations, tractions are manifested as image stresses calculated by the FE solver at FE nodes. In order to validate and compare the practical differences between analytic and numeric methods, we compare the resulting image stresses from both methods, to the analytic expressions for infinite dislocations in inhomogenous media for edge \cite{head1953edge}, and screw dislocations \cite[p.~59,~64]{hirth1983theory}. We keep the same nomenclature and coordinate system as both infinite-domain solutions. Where the traction surface is the line $x=0$, the dislocation line direction is the positive $z$-direction (pointing out of the page), the dislocation coordinates are represented by $(a,~c)$, and points in the $xy$-plane described by their $(x,\,y)$ coordinates.
 
-The original paper by \citet{head1953edge} has a few typos that have been replicated in other sources. We therefore include the complete and correct expressions in \cref{eq:imageStressAnalyticEdge1,eq:imageStressAnalyticEdge2,eq:imageStressAnalyticScrew}. \citet{head1953edge} gives two basic cases. \Cref{eq:imageStressAnalyticEdge1} corresponds to the case where $\vec{b}$ is perpendicular to the surface and positive $b$ means it points in the positive $x$-direction,
+The original paper by \citet{head1953edge} has a few typos that have been replicated in other sources. We therefore include the complete and correct expressions in \cref{eq:imageStressAnalyticEdge1,eq:imageStressAnalyticEdge2,eq:imageStressAnalyticScrew}. \citet{head1953edge} gives two basic cases, as described by \cref{f:head_cases}.
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{head_edge_perp.pdf}
+        \caption{Edge dislocation with $\vec{b}$ perpendicular to the surface and pointing in the positive $x$-direction ($b \coloneqq \lVert \vec{b} \rVert > 0$).}
+        \label{sf:headCase1}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{head_edge_par.pdf}
+        \caption{Edge dislocation with $\vec{b}$ parallel to the surface and pointing in the positive $y$-direction ($b \coloneqq \lVert \vec{b} \rVert > 0$).}
+        \label{sf:headCase2}
+    \end{subfigure}
+    \caption{Two cases described by \citet{head1953edge}. In both cases, the line direction points towards the observer and the dashed line is the infinite traction-free boundary.}
+    \label{f:head_cases}
+\end{figure}
+\Cref{eq:imageStressAnalyticEdge1} corresponds to \cref{sf:headCase1}, where $\vec{b}$ is perpendicular to the surface and positive $b$ means it's pointing in the positive $x$-direction,
 \begin{subequations}\label{eq:imageStressAnalyticEdge1}
     \begin{align}
         \sigma_{xx} = D (y - c) & \left\{-\dfrac{3 (x - a)^2 + (y - c)^2}{[(x - a)^2 + (y - c)^2]^2} + \dfrac{3 (x + a)^2 + (y - c)^2}{[(x + a)^2 + (y - c)^2]^2}\right.                                             \\\nonumber
@@ -185,7 +204,7 @@ The original paper by \citet{head1953edge} has a few typos that have been replic
                                 & \left. + 2 a \dfrac{6 x (x + a) (y - c)^2 - (x - a) (x + a)^3 - (y - c)^4}{[(x + a)^2 + (y - c)^2]^3}\right\}\,.
     \end{align}
 \end{subequations}
-\Cref{eq:imageStressAnalyticEdge2} corresponds to the case where the $\vec{b}$ lies parallel to the surface and positive $b$ means it points in the positive $y$-direction,
+\Cref{eq:imageStressAnalyticEdge2} corresponds to \cref{sf:headCase2}, where $\vec{b}$ lies parallel to the surface and positive $b$ means it points in the positive $y$-direction,
 \begin{subequations}\label{eq:imageStressAnalyticEdge2}
     \begin{align}
         \sigma_{xx} = D         & \left\{ (x - a) \dfrac{(x - a)^2 - (y - c)^2}{[(x - a)^2 + (y - c)^2]^2} -(x + a) \dfrac{(x + a)^2 - (y - c)^2}{[(x + a)^2 + (y - c)^2]^2} \right.     \\\nonumber
@@ -211,21 +230,7 @@ Note the first terms of \cref{eq:imageStressAnalyticEdge1,eq:imageStressAnalytic
 
 \subsection{Methodology}\label{ss:paperMethod}
 
-Numerical integration of tractions can produces unexpected behaviour such as force hot spots and sign inversions as a dislocation approaches a surface. During a large simulation, these effects are hard to spot. \Cref{f:err_basic_cantilever} has a quick example of the relative errors for an idealised system not disimilar to what can be found with in a simple cantilever bending simulation with a single dislocation loop. As expected, the errors decrease as the mesh gets finer.
-\begin{figure}
-    \centering
-    \subfloat[$60 \times 16$ elements ($x \times y$).]
-    {
-        { \includegraphics[width=0.45\linewidth]{eta_mx=60_face=1.pdf} }
-    }
-    ~
-    \subfloat[$120 \times 36$ elements ($x \times y$).]
-    {
-        { \includegraphics[width=0.45\linewidth]{eta_mx=120_face=1.pdf} }
-    }
-    \caption[Relative error comparison of analytic v.s. numeric tractions on a surface as a function of mesh coarseness.]{Relative error ($\vec{F}^{\eta}$) in the nodal force obtained using numerical integration with one quadrature point $Q = 1$, and the analytic solution. The $xz$-face of a rectangular cantilever with plane normal, $\vec{n} = \left[0\,\overline{1}\,0\right]$. The dislocation is of pure edge character with $\vec{b} = [1\,0\,\overline{1}]$, and line direction, $\vec{l} = \left[\overline{1}\,2\,\overline{1}\right]/\sqrt{6}$ which pierces both $xz$-faces. The dislocation has its centre at the centroid of the cantilever.}
-    \label{f:err_basic_cantilever}
-\end{figure}
+Numerical integration of tractions can produces unexpected behaviour such as force hot spots and sign inversions as a dislocation approaches a surface. During a large simulation, these effects are hard to spot.
 
 \citet{analytic_tractions} identified that for a given number of quadrature points, the error is dependent on the dislocation character but always increases rapidly as the distance between the segment and element surface decrease (see \cref{f:rel_err_perp_edge,f:rel_err_par_edge}).
 
@@ -248,7 +253,7 @@ One serious disadvantage of the analytic tractions is that the implementation of
     ~
     \subfloat[]{\includegraphics[width=0.45\linewidth]{ftot_rotation_lin_rect_zoom.pdf}}
     % \includegraphics[width=0.8\linewidth]{ftot_rotation_lin_rect_inlaid.pdf}
-    \caption[Sample analytical forces on an element as a function of angle between surface and segment.]{(a) Example of the components of the total force on a surface element (the force summed over all four FE nodes) as a dislocation segment parallel to the surface element ($\theta = 0$) is rotated about its midpoint around the axis defined by $\vec{l}\times\vec{n}$. (b) is zomms into $\pm 10 \deg$, the force is smooth but not necessarily antisymmetric about the neighbourhood of $\theta=0$.}
+    \caption[Sample analytical forces on an element as a function of angle between surface and segment.]{(a) Example of the components of the total force on a surface element (the force summed over all four FE nodes) as a dislocation segment parallel to the surface element ($\theta = 0$) is rotated about its midpoint around the axis defined by $\vec{l}\times\vec{n}$. (b) is a zoomm into $\pm 10 \deg$, the force is smooth but not necessarily antisymmetric about the neighbourhood of $\theta=0$.}
     \label{f:rotate}
 \end{figure}
 The specific shape of the curves will vary depending on the element-segment configuration, but is smooth and well-behaved about singularity. For our purposes, we use a total of 8 perturbations of $1\deg$ each (4 clockwise and 4 anti-clockwise). We found this worked well, but can be changed if desired.
@@ -256,10 +261,10 @@ The specific shape of the curves will vary depending on the element-segment conf
 However, under finite-precision arithmetic, the check for orthogonality is dependent on the length scales involved in the simulation. This is particularly important considering the aforementioned use of arctangents, hyperbolic arctangents, logarithms and the large number of recurrence relations. Causing unexpected and rampant error propagation and numerical blow up is not difficult to achieve. When it happens, finding the root cause can lead one on a wild goose chase that is best avoided and often leads to a single segment in a single step of a long simulation that is slightly too small compared to its distance to a surface element to which it is slightly too parallel. To avoid these rare but high impact scenarios, we created a heuristic that dictates how strict the tolerance should be in order for the code to consider a segment to be parallel,
 %
 \begin{align}
-    \lvert\vec{l}\cdot\vec{n}\rvert \lesssim \dfrac{\max\left(\lvert\vec{R}\cdot\vec{n}\rvert\right)}{10^8}\,.
+    \lvert\vec{l}\cdot\vec{n}\rvert \lesssim \max\left(\lvert\vec{R}\cdot\vec{n}\rvert\right) \cdot 10^{-8}\,.
 \end{align}
 %
-In our case the numerator on the RHS is simply the FEM domain's largest dimension. $10^8$ is used instead of actual machine precision $\sim10^{15}$ because the seed functions and large number of recurrence relations of the solution propagate errors if the value of $\vec{l} \cdot \vec{n}$ is too close to zero. Ironically, tolerances which are too large can cause the perturbations to rotate the dislocation segment closer to the singularity, producing erroneous results. Larger than necessary tolerances can also slow down the calculation by detecting dislocations that are far enough from the special case that they can be treated like non-parallel segments. This heuristic is a good general purpose rule that keeps the tolerance in a goldilocks zone.
+In our case we assume $\max\left(\lvert\vec{R}\cdot\vec{n}\rvert\right)$ to be the largest diagonal in our cuboid domain. A factor of $10^{-8}$ is used instead of actual machine precision $\sim10^{15}$ because the seed functions and large number of recurrence relations of the solution propagate errors if the value of $\vec{l} \cdot \vec{n}$ is too close to zero. Ironically, tolerances which are too large can cause the perturbations to rotate the dislocation segment closer to the singularity, producing erroneous results. Larger than necessary tolerances can also slow down the calculation by detecting dislocations that are far enough from the special case that they can be treated like non-parallel segments. This heuristic is a good general purpose rule that keeps the tolerance in a goldilocks zone.
 
 Another issue with the rotation is that one does not want a dislocation segment to intersect the surface when it is being rotated. Naively one would calculate the maximum rotational angle, $\theta_{\textrm{max}}$, to be,
 %
@@ -281,11 +286,11 @@ The total force on a given node must include the force contributions from every 
 The specifics of the mapping depend on the global FE node numbering. Using \cref{f:shared_node} as our reference labels for elements and nodes, $e$ and $n$ respectively, we can give a concrete example of how this is done by defining,
 \begin{subequations}
     \begin{align}
-        \vec{x_{e,n}} & \equiv	\begin{bmatrix}
-            x_{e,n} & y_{e,n} & z_{e,n}
+        \vec{f_{e,n}} & \coloneqq	\begin{bmatrix}
+            f_{x_{e,n}} & f_{y_{e,n}} & f_{z_{e,n}}
         \end{bmatrix}^{\mathsf{T}}, \quad
-        \vec{x_{n}} \equiv	\begin{bmatrix}
-            x_{n} & y_{n} & z_{n}
+        \vec{f_{n}} \coloneqq	\begin{bmatrix}
+            f_{x_{n}} & f_{y_{n}} & f_{z_{n}}
         \end{bmatrix}^{\mathsf{T}}            \\
         \begin{split}
             \mtx{N_{L}} &=	\begin{bmatrix}
@@ -301,25 +306,25 @@ The specifics of the mapping depend on the global FE node numbering. Using \cref
             l_2    \\
             \vdots \\
             l_9
-        \end{bmatrix}                          \\
+        \end{bmatrix}                             \\
         \begin{split}
             \mtx{F_{e}} &=	\begin{bmatrix}
-                \vec{x_{1,1}} & \vec{x_{1,2}} & \vec{x_{1,4}} & \vec{x_{1,5}} \\
-                \vec{x_{2,2}} & \vec{x_{2,3}} & \vec{x_{2,5}} & \vec{x_{2,6}} \\
-                \vec{x_{3,5}} & \vec{x_{3,6}} & \vec{x_{3,8}} & \vec{x_{3,9}} \\
-                \vec{x_{4,4}} & \vec{x_{4,5}} & \vec{x_{4,7}} & \vec{x_{4,8}} \\
+                \vec{f_{1,1}} & \vec{f_{1,2}} & \vec{f_{1,4}} & \vec{f_{1,5}} \\
+                \vec{f_{2,2}} & \vec{f_{2,3}} & \vec{f_{2,5}} & \vec{f_{2,6}} \\
+                \vec{f_{3,5}} & \vec{f_{3,6}} & \vec{f_{3,8}} & \vec{f_{3,9}} \\
+                \vec{f_{4,4}} & \vec{f_{4,5}} & \vec{f_{4,7}} & \vec{f_{4,8}} \\
             \end{bmatrix}
         \end{split}
         ,\quad
         \vec{\tilde{F}} = 	\begin{bmatrix}
-            \vec{x_{1}} \\
-            \vec{x_{2}} \\
+            \vec{f_{1}} \\
+            \vec{f_{2}} \\
             \vdots      \\
-            \vec{x_{9}}
+            \vec{f_{9}}
         \end{bmatrix}\,.\label{eq:force_imp}
     \end{align}
 \end{subequations}
-Where $\vec{x_{e,n}}$ is a $3\times1$ column vector corresponding to the $(x\,,y\,,z)$ dislocation induced forces on node, $n$, on the surface element, $e$. There are four of these per rectangular surface element, where a given node, $n$, can appear in multiple surface elements (e.g. node 5 in \cref{f:shared_node} is shared by all 4 surface elements), all of which independently contribute to the total force on said node. $\vec{x_n}$ is a $3\times1$ column vector corresponding to the total $(x\,,y\,,z)$ dislocation induced forces on node $n$. These are used to shorten the definition of \cref{eq:force_imp} and are not explicitly defined in the implementation, rather they give the force matrices $\mtx{F_{e}}$ and $\vec{\tilde{F}}$ a specific row order. $\mtx{N_{L}}$ is crucial for the correct implementation of this analytical solution in traditional FE codes. It is the $E\times4$ matrix corresponding to the global label of each node in a given surface element. Each row of the matrix represents a surface element and each column represents a node in the surface element. We cannot na\"ively add the columns together as that would give the total force acting on the element as a whole, not each FE node individually. We chose to arrange the columns in accordance to \cref{f:force_lin_rect} as it makes it easier to implement the solution, but the only thing that matters is that the basis vectors $\vec{n},\,\vec{p},\,\vec{q}$ are calculated appropriately. $\vec{\gamma}$ is the vector with the FE node labels, which makes mapping force to node possible. $\mtx{F_{e}}$ is the $3E \times 4$ matrix where the forces acting on each of the four nodes (column) in a particular surface element (each element corresponds to three consecutive rows because there are three dimensions) are stored. $\vec{\tilde{F}}$ is the $3N\times1$ column vector where the total forces on each node are stored (each node has three rows because there are three dimensions). This is easily generalisable to $E$ elements and $N$ nodes.
+Where $\vec{f_{e,n}}$ is a $3\times1$ column vector corresponding to the $(x\,,y\,,z)$ dislocation induced forces on node, $n$, on the surface element, $e$. There are four of these per rectangular surface element. Any given node, $n$, can appear in multiple surface elements (e.g. node 5 in \cref{f:shared_node} is shared by all 4 surface elements), all of which independently contribute to the total force on said node. $\vec{f_n}$ is a $3\times1$ column vector corresponding to the total dislocation induced forces on node $n$. These are used to shorten the definition of \cref{eq:force_imp} and are not explicitly defined in the implementation, rather they give the force matrices $\mtx{F_{e}}$ and $\vec{\tilde{F}}$ a specific row order. $\mtx{N_{L}}$ is crucial for the correct implementation of this analytical solution in traditional FE codes. It is the $E\times4$ matrix corresponding to the global label of each node in a given surface element. Each row of the matrix represents a surface element and each column represents a node in the surface element. We cannot na\"ively add the columns together as that would give the total force acting on the element as a whole, not each FE node individually. We chose to arrange the columns in accordance to \cref{f:force_lin_rect} as it makes it easier to implement the solution, but the only thing that matters is that the basis vectors $\vec{n},\,\vec{p},\,\vec{q}$ are calculated appropriately. $\vec{\gamma}$ is the vector with the FE node labels, which makes mapping force to node possible. $\mtx{F_{e}}$ is the $3E \times 4$ matrix where the forces acting on each of the four nodes (column) in a particular surface element (each element corresponds to three consecutive rows because there are three dimensions) are stored. $\vec{\tilde{F}}$ is the $3N\times1$ column vector where the total forces on each node are stored (each node has three rows because there are three dimensions). This is easily generalisable to $E$ elements and $N$ nodes.
 
 \Cref{a:tot_force} illustrates how the total force on each node is obtained. However, our implementation does not strictly follow it because we memoise a generalised version of $\vec{L}$ upon simulation initialisation instead of finding one at every iteration, reducing computational time but requiring us to account for nodes without traction boundary conditions. Our indexing also starts at 1, but zero indexing makes the algorithm easier to follow.
 \begin{algorithm}
@@ -340,14 +345,14 @@ Where $\vec{x_{e,n}}$ is a $3\times1$ column vector corresponding to the $(x\,,y
     \end{algorithmic}
 \end{algorithm}
 
-The resulting force vector is then used in \cref{eq:thatbc} to calculate $\tns{\hat{\sigma}}$, since $\tilde{\vec{T}} \equiv \tilde{\vec{F}}$. \Cref{f:headvstractionfem} shows the simple system we used to compare the image stresses calculated by our FE solver using numeric tractions v.s. analytic tractions v.s. infinite-domain, singular image stresses in \cref{eq:imageStressAnalyticEdge1,eq:imageStressAnalyticEdge2,eq:imageStressAnalyticScrew}. The three test cases are: two edge dislocations and one screw, all of which have line direction $\vec{l} = [0\, 0\, 1]$. The Burgers vectors for the different scenarios are $\vec{b}_\textrm{e1} \equiv \vec{b} = [1\, 0\, 0]$, $\vec{b}_\textrm{e2} \equiv \vec{b} = [0\, 1\, 0]$, as defined in \cite{head1953edge}; and $\vec{b}_\textrm{s} \equiv \vec{b} = \vec{l} = [0\, 0\, 1] $, as defined in \cite[p.~59,~64]{hirth1983theory}.
+The resulting force vector is then used in \cref{eq:thatbc} to calculate $\tns{\hat{\sigma}}$, since $\tilde{\vec{T}} \coloneqq \tilde{\vec{F}}$. \Cref{f:headvstractionfem} shows the simple system we used to compare the image stresses calculated by our FE solver using numeric tractions v.s. analytic tractions v.s. infinite-domain, singular image stresses in \cref{eq:imageStressAnalyticEdge1,eq:imageStressAnalyticEdge2,eq:imageStressAnalyticScrew}. The three test cases are: two edge dislocations and one screw, all of which have line direction $\vec{l} = [0\, 0\, 1]$. The Burgers vectors for the different scenarios are $\vec{b}_\textrm{e1} \coloneqq \vec{b} = [1\, 0\, 0]$, $\vec{b}_\textrm{e2} \coloneqq \vec{b} = [0\, 1\, 0]$, as defined in \cite{head1953edge}; and $\vec{b}_\textrm{s} \coloneqq \vec{b} = \vec{l} = [0\, 0\, 1] $, as defined in \cite[p.~59,~64]{hirth1983theory}.
 
-The units in all our examples are normalised to lattice parameter, $a$ is the dislocation core radius for the non-singular formulation discussed in \cite{a_non-singular_continuum_theory_of_dislocations}, and $b \equiv \lVert \vec{b} \rVert$.
+The units in all our examples are normalised to lattice parameter, $a$ is the dislocation core radius for the non-singular formulation discussed in \cite{a_non-singular_continuum_theory_of_dislocations}, and $b \coloneqq \lVert \vec{b} \rVert = 1$.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.8\linewidth]{head_vs_fe_tractions_setup_diagram.pdf}
-    \caption[Set up comparing infinite-domain, singular solutions of stress fields to those obtained via a non-singular formulation with analytic and numeric tractions coupled to FEM.]{Dislocation parallel to a surface described by the line $x = 0$, where the $(x,\,y)$ dislocation coordinates are $(a,\,c)$ and the dislocation line going in the positive $z$-direction. (a) describes the box we used for our comparison, a  $40 \times 40 \times 40$ element cubic box with side lengths equal to $2000$ with $\vec{T} = \bm{0}$, traction boundary conditions only on the nodes along $x = 0$, and $\vec{U} = \bm{0}$, displacement conditions everywhere else. (b) is the 2D view with the dislocation coordinates $(a,~c)$, as well as the two edge Burgers vectors in \cite{head1953edge}, $\vec{b}_\textrm{e1} \equiv \vec{b} = [1\, 0\, 0]$, $\vec{b}_\textrm{e2} \equiv \vec{b} = [0\, 1\, 0]$ and the screw Burgers vector $\vec{b}_\textrm{s} \equiv \vec{b} = \vec{l} = [0\, 0\, 1] $ in \cite[p.~59,~64]{hirth1983theory}.}
+    \caption[Set up comparing infinite-domain, singular solutions of stress fields to those obtained via a non-singular formulation with analytic and numeric tractions coupled to FEM.]{Dislocation parallel to a surface described by the line $x = 0$, where the $(x,\,y)$ dislocation coordinates are $(a,\,c)$ and the dislocation line going in the positive $z$-direction. (a) describes the box we used for our comparison, a  $40 \times 40 \times 40$ element cubic box with side lengths equal to $2000$ with $\vec{T} = \bm{0}$, traction boundary conditions only on the nodes along $x = 0$, and $\vec{U} = \bm{0}$, displacement conditions everywhere else. (b) is the 2D view with the dislocation coordinates $(a,~c)$, as well as the two edge Burgers vectors in \cite{head1953edge}, $\vec{b}_\textrm{e1} \coloneqq \vec{b} = [1\, 0\, 0]$, $\vec{b}_\textrm{e2} \coloneqq \vec{b} = [0\, 1\, 0]$ and the screw Burgers vector $\vec{b}_\textrm{s} \coloneqq \vec{b} = \vec{l} = [0\, 0\, 1] $ in \cite[p.~59,~64]{hirth1983theory}.}
     \label{f:headvstractionfem}
 \end{figure}
 
@@ -362,21 +367,21 @@ However, we found a simple and realistic configuration that is close to the setu
     \label{t:simulation_params}
     \begin{tabular}{ll}
         \toprule
-        Parameter          & Value                                           \\
+        Parameter                & Value                                                     \\
         \midrule
-        Crystal Structure  & BCC                                             \\
-        $\vec{b}$          & $[1\, 1\, 1]$                                   \\
-        $\vec{n}$          & $[1\, \overline{1}\, 0]$                        \\
-        $\vec{l}$          & $[1\, 1\, \overline{2}]$                        \\
-        $b$                & $\sqrt{3}/2$                                    \\
-        $a$                & $5\, $                                          \\
-        Grid Size          & $(20,\, 20,\, 20)$                              \\
-        Domain Size        & $(2000,\, 2000,\, 2000)\, $                     \\
-        Lattice size       & $3.18\times 10^{-4}~\mu\text{m}$                \\
-        $(x_{0},\, y_{0})$ & $(62.5,\, 1000)\, $                             \\
-        Min segment length & $50\, $                                         \\
-        Max segment length & $125\, $                                        \\
-        $\mtx{R}$          & $[\hat{\vec{b}}~ \hat{\vec{n}}~ \hat{\vec{l}}]$ \\
+        Crystal Structure        & BCC                                                       \\
+        Lattice size, $a$        & $3.18\times 10^{-4}~\mu\text{m}$                          \\
+        $\vec{b}$                & $\frac{1}{2}[1\, 1\, 1]$                                  \\
+        $\vec{n}$                & $[1\, \overline{1}\, 0]$                                  \\
+        $\vec{l}$                & $[1\, 1\, \overline{2}]$                                  \\
+        $b$                      & $\sqrt{3}/2\, a$                                          \\
+        Core radius, $r_a$       & $5\, a$                                                   \\
+        Grid Size                & $20 \times 20 \times 20$ elements                         \\
+        Cubic domain side length & $2000\, a $                                               \\
+        $(x_{0},\, y_{0})$       & $(62.5,\, 1000)\, a$                                      \\
+        Min segment length       & $50\, a$                                                  \\
+        Max segment length       & $125\, a$                                                 \\
+        $\mtx{R}^T$              & $\begin{bmatrix} \hat{\vec{b}} \\ \hat{\vec{n}} \\ \hat{\vec{l}} \end{bmatrix} = \begin{bmatrix} \sqrt{3}/3 & \sqrt{3}/3 & \sqrt{3}/3 \\ \sqrt{2}/2 & -\sqrt{2}/2 & 0 \\ \sqrt{6}/6 & \sqrt{6}/6 & -\sqrt{6}/3\end{bmatrix}$ \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -808,17 +813,22 @@ Lastly, to show how much numeric tractions can affect a result, \cref{f:simulati
 
 Often the effects of tractions on a simulation can be quite subtle if things do not go catastrophically wrong, but a quick and easy way of seeing how the numeric tractions have a tendency to spike and invert sign (as in \cref{sf:line_sxxepar}) is to pause a simulation while its running and scatter plot the numeric tractions v.s. analytic ones. The plot will show a positive correlation---as the sign inversions in numeric tractions are relatively rare events---but whichever axis corresponds to the numeric tractions will have the largest range. Using proportional axes makes the differences quite evident even at a quick glance as the aspect ratio will be far from 1:1.
 
-In other parts of our work, we have noted that despite the analytic tractions taking approximately 10 times longer to compute than numerically calculated tractions with $Q = 1$ (which agrees with the findings in \cite{analytic_tractions}), yield more stable and ultimately faster simulations. Even simple simulations are typically faster when using analytic tractions over numeric ones. This was not the case with the simulation we show here, but the numeric tractions led to a hung simulation, which we have found is quite common. The margin by which using analytic tractions leads to faster overall simulations grows as simulation complexity increases. Only the simplest simulations initially benefit from numeric tractions, but this often decreases and reverses as the simulation advances. Another fortunate side effect of more accurate tractions is the fact that fewer dislocation segments are generated during simulations, which \citet{bromage2018calculating} found when correctly accounting for the displacements generated by dislocations.
+In other parts of this work, we have noted that despite the analytic tractions taking approximately 10 times longer to compute than numerically calculated tractions with $Q = 1$ (which agrees with the findings in \cite{analytic_tractions}), yield more accurate simulations.
 
-Given our findings, we cannot recommend using numeric tractions when analytic ones are available. The losses in computational speed that result from moving from one to the other are more than made up for by the fewer topological operations, fewer generated segments, and more accurate velocities. All of which result in fewer calculations of segment-segment interactions, fewer collisions, larger timesteps and ultimately cleaner simulations that run into fewer snags along the way.
+In general, we recommend using analytic tractions when available. The increased stability leads to better behaved simulations, especially when using particularly sensitive mobility laws, higher dislocation densities, and complicated loading conditions. In cases such as these, the numerical instability of numeric tractions can make dislocations move erratically and erroneously. However, as shown in \cref{sf:Ni100_DDD}, numeric tractions can do quite well.
 
-There is a case however, for combining both approaches in larger scale simulations. Since both numeric and analytic tractions converge to the same value as the dislocation-surface distance increases, a hybrid approach could possibly be undertaken without many negatives. Furthermore, \cite{analytic_tractions} also derived a Taylor series expansion of the solutions which can be used in cases where the dislocation-surface distance is large. These may be worth exploring in larger scale simulations. However, in the types of systems we model, other parts of our model tend to be much more rate-limiting than tractions. As such, we have all but ceased to use numeric tractions in our work.
+% Even simple simulations are typically faster when using analytic tractions over numeric ones. This was not the case with the simulation we show here, but the numeric tractions led to a hung simulation, which we have found is quite common. The margin by which using analytic tractions leads to faster overall simulations grows as simulation complexity increases. Only the simplest simulations initially benefit from numeric tractions, but this often decreases and reverses as the simulation advances. Another fortunate side effect of more accurate tractions is the fact that fewer dislocation segments are generated during simulations, which \citet{bromage2018calculating} found when correctly accounting for the displacements generated by dislocations.
+
+% Given our findings, we cannot recommend using numeric tractions when analytic ones are available. The losses in computational speed that result from moving from one to the other are more than made up for by the fewer topological operations, fewer generated segments, and more accurate velocities. All of which result in fewer calculations of segment-segment interactions, fewer collisions, larger timesteps and ultimately cleaner simulations that run into fewer snags along the way.
+
+There is a case for combining both approaches in larger scale simulations. Since both numeric and analytic tractions converge to the same value as the dislocation-surface distance increases, a hybrid approach could possibly be undertaken without many negatives. Furthermore, \cite{analytic_tractions} also derived a Taylor series expansion of the solutions which can be used in cases where the dislocation-surface distance is large. These may be worth exploring in larger scale simulations. However, in the types of systems we model, other parts of our model tend to be much more computationally-limiting than tractions. As a result, analytic tractions are the default method for EasyDD.
 
 \section{GPU parallelisation of analytic tractions}\label{s:parallel}
 %todo #14 add this figure https://www.researchgate.net/figure/Typical-NVIDIA-GPU-architecture-The-GPU-is-comprised-of-a-set-of-Streaming_fig1_236666656
 
 \subsection{Introduction}
-Graphics Processing Units (GPUs) have been leveraged by digital art, animation studios and gaming companies since the 1990s to offload repetitive, grid-based mathematical computations away from the Central Processing Units (CPUs). These operations are usually very computationally cheap, require minimal logic, and do not need more than single precision (32-bit) arithmetic \cite{gpu1,gpu2,gpu3}, in fact, increases in accuracy would get lost in the RGB channel regardless. As such, GPUs evolved primarily to efficiently perform lightweight operations on vast amounts of 32-bit data. As such, their memory buses are extremely fast and and their processors very minimalistic.
+
+As mentioned in \cref{sc:compgpu}, GPUs have been traditionally leveraged to perform lightweight operations on vast amounts of limited-precision data. As such, their memory buses are extremely fast and and their processors very minimalistic, which is not conducive to scientific purposes.
 
 It wasn't until much later that engineers and scientists picked up on the potential of GPUs \cite{gpu_comp,mixedPrecFEM,jia2014gpu}. Fields where lower precision is advantageous---because it increases the signal-to-noise ratio, or real-world tolerances exceed the in-silico precision---such as data science, civil engineering and image/signal processing, first leveraged this technology. In fact, many big data applications operate on half and some even go as low as quarter precision simply due to the low sensitivity, large amount of noise and vast quantities of data \cite{pagerank}.
 
@@ -838,7 +848,7 @@ NVidia GPUs have highy specialised architecture shown in \cref{gpuarch} which wa
     \label{gpuarch}
 \end{figure}
 The unit of processing is called a thread. Warps are physical collections of 32 threads that act as a single unit under a single scheduler, i.e. all threads in a warp execute the same instruction on different data. This type of computing model is known as SIMD (Single Instruction Multiple Data). As an aside, CPUs can also perform SIMD operations within vector modules. In contrast to threads in CPUs,
-threads in GPUs are not independent, they are always part of a warp. Thread blocks, simply known as blocks, are collections of threads assigned to a Streaming Multiprocessor (SM). All threads in a multiprocessor share common resources like shared memory and a register file. This means the total memory used by all threads in a block must not exceed the maximum amount of memory per block. If this happens, the programme may fail to execute or crash. Blocks are then aggregated into grids, which are equally but non-deterministically distributed across all SMs. More information can be found in NVidia's programming guide \cite{nvidia}.
+threads in GPUs are not independent, they are always part of a warp. Thread blocks, simply known as blocks, are collections of threads assigned to a Streaming Multiprocessor (SM). All threads in a multiprocessor share common resources like shared memory and a register file. This means the total memory used by all threads in a block must not exceed the maximum amount of memory per block. If this happens, the program may fail to execute or crash. Blocks are then aggregated into grids, which are equally but non-deterministically distributed across all SMs. More information can be found in NVidia's programming guide \cite{nvidia}.
 
 For all their advantages, parallel algorithms are fundamentally different to serial ones. In particular the way GPUs differ from CPUs makes it a non-trivial task to properly parallelise many algorithms. Doing so poorly can result in decreased performance, particularly when using high performace/scientific computing cards. Maximising resource use is also important. In particular, for CUDA applications each block should aim to contain as many, fully-occuppied warps (all 32 threads working on relevant data) as possible without exceeding the available memory in a block. Furthermore, memory access patterns are fundamentally different for GPUs, given how threads are aggregated into warps. There is also the issue of scaling, whereby the cost of utilising the GPU may not be worth paying until a certain computation size.
 
@@ -869,7 +879,7 @@ As a result, we have to be extremely careful when mapping CPU (host) memory, arr
 The traction calculation is $\mathcal{O}(MN)$, where $M$ is the number of surface elements and $N$
 the number of segments. As such, there are two first order parallelisation strategies. Parallelising over elements and looping over segments; parallelising over segments and looping over elements. And two second order parallelisation strategies. Parallelising over elements and subparallelising over segments and vice-versa. However, higher order parallelisations are usually disadvantageous unless the problem is very computationally cheap because there is more competition for parallel resource use. We only implemented both first order parallelisations. There cannot be a parallelisation over nodes as the unit problem is a single surface element and dislocation segment.
 
-Both first order parallelisations have similar performances, but parallelising over dislocations have better scaling as simulations advance because the number of surface elements is constant while the number of dislocation segments tends to increase. The choice of parallelisation will depend on the relative amounts of surface elements to dislocation segments.
+Both first order parallelisations have similar performances, but parallelising over dislocations have better scaling as simulations advance because the number of surface elements is constant while the number of dislocation segments tends to increase. The choice of parallelisation will depend on the ratio of surface elements to dislocation segments.
 
 The algorithm for mapping from the objects to be parallelised over from host (CPU) to device (GPU) memory is the same in either case. The only thing that changes is that surface elements have 4 nodes and dislocation segments have 2. If parallelising over dislocation segments, the Burgers vector also needs to be mapped in the same manner, but it is equivalent to having a single `node'. The mapping is as follows,
 \begin{subequations}\label{eq:hostDeviceElementMap}
@@ -886,7 +896,7 @@ The algorithm for mapping from the objects to be parallelised over from host (CP
         \end{aligned}
     \end{align}
 \end{subequations}
-Where $ e $ is the element to be mapped, $ n $ the node number, $ E $ the total number of elements and $N$ the total number of nodes per element.
+Where $ e $ is the element to be mapped, $ n $ the node number, $ E $ the total number of elements, $N$ the total number of nodes per element, $\vec{X}_{en}$ the vector of $(x,\,y,\,z)$ nodal coordinates for node $n$ in alement $e$.
 
 \begin{figure}
     \centering
@@ -940,9 +950,9 @@ In order to maximise performance after properly mapping memory to the GPU we hav
     \label{eq:opt_cache_len_bcne}
     l =
     \begin{cases}
-        a \times N \times E\,,                & \quad a > 0 \in \mathbb{N}                                          \\
-        \textrm{or}                                                                                                 \\
-        \dfrac{1}{2^{a}} \times N \times E\,, & \quad a \geq 0 \in \mathbb{N},\, N \times E \equiv 0 \mod{2^{a}}\,,
+        a \times N \times E\,,                & \quad a > 0 \in \mathbb{N}                                             \\
+        \textrm{or}                                                                                                    \\
+        \dfrac{1}{2^{a}} \times N \times E\,, & \quad a \geq 0 \in \mathbb{N},\, N \times E \coloneqq 0 \mod{2^{a}}\,,
     \end{cases}
 \end{align}
 where $a$ is the number of entries, $N$ the number of nodes and $E$ the number of elements. This can be achieved by making use of the flexibility afforded by the NVidida architecture. Every GPU has various collections of warps called Streaming Microprocessors (SMs). Each SM is independent of other SMs, however, warps within an SM all share certain resources such as various levels of caches and schedulers. Each SM can be split into blocks of threads, all of which share some resources. The optimal usage entails finding the best block size (preferably a multiple of 32 to maximise thread usage, as the smallest unit of processing is a warp) for a particular problem. Each block as a dimension (the number of threads inside it), an index (there can be multiple blocks in a single SM), and each thread has an index that identifies it within its block. These values are used to index the global device memory. \Cref{f:parallel_exec} has an example of how this works for a block of two threads and a set-up as described by \cref{f:paraLabel} and mapping by \cref{eq:hostDeviceElementMap}.
@@ -953,7 +963,7 @@ where $a$ is the number of entries, $N$ the number of nodes and $E$ the number o
     \label{f:parallel_exec}
 \end{figure}
 
-There are $6\times 3\times 8 + 6\times 8 = 192$ bytes of information in each unit problem: 6 nodes with 3 coordinates each, each of 8 bytes (double precision), plus 6 pointers of 8 bytes each\footnote{The nodes are stored in arrays, each array needs a pointer, which pointer is 8 bytes in x64 architecture}. We must consider this when computing the number of threads because GPUs have a finite amount of shared memory per block. If we go above this threshold the GPU will error, which under normal circumstances is fine because the error causes a crash, but when \mintinline{matlab}{MATLAB} interfaces with GPUs, the error does not get reported back and the programme keeps running without having calculated anything.
+There are $6\times 3\times 8 + 6\times 8 = 192$ bytes of information in each unit problem: 6 nodes with 3 coordinates each, each of 8 bytes (double precision), plus 6 pointers of 8 bytes each\footnote{The nodes are stored in arrays, each array needs a pointer, which pointer is 8 bytes in x64 architecture}. We must consider this when computing the number of threads because GPUs have a finite amount of shared memory per block. If we go above this threshold the GPU will error, which under normal circumstances is fine because the error causes a crash, but when \mintinline{matlab}{MATLAB} interfaces with GPUs, the error does not get reported back and the program keeps running without having calculated anything.
 
 Realistically, this is extremely difficult to achieve, particularly in dynamic, non-conservative simulations such as discrete dislocation dynamics. So we also came up with two heuristics that aim to utilise as many computational resources as effectively as possible,
 \begin{align}\label{eq:numThreads}
