@@ -17,11 +17,11 @@ The story of humanity is the story of our tools. Every leap in technological cap
 \section{Fusion energy production}
 \label{s:fusion}
 
-There currently exist two major branches of research for large scale fusion energy production \cite{icfvsmcf}:
-\begin{inparaenum}[\itshape1\upshape)]
-    \item magnetic confinement fusion (MCF) \cite{mcf} which confines the plasma using magnetic fields and
-    \item inertial confinement fusion (ICF) \cite{icf} which uses a frozen fuel pellet which is either directly or indirectly compressed by arrays of powerful lasers.
-\end{inparaenum}
+There currently exist two major branches of research for large scale fusion energy production \cite{icfvsmcf,betti2010thermonuclear}:
+\begin{enumerate}
+    \item Magnetic Confinement Fusion (MCF) \cite{mcf} which confines the plasma using magnetic fields and
+    \item Inertial Confinement Fusion (ICF) \cite{icf} which uses a frozen fuel pellet which is either directly or indirectly compressed by arrays of powerful lasers.
+\end{enumerate}
 The physics and engineering challenges vary greatly between both approaches but the fundamental materials problems remain largely the same---with a few exceptions such as divertors \cite{icf_mcf1, icf_mcf2}.
 
 \subsection{Operating environment}
@@ -29,7 +29,7 @@ The physics and engineering challenges vary greatly between both approaches but 
 
 A constant feature of nuclear energy production is the exposure of reactor materials to large loads of ionising and non-ionising radiation. In the case of fission, this is mostly in the form of low energy neutrons and residual radiation from fission products. Fusion on the other hand, deals with the sparsely explored 14 MeV neutron spectrum \cite{mats_fis_fus}. The lack of appropriate sources of suitably energetic neutrons \cite{ifmif} has meant that modelling, as well as searching for experimental analogues for the true damage cascades have become a crucial part of materials research \cite{fusmat1s}.
 
-When it comes to fusion, the operating environments change vastly between ICF and MCF, as described by \cref{tab:rad} \cite{openv}. The table should be read with a healthy dose of scepticism, given that the numbers and conditions for commercial reactors, or even reactors capable of producing a net positive amount of energy, are not yet fully known because they do not exist. This is especially true for ICF, where we are \emph{extremely far} from achieving the operating frequencies required for a commercial reactor. However, the table provides a fairly reasonable first approximation of the demands placed on reactor materials for both mainstream types of fusion energy production. That said, the demands on the components needed for energy harvesting---a divertor in the case of MCF, and an open problem for ICF---are conspicuous by their absence.
+When it comes to fusion, the operating environments change vastly between Inertial Confinement Fusion (ICF) and Magnetic Confinement Fusion (MCF), as described by \cref{tab:rad} \cite{openv}. The table should be read with a healthy dose of scepticism, given that the numbers and conditions for commercial reactors, or even reactors capable of producing a net positive amount of energy, are not yet fully known because they do not exist. This is especially true for ICF, where we are \emph{extremely far} from achieving the operating frequencies required for a commercial reactor. However, the table provides a fairly reasonable first approximation of the demands placed on reactor materials for both mainstream types of fusion energy production. That said, the demands on the components needed for energy harvesting---a divertor in the case of MCF, and an open problem for ICF---are conspicuous by their absence.
 
 \begin{table}
     \centering
@@ -99,7 +99,7 @@ Transmutation products will always be problematic, but they are a fact of workin
 \section{Parallel computing}
 \label{s:parallel_comp}
 
-Processing chips are made up of millions or even billions of transistors acting as switches in logic gates. Each time a logic gate fires, the capacitors inside them charge and discharge at the chip's frequency otherwise known as clock speed \cite{cpu_trnstor}. Consider the power of any electronic component,
+Modern processing chips are made up of billions of transistors acting as switches in logic gates. Each time a logic gate fires, the capacitors inside them charge and discharge at the chip's frequency otherwise known as clock speed \cite{cpu_trnstor}. Consider the power of any electronic component,
 \begin{align}\label{eq:pow_ec}
     P(t) & = I(t) V(t) \,,
 \end{align}
@@ -112,8 +112,8 @@ where $ I $ is current and $ V $ is voltage, both as functions of time, $t$. The
 where $ C $ is capacitance, $ E $ the energy stored in the capacitor, $Q_\rvar{c}$ the charge stored in the capacitor and $V_\rvar{c}$ the voltage of the capacitor. Substituting \cref{eq:cap_cur_pow_dt} into \cref{eq:pow_ec} and integrating twice, we obtain the expression for the energy stored in a capacitor,
 \begin{subequations}
     \begin{align}\label{eq:e_cap}
-        \int\limits_{0}^{E_{c}}\int\limits_{0}^{\infty} \dfrac{\rvar{d}E(t)}{\rvar{d}t}\; \delta t & = C \int\limits_{0}^{V_{c}}\int\limits_{0}^{\infty} V(t) \dfrac{\mathrm{d}V(t)}{\rvar{d}t}\; \delta t\,, \\
-        E_{\rvar{c}}                                                                               & = \dfrac{C V_{\rvar{c}}^{2}}{2}  = \dfrac{Q_\rvar{c} V_\rvar{c}}{2} = \dfrac{Q_\rvar{c}^2}{2C}\,,
+        \int\limits_{0}^{E_{c}}\int\limits_{0}^{\infty} \dfrac{\rvar{d}E(t)}{\rvar{d}t}\; \rvar{d} t & = C \int\limits_{0}^{V_{c}}\int\limits_{0}^{\infty} V(t) \dfrac{\mathrm{d}V(t)}{\rvar{d}t}\; \rvar{d} t\,, \\
+        E_{\rvar{c}}                                                                                 & = \dfrac{C V_{\rvar{c}}^{2}}{2}  = \dfrac{Q_\rvar{c} V_\rvar{c}}{2} = \dfrac{Q_\rvar{c}^2}{2C}\,,
     \end{align}
 \end{subequations}
 where $ V_{\rvar{c}} $, $ E_{\rvar{c}} $, $Q_\rvar{c}$ are the voltage, energy and charge stored in the capacitor. Recalling that in a processing chip, the capacitors are charged and discharged at the chip's clock speed $ f $, we arrive at the expression for power consumption, $ P_{\rvar{c}} $, of a capacitor charging and discharging at frequency $ f $ \cite{microelec},
@@ -126,15 +126,15 @@ Computer chips are rather more complicated, but their power consumption (also kn
     P = P_{\rvar{dyn}} + P_{\rvar{sc}} + P_{\rvar{leak}}\,,
 \end{align}
 where $ P_{\rvar{dyn}} $ is the dynamic power dissipation given by \cref{eq:p_cap}. The two other dissipation mechanisms are:
-\begin{inparaenum}[\itshape 1\upshape)]
-    \item short-circuit, sc, which depends on frequency and occurs when a direct path from transistor to ground is made as a result of multiple transistors conducting simultaneously; and
-    \item leakage, leak, which depends on the voltage and is due to micro-currents between doped parts a transistor.
-\end{inparaenum}
+\begin{enumerate}
+    \item $P_{\rvar{sc}}$, short-circuit, which depends on frequency and occurs when a direct path from transistor to ground is made as a result of multiple transistors conducting simultaneously; and
+    \item $P_{\rvar{leak}}$, leakage, which depends on the voltage and is due to micro-currents that form at the p-n junctions\footnote{The p-n junction is the region between the doped semiconductor with free holes, (p-type semiconductor), and the doped semicondutor with free electrons (n-type semiconductor).} of the transistor.
+\end{enumerate}
 Furthermore, higher voltages and frequencies result in higher temperatures, which in turn mean decreased transistor performance and increased capacitance. The overall result is an energy expenditure curve similar to \cref{f:cpu_en_cnvx} \cite{cpu_en_cnvx} for every processor unit.
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{cpu_en_cnvx.png}
-    \caption[Energy expenditure of CPU vs Voltage.]{Energy required by a Samsung Galaxy S2 CPU at \SI{37}{\degreeCelsius} to complete the Gold-Rader implementation of the \emph{bit-reverse} algorithm. The dashed lines denote a theoretical model, image and model found in \cite{cpu_en_cnvx}.}
+    \caption[Energy expenditure of CPU vs Voltage.]{Energy required by a Samsung Galaxy S2 CPU at \SI{37}{\degreeCelsius} to complete the Gold-Rader implementation of the \emph{bit-reverse} algorithm. The dashed lines denote a theoretical model, image and model from \cite{cpu_en_cnvx}.}
     \label{f:cpu_en_cnvx}
 \end{figure}
 
@@ -164,7 +164,7 @@ OpenCL allows one to work with heteragoenous systems and is similar to C in that
 
 OpenACC is similar to OpenMP in that they both use pragmas\footnote{Pragmas are especially formated comments that specific compilers recognise and turn into special instructions at compile time. They are not part of the programming language's official standard, but rather compiler-specific extensions. Pragmas are usually programmed in C or Assembly and must be implemented by the compiler manufacturer. Nothing prevents application developers from writing the would-be pragma's code directly into their application, but this can prove a lengthy and difficult process. The rigid nature of pragmas, as well as the compiler manufacturer's priorities, limit their scope and usability.} and they both work in shared memory environments---same GPU and same CPU respectively. This is no coincidence as OpenACC was designed as an extension of OpenMP for developing parallel applications on hardware accelerators. Unfortunately, being pragma based, the standard requires significant work by compiler manufacturers, so its adoption has therefore been slow \cite{openacc}. Furthermore, despite simplifying development and minimising the barrier to entry, the use of pragmas limits the flexibility and adaptability of the framework compared to OpenCL.
 
-Recently however, a third option has become viable. NVidia's Computer Unified Device Architecture (CUDA) framework provides the best aspects of both OpenCL and OpenACC. The tradeoff is that it only works on NVidia GPUs and is a closed source product. However, the accessibility and flexibility of CUDA provides anyone familiar with C/C++ the means to develop a GPU application with little issue. NVidia is also strongly backing scientific research by adding double precision support on their GPUs. They have also worked to provide parallel equivalents of well known serial libraries---such as cuBLAS \& cuFFT---for scientific computing. They have additionally developed a wide range of specialist graphics cards tailor-made for scientific purposes. As such, they are the leaders in GPU computing in scientific communities \cite{nvidia}.
+Recently however, a third option has become viable. NVidia's Computer Unified Device Architecture (CUDA) framework provides the best aspects of both OpenCL and OpenACC. The tradeoff is that it only works on NVidia GPUs and is a closed source product. However, the accessibility and flexibility of CUDA provides anyone familiar with C/C++ the means to develop a GPU application with little issue. NVidia is also strongly backing scientific research by adding double precision support to their GPUs. They have also worked to provide parallel equivalents of well known serial libraries---such as cuBLAS \& cuFFT---for scientific computing. They have additionally developed a wide range of specialist graphics cards tailor-made for scientific purposes. As such, they are the leaders in GPU computing in scientific communities \cite{nvidia}.
 
 \subsubsection{Hurdles for parallelisation}
 \label{sc:hurdpara}
@@ -197,7 +197,7 @@ Special cases, such as having a parallel dislocation line segment to a surface, 
 \end{figure}
 One of the advantages of GPU-CPU independence is that both can work concurrently on different aspects of the problem. If both systems have to talk to each other, or there are any race conditions (one process needs to finish before the other can start), then one must tread carefully, ensuring proper syncronisation and data mapping before proceeding (see \cref{f:async_gpu_cpu}).
 
-The reason why code branching is bad for GPU parallelisation is down to the fact that they work like software-customisable vector machines. As in vector processors, collections of threads all carry out the same operation on different pieces of data at the same time. The threads essentially behave as one, operating on different data. This is advantageous to a GPU because it means more energy and space can be used for computation rather than logic and scheduling. However, this eliminates the ability of code to branching within each collection of threads. This means that every branch of an \texttt{if} or \texttt{switch-case} statement will be executed whether a condition is met or not\footnote{If the branch can be resolved at compile time, it is possible for the compiler to prune it as part of compile time optimisation. However, this can be unreliable and depends on how transparent the optimsation is to the compiler, how agressive the optimisation setting is, and how the compiler is implemented. Therefore, relying on compile time optimisation to prune branches is not recommended.}. Only data storage depends on whether a condition is true or false, as illustrated in \cref{f:code_branching}.
+The reason why code branching is bad for GPU parallelisation is down to the fact that they work like software-customisable vector machines. As in vector processors, collections of threads all carry out the same operation on different pieces of data at the same time. The threads essentially behave as one, operating on different data. This is advantageous to a GPU because it means more energy and space can be used for computation rather than logic and scheduling. However, this eliminates the ability of code branching within each collection of threads. This means that every branch of an \texttt{if} or \texttt{switch-case} statement will be executed whether a condition is met or not\footnote{If the branch can be resolved at compile time, it is possible for the compiler to prune it as part of compile time optimisation. However, this can be unreliable and depends on how transparent the optimsation is to the compiler, how agressive the optimisation setting is, and how the compiler is implemented. Therefore, relying on compile time optimisation to prune branches is not recommended.}. Only data storage depends on whether a condition is true or false, as illustrated in \cref{f:code_branching}.
 \begin{figure}
     \centering
     \begin{subfigure}[t]{0.48\linewidth}
@@ -253,17 +253,17 @@ Furthermore, dislocations often accumulate in the vicinity of microstructural fe
 
 Coupling dislocation dynamics (DD) to FEM is important to properly simulate micromechanical tests because DD provides us with a more precise set of inputs and greater granularity for solving the FE problem. There are at present two methods with which to do so, the \nameref{sss:superposition} and the \nameref{sss:discrete_continuum}. Discrete dislocation dynamics, where the dislocation is broken into nodes connected by segments is a relatively compuationally- and data-efficient implementation of dislocation dynamics, which has the added advantage of having analytical solutions for straight-line segments. However, as discussed in \cref{sss:lvl_set}, explicit discretisation is not the only way to tackle the problem.
 
-\subsubsection{Superposition model}
+\subsubsection{Superposition Method}
 \label{sss:superposition}
 
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{fem_ddd.pdf}
-    \caption[Superposition Model for DDD-FEM coupling.]{The superposition used to couple DDD and FEM. The volume $V$ is bounded by a surface $S = S_{T} \cup S_{U}$ and contains a dislocation ensemble and is subjected to tractions $\vec{T}$ on $S_{T}$ and $\vec{U}$ on $S_{u}$. First, the traction, $\vec{\tilde{T}}$, and displacement, $\vec{\tilde{u}}$, fields due to the dislocations in the infinite domain (DDD) are evaluated on the boundaries $S_{T}$ and $S_{U}$ respectively. Then an elastic boundary value problem can be solved with FEM to calculate the corrective elastic fields required to satisfy the boundary conditions $\vec{\hat{T}} = \vec{T} - \vec{\tilde{T}}$ and $\vec{\hat{u}} = \vec{U} - \vec{\tilde{u}}$.}
+    \caption[Superposition Method for DDD-FEM coupling.]{The superposition used to couple DDD and FEM. The volume $V$ is bounded by a surface $S = S_{T} \cup S_{U}$ and contains a dislocation ensemble and is subjected to tractions $\vec{T}$ on $S_{T}$ and $\vec{U}$ on $S_{u}$. First, the traction, $\vec{\tilde{T}}$, and displacement, $\vec{\tilde{u}}$, fields due to the dislocations in the infinite domain (DDD) are evaluated on the boundaries $S_{T}$ and $S_{U}$ respectively. Then an elastic boundary value problem can be solved with FEM to calculate the corrective elastic fields required to satisfy the boundary conditions $\vec{\hat{T}} = \vec{T} - \vec{\tilde{T}}$ and $\vec{\hat{u}} = \vec{U} - \vec{\tilde{u}}$.}
     \label{f:fem_ddd}
 \end{figure}
 
-The Superposition Model (SM) works by decomposing the problem into separate DDD and FE problems (\cref{f:fem_ddd}). It is assumed that a linear-elastic body $ V $ bounded by a surface $ S $ is subject to traction boundary conditions, $ \vec{T} $, on $ S_{T} $ and displacement boundary conditions, $ \vec{U} $, on $ S_{u} $. The formulation proposed in \cite{dismot} to impose traction-displacement boundary conditions on DDD problems in finite domains states that the total displacement and stress fields can be written as a superposition of displacement and stress fields obtained from DDD and FE,
+The Superposition Method (SM) works by decomposing the problem into separate DDD and FE problems (\cref{f:fem_ddd}). It is assumed that a linear-elastic body $ V $ bounded by a surface $ S $ is subject to traction boundary conditions, $ \vec{T} $, on $ S_{T} $ and displacement boundary conditions, $ \vec{U} $, on $ S_{u} $. The formulation proposed in \cite{dismot} to impose traction-displacement boundary conditions on DDD problems in finite domains states that the total displacement and stress fields can be written as a superposition of displacement and stress fields obtained from DDD and FE,
 \begin{subequations}
     \label{eq:superposition}
     \begin{align}
@@ -284,14 +284,14 @@ A further problem with this method is that modelling elastic inclusions not only
 
 That said, the relative simplicity of the superposition method has made it a popular choice \cite{analytic_tractions, ddd_fem_sm, ddd_fem_sm2} for coupling DDD and FEM because all it requires is the calculation of forces and displacements on the boundaries (see \cref{ss:analytic_forces}).
 
-\subsubsection{Discrete continuum model}
+\subsubsection{Discrete Continuum Method}
 \label{sss:discrete_continuum}
 
-The Discrete Continuum Model (DCM) takes an alternative approach to solving the same coupling problem. The DCM only treats short-range dislocation-dislocation interactions analytically while all other interactions are numerically calculated via FEM \cite{dcm}. It is based on the regularisation of the atomic displacement jump across the slip plane into a plastic strain inclusion according to eigenstrain theory \cite{eigenstrain}. Like the Superposition Model, the DCM also assumes the simulated volume to be linear-elastic.
+The Discrete Continuum Method (DCM) takes an alternative approach to solving the same coupling problem. The DCM only treats short-range dislocation-dislocation interactions analytically while all other interactions are numerically calculated via FEM \cite{dcm}. It is based on the regularisation of the atomic displacement jump across the slip plane into a plastic strain inclusion according to eigenstrain theory \cite{eigenstrain}. Like the Superposition Method, the DCM also assumes the simulated volume to be linear-elastic.
 
-The eigenstrain formalism assumes that material defects can be represented as stress-free strain distributions, dubbed \emph{eigenstrains} \cite{eigenstrain}. For example, a dislocation loop of any shape may be approximately represented by thin, coherent, plate-like inclusions with the same contour as the loop and a characteristic thickness, $ h $, as shown in \cref{f:eigenstrain} \cite{dcm}. The eigenstrain tensor, $ \epsilon^{\rvar{p}} $, can then be defined as a symmetric dyadic product of the Burgers vector, $ \vec{b} $, and slip plane normal $ \vec{n} $,
+The eigenstrain formalism assumes that material defects can be represented as stress-free strain distributions, dubbed \emph{eigenstrains} \cite{eigenstrain}. For example, a dislocation loop of any shape may be approximately represented by thin, coherent, plate-like inclusions with the same contour as the loop and a characteristic thickness, $ h $, as shown in \cref{f:eigenstrain} \cite{dcm}. The eigenstrain tensor, $ \tns{\varepsilon^{\rvar{p}}} $, can then be defined as a symmetric dyadic product of the Burgers vector, $ \vec{b} $, and slip plane normal $ \vec{n} $,
 \begin{align}\label{eq:eigenstrain}
-    \tns{\epsilon^{\rvar{p}}} & \equiv \dfrac{1}{2h} (\vec{b} \otimes \vec{n} + \vec{n} \otimes \vec{b})\,.
+    \tns{\varepsilon^{\rvar{p}}} & \equiv \dfrac{1}{2h} (\vec{b} \otimes \vec{n} + \vec{n} \otimes \vec{b})\,.
 \end{align}
 \Cref{eq:eigenstrain} can be used to calculate approximate elastic fields from the stress-free eigenstrain distribution. The approximation is accurate far from the dislocation core \cite{dln_core}. As we move closer---but still outside the core region---the approximation tends toward the exact discrete dislocation solution as $ h \to 0$. From linear elasticity, the total plastic strain is the sum of the individual plastic strains due to each dislocation segment.
 \begin{figure}
@@ -339,7 +339,7 @@ where $ \vec{v} $ is the dislocation velocity. This definition uses the material
     \label{f:lvl_set_dd}
 \end{figure}
 
-The level set method is significantly more computationally expensive than DDD \cite{lvl_set_dd}. It must solve two coupled quasi-linear partial differential equations whose character is in general undefined. It therefore requires the use of very robust numerical solvers such as higher order Total Variation Deminishing (TVD) Runge-Kutta methods for time discretisation (TVD-RK4 or higher), and high order ENO (Essentially Nonoscillatory $ \mathcal{O}(N^5) $ or higher) or WENO (Weighted Essentially Non-Oscilatory) interpolation methods for spatial discretisation \cite{lvl_set_ddd_inc} for the solutions to converge satisfactorily. The method also makes it impossible to obtain many of the useful analytical solutions one can find by discretising dislocations into straight line segments. Another problem is that this method has never been truly coupled to the finite element method. However, if one were to do so there are two naïve ways of going about it:
+The level set method is significantly more computationally expensive than DDD \cite{lvl_set_dd}. It must solve two coupled quasi-linear partial differential equations whose character is in general undefined. It therefore requires the use of very robust numerical solvers such as higher order Total Variation Deminishing (TVD) Runge-Kutta methods for time discretisation (TVD-RK4 or higher), and high order ENO (Essentially Nonoscillatory $ \mathcal{O}(N^5) $ or higher) or WENO (Weighted Essentially Non-Oscilatory) interpolation methods for spatial discretisation \cite{lvl_set_ddd_inc} for the solutions to converge satisfactorily. The method also makes it impossible to use many of the useful analytical solutions one can find by discretising dislocations into straight line segments. Another problem is that this method has never been truly coupled to the finite element method. However, if one were to do so there are two naïve ways of going about it:
 \begin{inparaenum}[\itshape1\upshape)]
     \item numerically integrating along the dislocation lines and finding a way to numerically calculate the forces on FE nodes, or
     \item discretising the level set curves and using either the DCM or SM to find forces and displacements.
@@ -349,12 +349,12 @@ The former would be very computationally expensive. Furthermore, no one has foun
 \subsection{Non-singular continuum theory of dislocations}
 \label{ss:non-singular_dln}
 
-The Peach-Koehler formula describes the fundamental interactions of dislocations \cite{pk_force} according to the force, $ \vec{f} $, that a local stress $ \tns{\sigma} $ exerts on a dislocation line with Burgers vector, $ \vec{b} $, and line direction, $ \vec{\xi} $,
+The Peach-Koehler formula describes the fundamental interactions of dislocations \cite{pk_force} according to the force, $ \vec{f} $, that a local stress $ \tns{\sigma} $ exerts on a unit length dislocation line with Burgers vector, $ \vec{b} $, and line direction, $ \vec{\xi} $,
 \begin{align}
     \vec{f} & = (\tns{\sigma} \cdot \vec{b}) \times \vec{\xi}\,.
 \end{align}
 
-According to \cite{mura_t}, the internal stress field of a dislocation loop in a homogenous, infinite, linear-elastic medium is given by the contour integral around a loop $ L $,
+The internal stress field of a dislocation loop in a homogenous, infinite, linear-elastic medium is given by the contour integral around a loop $ L $ \cite{mura_t},
 \begin{align}\label{eq:field_stress}
     \sigma_{ij}^{\infty}(\vec{x}) & = C_{ijkl} \oint_{L} \epsilon_{lnh} C_{pqmn} \dfrac{\partial G_{kp}(\vec{x} - \vec{x'})}{\partial x_{q}} b_{m}\; \rvar{d}x'_{h}\,,
 \end{align}
@@ -366,7 +366,7 @@ where $ \mu $, $ \nu $ are the isotropic shear modulus and Poisson's ratio respe
 \begin{align}\label{eq:e_dln1}
     E & = \dfrac{1}{2} \int S_{ijkl} \sigma_{ij}(\vec{x}) \sigma_{kl}(\vec{x})\; \rvar{d}^{3}\vec{x}\,,
 \end{align}
-where $ S = C^{-1} $ is the elastic compliance tensor. These divergent properties often prove problematic when numerically computing dislocation forces and energies. \Cref{eq:e_dln1} can also be expressed as a double line integral \cite{dewit1, dewit2},
+where $ S = C^{-1} $ is the elastic compliance tensor. These divergent properties prove problematic when numerically computing dislocation forces and energies. \Cref{eq:e_dln1} can also be expressed as a double line integral \cite{dewit1, dewit2},
 \begin{align}\label{eq:e_dln2}
     E = & - \dfrac{\mu}{8\pi} \oiint_{L} \partial_{k} \partial_{k} R(\vec{x}-\vec{x}') b_{i} b'_{j} \;\rvar{d}x_{i} \;\rvar{d}x'_{j}\nn
         & - \dfrac{\mu}{4 \pi (1-\nu)} \oiint_{L} \partial_{i} \partial_{j} R(\vec{x}-\vec{x}') b_{i} b'_{j} \;\rvar{d}x_{k} \;\rvar{d}x'_{k}\nn
@@ -386,7 +386,7 @@ There have been many attempts at removing this singularity, including finite-str
     \item the possibility for multiple non-degenerate expressions and solutions for the line integral of the dislocation line energy.
 \end{inparaenum}
 
-\Citet{a_non-singular_continuum_theory_of_dislocations} took it upon themselves to define and justify a different Burgers vector distribution that maintains the mathematical convenience of the classical formulation that also eliminates such an unphysical assumption. They did so by introducing a Burgers vector density function,
+\Citet{a_non-singular_continuum_theory_of_dislocations} defined and justified a different Burgers vector distribution that maintains the mathematical convenience of the classical formulation and eliminates such an unphysical assumption. They did so by introducing a Burgers vector density function,
 \begin{subequations}\label{eq:b_dist}
     \begin{align}
         \vec{b}          & = \int \vec{g}(\vec{x}) \;\rvar{d}^{3} \vec{x}\label{seq:bv_dist}\,, \\
@@ -423,9 +423,9 @@ where $ a $ is an arbitrary constant meant to represent the dislocation core rad
 \end{subequations}
 \Cref{eq:hand_wavy} is a very brave statement given that,
 \begin{align}
-    \nabla^{2} \left[R^{-1}\right] & = \nabla^{2}\left[(x^{2} + y^{2} + z^{2})^{-1/2}\right] = 0/\,,
+    \nabla^{2} \left[R^{-1}\right] & = \nabla^{2}\left[(x^{2} + y^{2} + z^{2})^{-1/2}\right] = 0\,,
 \end{align}
-but may be physically justified by pretending $ \nabla^{2}\left[R^{-1}\right] $ arises from assuming a spherical surface of radius 0. \Cref{eq:dist} is a similarly dubious statement that can be justified by noting that,
+everywhere except when $x^2 + y^2 + z^2 = 0$, where the expression is equal to $-0/0$. If we want the equation to be solveable, it is necessary to define an infinitesimally small sphere with radius 0, whose surface area is $4\pi\delta^3(\vec{x})$, multiplying by $-2$ (negative sign from $-0/0$, and 2 from the numerator of \cref{eq:hand_wavy}) yields $-8\pi\delta^3(\vec{x})$. \Cref{eq:dist} is a similarly dubious statement that can be justified by noting that,
 \begin{align}
     \lim\limits_{a\to 0} w(\vec{x}) = \delta^{3}(\vec{x})\,.
 \end{align}
@@ -446,7 +446,7 @@ The problematic singularity associated with the classical Volterra dislocation i
     G_{ij}(\vec{x} - \vec{x'}) & = \dfrac{1}{8\pi \mu}\left[ \delta_{ij} \partial_{pp} - \dfrac{1}{2(1-\nu)} \partial_{ij} \right] R_{a}(\vec{x} - \vec{x'})\,.
 \end{align}
 
-Using the non-singular definition of $ G(\vec{x}-\vec{x}') $ in \cref{eq:field_stress} we obtain the expression for the stress field of a single straight dislocation line segment bounded by two dislocation nodes at $\vec{x_1}$ and $\vec{x_2}$1, 2) \cite{a_non-singular_continuum_theory_of_dislocations},
+Using the non-singular definition of $ G(\vec{x}-\vec{x}') $ in \cref{eq:field_stress} we obtain the expression for the stress field of a single straight dislocation line segment bounded by two dislocation nodes at $\vec{x_1}$ and $\vec{x_2}$ \cite{a_non-singular_continuum_theory_of_dislocations},
 \begin{align}
     \label{eq:stressIntro}
     \tns{\tilde{\sigma}}(\vec{x}) = &
@@ -488,7 +488,7 @@ The vectors $\vec{p}$ and $\vec{q}$ are aligned with the edges of the rectangula
 \subsection{Multiphase simulations}
 \label{ss:multiphase}
 
-Modelling heterogeneity in DDD remains challenging. The core assumption of DDD is that we have a homogenous linear elastic space with invariant properties. However, modelling multiphase systems such as multicrystals and inclusions necessitates a weakening of such assumptions, particularly the space's homogeneity. Multiphase models are also necessary to apply DDD to more realistic scenarios.
+Modelling heterogeneity in DDD remains challenging. The core assumption of DDD is that we have a homogenous linear elastic solid with invariant properties. However, modelling multiphase systems such as multicrystals and inclusions necessitates a weakening of such assumptions, particularly the solid's homogeneity. Multiphase models are also necessary to apply DDD to more realistic scenarios.
 
 Fusion in particular is riddled with examples of highly heterogenous materials. As previously mentioned, neutron bombardment often causes clustering of transmutation products, particularly on divertor and first wall materials; such clusters often substantially change many of their mechanical and thermal properties. The whole point of Oxide-Dispersion Strengthened (ODS) steels \cite{ddd_ods} is to hamper radiation damage by distributing oxide inclusions within their matrix; if we hope to model such alloys with DDD we must find a way to relax our homogeneity criteria.
 
@@ -620,7 +620,7 @@ New NVidia architectures have made varying degrees of nested parallelisation pos
 
 The parallisation strategies for the other two problems, (b) and (c) in \cref{f:gpu_ddd}, involved similar decompositions as the remote force computation. For surface tractions \citet{gpu_ddd} parallelised over $ k $ surface nodes with sequential calculation and addition of the stress from each dislocation line segment. For the image stresses, they chose the reverse strategy since it allows for the serialised addition of the image stresses on dislocation line segments.
 
-Their findings showed very promising results for parallelising DDD simulations. Compared to serial implementations in C, their findings showed that depending on the specific problem and parameters used. The parallel implementation reduced computational time by a factor of $ \sim 110 $ at best and $ \sim 3 $ at worst, for sufficiently large problems. This is of course, provided one uses a card designed for high performance computing, as these are tailored towards \texttt{double} precision arithmetic and computationally intensive procedures. However, gaming graphics cards are increasingly capable of double precision arithmetic and though not as drastic, speed gains are still substantial for sufficiently large problems.
+Their findings showed very promising results for parallelising DDD simulations. Compared to serial implementations in C, depending on the specific problem and parameters used. The parallel implementation reduced computational time by a factor of $ \sim 110 $ at best and $ \sim 3 $ at worst, for sufficiently large problems. This is of course, provided one uses a card designed for high performance computing, as these are tailored towards \texttt{double} precision arithmetic and computationally intensive procedures. However, gaming graphics cards are increasingly capable of double precision arithmetic and though not as drastic, speed gains are still substantial for sufficiently large problems.
 
 \section{Project outline and new science}
 \label{s:objectives}

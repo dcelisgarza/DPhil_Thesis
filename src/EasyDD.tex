@@ -11,7 +11,7 @@ As mentioned in \cref{s:objectives}, this project aims to integrate multidiscipl
 \subsection{Correct time-adaptive integrator}
 \label{ss:integrator}
 
-The first obvious hurdle to overcome when making more complex simulations possible was the unreasonably long computational time taken for a dislocation plasticity simulation to sufficiently advance past the elastic regime. A simple microcantilever bending simulation with a few frank reed sources would take a whole night to reach the plastic regime, some early simulations by Bruce Bromage took days to get there.
+The first obvious hurdle to overcome when making more complex simulations possible was the unreasonably long computational time taken for a dislocation plasticity simulation to sufficiently advance past the elastic regime. A simple microcantilever bending simulation with a few frank reed sources would take a whole night to reach the plastic regime.
 
 The unacceptable slowness prompted a closer examination of the adaptive-time Euler-trapezoid predictor-corrector solver described in algorithm 10.2 and equations (10.42, 10.45 and 10.46) in \cite[p.~214--216]{ddlab}, reproduced here by \cref{alg:trapezoid,eq:trapezoid},
 \begin{align}\label{eq:trapezoid}
@@ -24,70 +24,70 @@ where $\vec{r}_i$ are nodal coordinates, $\vec{v}_i$ are nodal velocities, $\vec
     \caption{Adaptive Euler-trapezoid predictor-corrector algorithm.}
     \label{alg:trapezoid}
     \begin{enumerate}
-        \item Initialise time step $\Delta t \gets \Delta t_{\rvar{max}}$.
-        \item $\Delta t_0 \gets \Delta t$.
+        \item Initialise time step $\Delta t = \Delta t_{\rvar{max}}$.
+        \item $\Delta t_0 = \Delta t$.
         \item Compute $\vec{r}_i^{\rvar{P}}(t + \Delta t)$ and corrector $\vec{r}_i(t + \Delta t)$ from \cref{eq:trapezoid}.
-        \item If $\max_i\left(\lVert \vec{r}_i^{\rvar{P}}(t + \Delta t) - \vec{r}_i(t + \Delta t)\rVert\right) > \epsilon$, reduce time step $\Delta t \gets \Delta t / 2$ and go to 3.
-        \item $t \gets t + \Delta t$.
-        \item If $\Delta t = \Delta t_0$, increase time step to $\Delta t \gets \min(1.2 \Delta t, \Delta t_{\rvar{max}})$.
+        \item If $\max_i\left(\lVert \vec{r}_i^{\rvar{P}}(t + \Delta t) - \vec{r}_i(t + \Delta t)\rVert\right) > \epsilon$, reduce time step $\Delta t = \Delta t / 2$ and go to 3.
+        \item $t = t + \Delta t$.
+        \item If $\Delta t = \Delta t_0$, increase time step to $\Delta t = \min(1.2 \Delta t, \Delta t_{\rvar{max}})$.
         \item Return to 2, unless total number of cycles is reached.
     \end{enumerate}
 \end{algorithm}
 
 The original, supposed implementation of this is found in commit \href{https://github.com/TarletonGroup/EasyDD/blob/780a6c41b35687b443d3241674af7393d2140639/int_trapezoid.m}{\texttt{65907b0}} under the name \texttt{int\_trapezoid.m}.
 
-However, this was not the case. There were a number of problems with the implementation. Firstly, it only used $\Delta t_\rvar{max}$ only on the first timestep. It also only increased the timestep once every timestep. Ideally, an adaptive time algorithm should increase the time step to the maximum that is still under the error criteria. The way the old version of the integrator worked meant that the time step would take multiple steps to ramp back up after decreasing. Take for example, a case where the time step had to decrease once for two consecutive steps, $\Delta t = \Delta t_0/4$ would have taken $\lceil\log_1.2(4)\rceil = 8$ subsequent time steps to surpass what it was originally, $\Delta t_0$. In general, $N$ time step halvings, would require $\log_b(2^N)$ steps get back to the original value, using $b$ as the time-step increase factor. Since only one increase in time step was allowed per simulation step, simulations were taking many more timesteps than necessary.
+However, this was not the case. There were a number of problems with the implementation. Firstly, it only used $\Delta t_\rvar{max}$ on the first timestep. It also only increased the timestep once every timestep. Ideally, an adaptive time algorithm should increase the time step to the maximum that is still under the error criteria. The way the old version of the integrator worked meant that the time step would take multiple steps to ramp back up after decreasing. Take for example, a case where the time step had to decrease once for two consecutive steps, $\Delta t = \Delta t_0/4$ would have taken $\lceil\log_{1.2}(4)\rceil = 8$ subsequent time steps to surpass what it was originally, $\Delta t_0$. In general, $N$ time step halvings, would require $\log_b(2^N)$ steps get back to the original value, using $b$ as the time-step increase factor. Since only one increase in time step was allowed per simulation step, simulations were taking many more timesteps than necessary.
 
-An improved algorithm is described in \cref{alg:trapezoid_improved}. This algorithm maximises the time step given absolute and relative error criteria, ($\epsilon_{\rvar{max}}$, $\upsilon_{\rvar{max}}$), absolute maximal and minimal timesteps, ($\Delta t_{\rvar{max}}$, $\Delta t_{\rvar{min}}$) and number of iterations, $\rvar{iter}_{\rvar{max}}$. It also uses a modulated timestep increase by how far under the absolute accuracy criteria we are. It also fixes a bug that made the error calculation only account for the largest magnitude of a single component of the 3D vectors, rather than the largest norm. The new implementation can be found in the most current version of \href{https://github.com/TarletonGroup/EasyDD/blob/master/src/int_trapezoid.m}{\texttt{int\_trapezoid.m}}.
+An improved algorithm is described in \cref{alg:trapezoid_improved}. This algorithm maximises the time step given absolute and relative error criteria, ($\epsilon_{\rvar{max}}$, $\eta_{\rvar{max}}$), absolute maximal and minimal timesteps, ($\Delta t_{\rvar{max}}$, $\Delta t_{\rvar{min}}$) and number of iterations, $\rvar{iter}_{\rvar{max}}$. It also uses a modulated timestep increase by how far under the absolute accuracy criteria we are. It also fixes a bug that made the error calculation only account for the largest magnitude of a single component of the 3D vectors, rather than the largest norm. The new implementation can be found in the most current version of \href{https://github.com/TarletonGroup/EasyDD/blob/master/src/int_trapezoid.m}{\texttt{int\_trapezoid.m}}.
 \begin{algorithm}
     \caption{Improved adaptive timestep algorithm.}
     \label{alg:trapezoid_improved}
     \begin{algorithmic}
-        \State $\rvar{Convergent} \gets \rvar{false}$, $\Delta t_{\rvar{valid}} \gets 0$, $\rvar{iter} \gets 0$, $\rvar{flag} \gets \rvar{false}$
-        \While{$\rvar{Convergent}$}
+        \State $\rvar{Convergent} = \rvar{false}$, $\Delta t_{\rvar{valid}} = 0$, $\rvar{iter} = 0$, $\rvar{flag} = \rvar{false}$
+        \While{$\rvar{Convergent} == \rvar{false}$}
         \State Compute $\vec{r}_i^{\rvar{P}}(t + \Delta t)$ and corrector $\vec{r}_i(t + \Delta t)$ from \cref{eq:trapezoid}.
-        \State $\Delta \vec{r}_i \gets \vec{r}_i(t + \Delta t) - \vec{r}_i^{\rvar{P}}(t + \Delta t)$
-        \State $\vec{\overline{r}}_i \gets \dfrac{\vec{g}_i(\left\{\vec{r}_j(t)\right\}) + \vec{g}_i\left(\left\{\vec{r}_i^{\rvar{P}}(t + \Delta t)\right\}\right)}{2}\Delta t$
-        \State $\epsilon \gets \max_i\left(\lVert \Delta \vec{r}_i \rVert \right)$
-        \State $\upsilon \gets \max_i\left(\lVert \Delta \vec{r}_i - \vec{\overline{r}}_i \rVert\right)$
-        \If{$\epsilon < \epsilon_{\rvar{max}} $ and $\upsilon < \upsilon_{\rvar{max}}$}
+        \State $\Delta \vec{r}_i = \vec{r}_i(t + \Delta t) - \vec{r}_i^{\rvar{P}}(t + \Delta t)$
+        \State $\vec{\overline{r}}_i = \dfrac{\vec{g}_i(\left\{\vec{r}_j(t)\right\}) + \vec{g}_i\left(\left\{\vec{r}_i^{\rvar{P}}(t + \Delta t)\right\}\right)}{2}\Delta t$
+        \State $\epsilon = \max_i\left(\lVert \Delta \vec{r}_i \rVert \right)$
+        \State $\eta = \max_i\left(\lVert \Delta \vec{r}_i - \vec{\overline{r}}_i \rVert\right)$
+        \If{$\epsilon < \epsilon_{\rvar{max}} $ and $\eta < \eta_{\rvar{max}}$}
         \State $\Delta t_{\textrm{valid}} = \Delta t$
-        \State $\gamma \gets 1.2\left(\dfrac{1}{\left[1 + (1.2^{20} - 1) (\epsilon / \epsilon_{\textrm{max}})\right]}\right)^{1/20}$
-        \State $\rvar{flag} \gets \rvar{true}$
-        \State $\rvar{iter} \gets \rvar{iter} + 1$
-        \State $\Delta t \gets \max\left(\gamma \Delta t,\, \Delta t_\rvar{max}\right)$
+        \State $\gamma = 1.2\left(\dfrac{1}{\left[1 + (1.2^{20} - 1) (\epsilon / \epsilon_{\textrm{max}})\right]}\right)^{1/20}$
+        \State $\rvar{flag} = \rvar{true}$
+        \State $\rvar{iter} = \rvar{iter} + 1$
+        \State $\Delta t = \max\left(\gamma \Delta t,\, \Delta t_\rvar{max}\right)$
         \ElsIf{$\rvar{flag} == \rvar{true}$}
-        \State $\Delta t \gets \Delta t_{\rvar{valid}}$
-        \State $\rvar{iter} \gets \rvar{iter}_\rvar{max}$
+        \State $\Delta t = \Delta t_{\rvar{valid}}$
+        \State $\rvar{iter} = \rvar{iter}_\rvar{max}$
         \ElsIf{$\Delta t < \Delta t_\rvar{min}$}
-        \State $\Delta t \gets \Delta t / 2$
-        \State $\rvar{iter} \gets \rvar{iter} + 1$
+        \State $\Delta t = \Delta t / 2$
+        \State $\rvar{iter} = \rvar{iter} + 1$
         \ElsIf{$\Delta t == \Delta t_\rvar{min}$}
-        \State $\rvar{iter} \gets \rvar{iter}_\rvar{max} + 1$
+        \State $\rvar{iter} = \rvar{iter}_\rvar{max} + 1$
         \Else
-        \State $\Delta t \gets \Delta t / 2$
+        \State $\Delta t = \Delta t / 2$
         \EndIf
         \If{$\rvar{iter} > \rvar{iter}_{\rvar{max}}$ or $\Delta t == \Delta t_{\rvar{max}}$}
-        \State $\rvar{Convergent} \gets \rvar{true}$
+        \State $\rvar{Convergent} = \rvar{true}$
         \EndIf
         \EndWhile
-        \State $t \gets t + \Delta t$
+        \State $t = t + \Delta t$
         \State Proceed with the rest of the simulation.
     \end{algorithmic}
 \end{algorithm}
 
-\Cref{alg:trapezoid_improved} is more computationally expensive per iteration, but can increase the timestep more rapidly, optimally and is more robust than \cref{alg:trapezoid}. The original algorithm also wasn't correctly implemented. Together, these changes let the new version of the software move through the elastic regime of our simulations orders of magnitude times faster than before. Simulations that took hours to days to reach the plastic regime, started doing so in minutes to hours. It also narrowed the gap between different loading conditions, as simulations were now more capable of effectively adjusting the timestep to more efficiently match the error tolerances. However, as discussed in \cref{c:simulations}, there is still a danger of overloading simulations. Fixing the integrator was the first major bottleneck we fixed, allowing us to identify and resolve downstream issues that were previously unkown.
+\Cref{alg:trapezoid_improved} is more computationally expensive per iteration, but can increase the timestep more rapidly, optimally and is more robust than \cref{alg:trapezoid}. The original algorithm also wasn't correctly implemented. Together, these changes let the new version of the software move through the elastic regime of our simulations orders of magnitude faster than before. Simulations that took hours to days to reach the plastic regime, started doing so in minutes to hours. It also narrowed the gap between different loading conditions, as simulations were now more capable of effectively adjusting the timestep to more efficiently match the error tolerances. However, as discussed in \cref{c:simulations}, there is still a danger of overloading simulations. Fixing the integrator was the first major bottleneck we fixed, allowing us to identify and resolve downstream issues that were previously unkown.
 
 \subsection{Matrix conditioning}
 \label{ss:matrix}
 
-A common problem with discrete dislocation dynamics is the tendancy for some networks to have a large degree of variation in the speed of dislocation nodes \cite{bertin2019gpu,ddlab,arsenlis2007enabling}. This is a consequence of the fact that nodes are discretised representations of dislocation lines. As such, nodal motion must be constrained to the motion of dislocations, i.e. nodal movement must be consistent with how a dislocation glides, climbs and cross-slips, accounting for dislocation character and slip system. Moreover, dislocation motion can be assumed to follow a linear, anisotropic, viscous drag model \cite{ddlab},
+A common problem with discrete dislocation dynamics is the tendancy for some networks to have a large degree of variation in the speed of dislocation nodes \cite{bertin2019gpu,ddlab,arsenlis2007enabling}. This is a consequence of the fact that nodes are discretised representations of dislocation lines. As such, nodal motion must be constrained to the motion of dislocations, i.e. nodal movement must be consistent with how a dislocation glides, climbs and cross-slips, accounting for dislocation character and slip system. Dislocation motion can be assumed to follow a linear, anisotropic, viscous drag model \cite{ddlab},
 \begin{align}\label{eq:dragCoef}
     \vec{F}_\textrm{drag}(\vec{x}) & = -\mathcal{B}(\vec{\xi}(\vec{x})) \cdot \vec{v}(\vec{x})\,,
 \end{align}
-where $\mathcal{B}$ is a tensor constructed from the anisotropic drag that a dislocation node, $\vec{x}$, experiences as a result of its constrained velocity $\vec{v}(\vec{x})$ due to being part of a discritesed segment $\vec{\xi}(\vec{x})$. In simple terms, this means a node can experience very different resitances to moving along its allowed movement vectors.
+where $\mathcal{B}$ is a tensor constructed from the anisotropic drag that a dislocation node, at $\vec{x}$, experiences as a result of its constrained velocity $\vec{v}(\vec{x})$ due to being part of a discritesed line segment with direction $\vec{\xi}(\vec{x})$. This means a node can experience very different resitances to moving along its allowed movement vectors.
 
-Different mobility laws can have different parametrisations for their permitted movement vectors. A problem that often plagues traditional mobility laws\footnote{Bruce Bromage, of \cite{bromage2018calculating} has developed a new BCC mobility law, \href{https://github.com/TarletonGroup/EasyDD/blob/master/src/mobbcc_bb1b.m}{\texttt{mobbcc1\_bb.m}} which can be found in the most current version of EasyDD. It solves many of the issues with traditional laws and is our new go-to for BCC materials. Among the things it fixes are: unreasonable cross-slip, pencil glide, and the problematic line-direction parametrisation. The drag matrix, $\mtx{B}$ in \cref{eq:nodeVel}, can still be singular however, so this law also includes the scale-averaged Levenberg-Marquardt regularisation discussed in this chapter.} is the movement of a node along a line segment itself. \Cref{f:lineMovement} shows how a node moving along a line segment does not change its topology, and should therefore have no effect on the energy of the network. Consequently, nodal movement along the line direction must not contribute to the total drag, so the line drag component of the stress tensor, $\mathcal{B}$, should tend to zero. On the other end of the spectrum we have climb, which is orders of magnitude less favourable than glide, so that component of the drag tensor should be much larger than the rest. However, these requirements can make the drag matrix, $\mtx{B}$ in \cref{eq:nodeVel}, singular. Keeping the matrix invertible while simultaneously meeting the physical requirements is a careful balancing act. Moreover, the low drag along the line direction often causes nodal speeds along these vectors to be much higher than other directions, often limiting the integration time step as a result.
+Different mobility laws can have different parametrisations for their permitted movement. A problem that often plagues traditional mobility laws\footnote{Bruce Bromage, of \cite{bromage2018calculating} has developed a new BCC mobility law, \href{https://github.com/TarletonGroup/EasyDD/blob/master/src/mobbcc_bb1b.m}{\texttt{mobbcc1\_bb.m}} which can be found in the most current version of EasyDD. It solves many of the issues with traditional laws and is our new go-to for BCC materials. Among the things it fixes are: unreasonable cross-slip, pencil glide, and the problematic line-direction parametrisation. The drag matrix, $\mtx{B}$ in \cref{eq:nodeVel}, can still be singular however, so this law also includes the scale-averaged Levenberg-Marquardt regularisation discussed in this chapter.} is the movement of a node along a line segment itself. \Cref{f:lineMovement} shows how a node moving along a line segment does not change its topology, and should therefore have no effect on the energy of the network. Consequently, nodal movement along the line direction must not contribute to the total drag, so the line drag component of the stress tensor, $\mathcal{B}$, should tend to zero. On the other end of the spectrum we have climb, which is orders of magnitude slower than glide, so that component of the drag tensor should be much larger than the rest. However, these requirements can make the drag matrix, $\mtx{B}$ in \cref{eq:nodeVel}, singular. Keeping the matrix invertible while simultaneously meeting the physical requirements is a careful balancing act. Moreover, the low drag along the line direction often causes nodal speeds along these vectors to be much higher than other directions, often limiting the integration time step as a result.
 \begin{figure}
     \centering
     \includegraphics[width=0.5\linewidth]{lineDirMov.pdf}
@@ -95,7 +95,7 @@ Different mobility laws can have different parametrisations for their permitted 
     \label{f:lineMovement}
 \end{figure}
 
-In the overdamped regime, $\dfrac{\rvar{d}\vec{v}}{\rvar{d}t}(\vec{x}) \to \vec{0}$, known driving forces (Peach-K\"{o}hler force + remote forces + self-force) and the unkown drag force sum to give,
+In the overdamped regime, $\dfrac{\rvar{d}\vec{v}}{\rvar{d}t}(\vec{x}) \to \vec{0}$, known driving forces (segment-segment interaction force + remote forces + self-force) and the unkown drag force sum to give,
 \begin{align}\label{eq:drivePlusDrag}
     \vec{F}_\rvar{drag}(\vec{x}) + \vec{F}_\rvar{drive}(\vec{x}) = \vec{0}\,.
 \end{align}
@@ -105,7 +105,7 @@ Substituting \cref{eq:dragCoef} into \cref{eq:drivePlusDrag} and rearranging giv
 \end{align}
 Strictly speaking, solving \cref{eq:nodeMob} requires global knowledge of the network. Fortunately, the discretisation makes it possible to distribute $\mathcal{B}$ along a line segment $i-j$,
 \begin{align}\label{eq:dragMatrix}
-    \mtx{B}_{ij} & \gets \oint_{C} N_i(\vec{x}) \mathcal{B}(\vec{\xi}(\vec{x})) N_j(\vec{x}) \rvar{d}L\,,
+    \mtx{B}_{ij} & = \oint_{C} N_i(\vec{x}) \mathcal{B}(\vec{\xi}(\vec{x})) N_j(\vec{x}) \rvar{d}L\,,
 \end{align}
 where $C$ is the whole network, $N_i$ and $N_j$ are simply shape functions that interpolate quantities given the relative position of a node to a segment, and $\rvar{d}L$ is the infinitesimal line segment. Thus giving individual expressions for node $i$ connected to node $j$. Using this discretisation and assuming the nodes connected to $i$ are subject to similar conditions, \cref{eq:nodeMob} can be broken up into an approximate expression for the velocity of a single node,
 \begin{align}\label{eq:nodeVel}
@@ -117,7 +117,7 @@ The immediate implication of the orders of magnitude difference in the drag coef
 \begin{align}\label{eq:conditionNumb}
     \kappa(\mtx{B}) = \dfrac{\lvert \lambda_\rvar{max} \rvert}{\lvert \lambda_\rvar{min} \rvert} \,,
 \end{align}
-where $\lambda_i$ is the $i$\textsuperscript{th} eigenvalue, and min, max are the minumum and maximum eigenvalues.
+where $\lambda_\rvar{min}$, $\lambda_\rvar{max}$ are the minumum and maximum eigenvalues.
 
 The condition number of a matrix codifies how much collinearity exists in its basis. The larger the condition number, the greater its basis' collinearity, and the more sensitive the sytem is to small perturbations. Such systems are said to be ill-conditioned. As a general rule, a condition number, $\kappa(\mtx{A}) = 10^k$, represents a loss of up to $k$ digits of precision on top of what is already lost from arithmetic methods under limited precision \cite{cheney2012numerical}.
 
@@ -132,20 +132,20 @@ The way our old mobility functions dealt with ill-conditioned $\mtx{B}$, relied 
     \caption[Bad way of avoiding drag matrix inversion singularity.]{Avoiding the inversion of a singular matrix by making $\mtx{B}$ extremely wrong and hoping the integrator error bounds pick it up and decrease the timestep.}
     \label{alg:bTotalOld}
     \begin{algorithmic}
-        \State Compute eigenvalue matrix, $\mtx{D} \gets \mtx{P}^{-1} \mtx{B} \mtx{P}$
-        \State $\kappa(\mtx{B}) \gets \lvert \lambda_{\rvar{max}} \rvert/ \lvert \lambda_{\rvar{min}} \rvert$
+        \State Compute eigenvalue matrix, $\mtx{D} = \mtx{P}^{-1} \mtx{B} \mtx{P}$
+        \State $\kappa(\mtx{B}) = \lvert \lambda_{\rvar{max}} \rvert/ \lvert \lambda_{\rvar{min}} \rvert$
         \If{$\kappa(\mtx{B}) < \kappa_{\rvar{min}}$}
         \State{\Comment{Normalise $\mtx{D}$ and $\vec{f}$ to the maximum eigenvalue.}}
-        \State $\mtx{D} \gets \mtx{D} / \lambda_{\rvar{max}}$
-        \State $\vec{f} \gets \vec{f} / \lambda_{\rvar{max}}$
+        \State $\mtx{D} = \mtx{D} / \lambda_{\rvar{max}}$
+        \State $\vec{f} = \vec{f} / \lambda_{\rvar{max}}$
         \State{\Comment{Invert $\mtx{D}$ by inverting each non-maximal eigenvalue.}}
         \ForAll{$(\lambda_k \in \mtx{D}) \neq \lambda_{\rvar{max}}$}
         \State{\Comment{$\lambda_\rvar{crit} \to 0$ is some arbitrary threshold for the minimum value of $\lambda_k$.}}
         \If{$\lambda_k > \lambda_{\rvar{crit}}$}
-        \State $\lambda_k \gets 1/\lambda_k$
+        \State $\lambda_k = 1/\lambda_k$
         \Else
         \State{\Comment{The inverse of 0 is not 0.}}
-        \State $\lambda_k \gets 0$
+        \State $\lambda_k = 0$
         \EndIf
         \EndFor
         \State{\Comment{$\mtx{D}$ is already inverted.}}
@@ -157,7 +157,7 @@ The way our old mobility functions dealt with ill-conditioned $\mtx{B}$, relied 
 \end{algorithm}
 There are various problems with \cref{alg:bTotalOld}.
 
-Assuming that an ill-conditioned matrix can be fixed by diagonalising and normalising. This is simply not true, it can help with numerical stability in some algorithms for the solution of linear systems but may not be enough. Perturbing the smallest eigenvalue in a direction such that $\kappa$ improves is a good way to renormalise a system without adding much error. However, perturbations of this type are often not enough when the condition number is too large. Furthermore, one wants to keep the overall behaviour of the system mostly intact, i.e. we want to maintain the relative sizes of the eigenvalues with respect to one another. If other eigenvalues are close in magnitude to the smallest one, the dynamics of the system can very easily change, even a very small perturbation may have undesireable consequences. Not to mention the fact that $\kappa$ may still be too large. In a system as stiff and dynamic as discrete dislocation dynamics, this approach is not robust enough.
+Formost of which, is assuming that an ill-conditioned matrix can be fixed by diagonalising and normalising. This is simply not true, it can help with numerical stability in some algorithms for solving linear systems, but it may not be enough for some systems. Perturbing the smallest eigenvalue in a direction such that $\kappa$ improves is a good way to renormalise a system without adding much error. However, perturbations of this type are often not enough when the condition number is too large. Furthermore, one wants to keep the overall behaviour of the system mostly intact, i.e. we want to maintain the relative sizes of the eigenvalues with respect to one another. If other eigenvalues are close in magnitude to the smallest one, the dynamics of the system can very easily change, even a very small perturbation may have undesireable consequences. Not to mention the fact that $\kappa$ may still be too large. In a system as stiff and dynamic as discrete dislocation dynamics, this approach is not robust enough.
 
 The assumption that the case where $\lambda_k < \lambda_{\rvar{crit}}$ for non-maximal eigenvalues is so rare that it won't have much of an effect. Unfortunately, it's common in junctions where nodal mobility is limited, as well as in volumes with large stress gradients. Although to be fair, these are also a consequence of the assumption of locality in \cref{eq:nodeVel}. Moreover, when every non-maximal eigenvalue is smaller than $\lambda_{\rvar{crit}}$, the error is much greater. For every eigenvalue under the threshold of $\lambda_{\rvar{crit}} = 10^{-k}$, the upper bound of the error is $k$ digits in the corresponding mobility component.
 
@@ -167,25 +167,25 @@ The regularisation of ill-conditioned systems is an active field of research \ci
 
 One of the most effective regularisations for low rank matrices is dampening the inversion by adding a small value, $c$---called the Levenberg-Marquardt coefficient---to a diagonal element of the matrix. This is roughly equivalent to perturbing the smallest eigenvalue as previously mentioned. If this factor is added the whole diagonal, the inversion can be sufficiently dampened, whilst keeping the main contribution from each basis vector roughly equal in relation to each other. This amounts to adding a small multiple of the identity matrix, $\mtx{I}$, to an ill-conditioned matrix. For a more accurate solution, one can iteratively refine $c$ to find the smallest value that keeps the matrix inversion from blowing up. A good heuristic for the value of the Levenberg-Marquardt coefficient is,
 \begin{align}\label{eq:marquardt}
-    c = \max\left(\lvert\mtx{A}\rvert\right) \sqrt(\epsilon)\,,
+    c = \max\left(\lvert\mtx{A}\rvert\right) \sqrt{\epsilon}\,,
 \end{align}
 where $\epsilon$ is machine precision and $\lvert A\rvert$ denotes the absolute values of matrix $\mtx{A}$. This ensures the perturbation is scaled to a number that will not underflow during arithmetic operations. Simply put, it ensures the perturbation is small but does not disappear during matrix inversion.
 
-It is worth noting that this renormalisation is a source of error. Adding noise to a system---even if small and along the diagonal---moves the system away from its true behaviour. However, the degree to which it is wrong is many orders of magnitude smaller than what is done in \cref{alg:bTotalOld}. Indeed, \cref{alg:bTotalNew} uses $\pm c $ and both perturbed solutions are averaged to give a much more accurate and simpler solution even under the traditionally problematic scenarios mentioned above. This new algorithm is now present in the mobility laws we now use, such as the most current version of \href{https://github.com/TarletonGroup/EasyDD/blob/372984499dd60136fc7badabd6cee192058d55d9/src/mobbcc_bb1b.m#L199}{\texttt{mobbcc\_bb.m}}.
+It is worth noting that this renormalisation is a source of error. Adding noise to a system---even if small and along the diagonal---moves the system away from its true behaviour. However, the degree to which it is wrong is many orders of magnitude smaller than what is done in \cref{alg:bTotalOld}. Indeed, \cref{alg:bTotalNew} uses $\pm c $ and both perturbed solutions are averaged to give a much more accurate and simpler solution even under the traditionally problematic scenarios mentioned above. This new algorithm is now present in the mobility laws we use, such as the most current version of \href{https://github.com/TarletonGroup/EasyDD/blob/372984499dd60136fc7badabd6cee192058d55d9/src/mobbcc_bb1b.m#L199}{\texttt{mobbcc\_bb.m}}.
 \begin{algorithm}
     \caption[Dampening the drag matrix inversion singularity.]{Improved regularisation of $\mtx{B}$ by way of perturbing the diagonal.}
     \label{alg:bTotalNew}
     \begin{algorithmic}
         \If{$\lVert \mtx{B} \rVert < \epsilon$}
-        \State $\vec{v} \gets \vec{0}$
+        \State $\vec{v} = \vec{0}$
         \ElsIf{$\lvert \lambda_{\rvar{max}} \rvert/ \lvert \lambda_{\rvar{min}} \rvert > 1/\epsilon$}
-        \State $\mtx{B}_+ \gets \mtx{B} + \sqrt{\epsilon} \max(\mtx{\lvert B\rvert}) \mtx{I}$
-        \State $\mtx{B}_- \gets \mtx{B} - \sqrt{\epsilon} \max(\mtx{\lvert B\rvert}) \mtx{I}$
-        \State $\vec{v}_+ \gets \mtx{B}_+^{-1} \vec{f}$
-        \State $\vec{v}_- \gets \mtx{B}_-^{-1} \vec{f}$
-        \State $\vec{v} \gets (\vec{v}_- + \vec{v}_+)/2$
+        \State $\mtx{B}_+ = \mtx{B} + \sqrt{\epsilon} \max(\mtx{\lvert B\rvert}) \mtx{I}$
+        \State $\mtx{B}_- = \mtx{B} - \sqrt{\epsilon} \max(\mtx{\lvert B\rvert}) \mtx{I}$
+        \State $\vec{v}_+ = \mtx{B}_+^{-1} \vec{f}$
+        \State $\vec{v}_- = \mtx{B}_-^{-1} \vec{f}$
+        \State $\vec{v} = (\vec{v}_- + \vec{v}_+)/2$
         \Else
-        \State $\vec{v} \gets \mtx{B}^{-1} \vec{f}$
+        \State $\vec{v} = \mtx{B}^{-1} \vec{f}$
         \EndIf
     \end{algorithmic}
 \end{algorithm}
@@ -197,7 +197,7 @@ This change enabled other team members, namely Haiyang Yu and Fengxian Liu to ge
 
 Many scientists and researchers spare no thought for good software. However, with the presently ongoing SARS-CoV 2 pandemic, the importance of research software has been made clear. Modelling has played a large role in informing government policy in the UK and the world \cite{covidScotland,covidUK1,covidUK2}. With modelling thrust into the spotlight, and the public release of the Imperial College modelling code, which was used to inform so much policy \cite{covidUK2}, \href{https://github.com/mrc-ide/covid-sim}{\texttt{https://github.com/mrc-ide/covid-sim}}, criticism was levied at the lack of care taken to ensure the correctness of the code \cite{natureModelCritique}.
 
-In experimental research, a lot of care is take to ensure the methodoogy used is reproducible, robust, and sound. There are standards, both external and internal, which ensure the quality of the results. But even with these measures in place, there is already a common issue with irreproducibility in science \cite{mede2020replication,randall2018irreproducibility,bolli2015reflections}. In the modern age, software is ubiquitous in the obtention, analysis and communication of scientific research. Anyone hoping to do science will interface with software at some point. This software should therefore be as high quality as possible, \emph{especially} if the science is modelling-based.
+In experimental research, a lot of care is take to ensure the methodoogy used is reproducible, robust, and sound. There are standards, both external and internal, which ensure the quality of the results. But even with these measures in place, there is already a common issue with reproducibility in science \cite{mede2020replication,randall2018irreproducibility,bolli2015reflections}. In the modern age, software is ubiquitous in the obtention, analysis and communication of scientific research. Anyone hoping to do science will interface with software at some point. This software should therefore be as high quality as possible, \emph{especially} if the science is modelling-based.
 
 Along this vein, one of the primary goals of this project was to develop a competent codebase that non-experts can take advantage of with minimal preparation. There were multiple sub-objectives that help us achieve this.
 \begin{enumerate}
@@ -216,7 +216,7 @@ As this is actively developed research software, the work described herein will 
 
 \subsection{Organisation}
 
-An oft-overlooked aspect of code useability is its organisation. However, as a codebase grows, it becomes more important for code be properly organised and source controlled. This makes it easier to browse, understand, and provides a crucial safey blanket against things going wrong.
+An oft-overlooked aspect of code useability is its organisation. However, as a codebase grows, it becomes more important for code to be properly organised and source controlled. This makes it easier to browse, understand, and provides a crucial safey blanket against things going wrong.
 
 \subsubsection{Source control}
 
@@ -309,23 +309,26 @@ The introduction of regressions makes it so code must be thoroughly and exhausti
 
 \subsubsection{Spurious memory allocation}
 
-\mintinline{matlab}{MATLAB} is infamous for the way it will happily grow an array dynamically when going out of bounds. This \emph{terrible} practice is even fundmental to the operation of \texttt{EasyDD}. However, changing this fundamental part of the codebase requires a complete rewrite and not deemed worthwhile, there are worse bottlenecks. However, there quite a few low-hanging fruit that have been picked.
+\mintinline{matlab}{MATLAB} is infamous for the way it will happily grow an array dynamically when going out of bounds. This \emph{terrible} practice is even fundmental to the operation of \texttt{EasyDD}. However, changing this fundamental part of the codebase requires a complete rewrite and not deemed worthwhile, there are worse bottlenecks.
 
 For example, the amount of memory unecessarily reallocated in the function that couples DDD and FEM was $12(N_x + 1)(N_y + 1)(N_z + 1)$ double precision floating point numbers, where $N_i$ is the number of elements in dimension $i$ of the finite domain. The cubic scaling is a performance killer at larger mesh sizes. In a simulation with hundreds or thousands of steps and a mesh with a few thousand FE nodes, the cost added up.
 
-More memory allocation also means more garbage collection (GC) \cite{hanson1990fast} i.e. automatically freeing memory, based on a set of criteria. The cost of GC can be significantly higher than that of memory allocation. Timing the equivalent of allocating a $20 \times 20 \times 20$ mesh in \mintinline{matlab}{MATLAB 2020b} takes on the order of \SI{70}{\micro\sec} on x86 CPU architectures, which is in-line with what it costs in \mintinline{C}{C}. However, deallocating memory takes about $5 \times$ longer. In a function that otherwise takes a few \si{\milli\sec}, adding almost \SI{0.5}{\milli\sec} because of spurious allocation is a significant overhead that can be easily remedied.
+More memory allocation also means more garbage collection (GC) \cite{hanson1990fast} i.e. automatically freeing memory, based on a set of criteria. The cost of GC can be significantly higher than that of memory allocation. Timing the equivalent of allocating a $20 \times 20 \times 20$ mesh in \mintinline{matlab}{MATLAB 2020b} takes on the order of \SI{70}{\micro\sec} on x86 CPU architectures, which is in-line with what it costs in \mintinline{C}{C}. However, deallocating memory takes about $5 \times$ longer. In a function that otherwise takes a few \si{\milli\sec}, adding almost \SI{0.5}{\milli\sec} because of spurious allocation is an overhead that can be very easily remedied.
 
 \subsubsection{Finite element optimisation}
 
-The use of sparse arrays is a must when working with finite elements, where matrices often take structured sparse forms. Taking advantage of this sparsity significantly reduces memory footprint and computational expense. The code already used these special data structures, along with Cholesky factorisation for faster solves of linear systems. However, \mintinline{matlab}{MATLAB} has a special form of it that exploits sparsity. This reduced the time required for the factorisation by around $50\times$, reduced the memory footprint of the final sparse arrays by a similar amount, and reduced the memory footprint of the actual factorisation procedure by approximately $10 \times$. The whole point of this factorisation is to make solving linear systems faster, in this case the calculation of the corrective displacements, $\vec{\hat{u}}$ on the free boundaries, $S_T$, as a result of the forces acting upon them,
+The use of sparse arrays is a must when working with finite elements, where matrices often take structured sparse forms. Taking advantage of this sparsity significantly reduces memory footprint and computational expense. The code already used these special data structures, along with Cholesky factorisation for faster solves of linear systems. However, \mintinline{matlab}{MATLAB} has a special form of it that exploits sparsity. This reduced the time required for the factorisation by around $50\times$, reduced the memory footprint of the final sparse arrays by a similar amount, and reduced the memory footprint of the actual factorisation procedure by approximately $10 \times$. The whole point of this factorisation is to make solving linear systems faster, in this case the calculation of the corrective displacements, $\vec{\hat{u}}$ on the fixed boundaries, $S_u$, as a result of the forces acting upon them,
 \begin{align}
-    \vec{\hat{u}} = \mtx{K}^{-1} \vec{f}\quad \text{on } S_T\,.
+    \vec{\hat{u}} & = \mtx{K}^{-1} \vec{f}\quad \text{on } S_u                                               \\
+                  & = \mtx{P_l}^{-1} \mtx{U}^{-1} \mtx{L}^{-1} \mtx{P_u}^{-1} \vec{f}\quad \text{on } S_u\,.
 \end{align}
-It improved solution speed by a factor of 3, thus reducing the cost of coupling DDD to FEM to be dominated by the computation of dislocation-induced tractions and displacements.
+Where $\mtx{P_l}$ and $\mtx{P_u}$ are sparse permutation matrices of the sparse upper and lower $\mtx{U}$, $\mtx{L}$ matrices given by the sparse factorisation.
 
-The final two optimisations also deal with memory. The first, removes unecessary allocations in the calculation of the global stiffness matrix and the introduction of a reduced stiffness matrix such that it only includes relevant degrees of freedom.
+The sparse factorisation improved the solution speed by a factor of 3. Thus ensuring the cost of coupling DDD to FEM is bottle-necked by the computation of dislocation-induced tractions and displacements.
 
-In aggregate these changes have given us the ability to use $15 \times$ more nodes than previously, as well as letting us build meshes over two orders of magnitude faster, mostly thanks to improved memory access patterns inside the mesh building loops.
+The final two optimisations also deal with memory. The first, removes unecessary allocations in the calculation of the global stiffness matrix and the introduction of a reduced stiffness matrix that only includes relevant degrees of freedom.
+
+In aggregate, these changes have given us the ability to use $15 \times$ more nodes than previously, as well as letting us build meshes over two orders of magnitude faster, mostly thanks to improved memory access patterns inside the mesh building loops.
 
 \subsection{Misc quality of life improvements}\label{s:qol}
 
@@ -335,6 +338,6 @@ There was also a recurring problem with simulations suddenly failing when a func
 
 \section{Conclusions}
 
-Scientific modelling is inherently an interdisciplinary skill. EasyDD is now faster, more efficient and more capable than ever before, in large part thanks to the work---ongoing or otherwise---described within this chapter. Subsequent chapters explore aspects more specific to discrete dislocation dynamics. However, it is important not to overlook the work that enables the obtention of results. Modern academia deems the final result to be paramount. But what is a result if it cannot be scrutinised because nobody can understand how it came about? Moreover, by developing good software, we bring others into the fold. We deem this to be one of the main contributions of the present project. We feel safe our ability to claim that we now have the capacity for providing more faithful recreations of reality in a less user-unfriendly way\ldots{} and without so much as a glancing touch on dislocation dynamics.
+Scientific modelling is inherently an interdisciplinary skill. EasyDD is now faster, more efficient and more capable than ever before, in large part thanks to the work---ongoing or otherwise---described within this chapter. Subsequent chapters explore aspects more specific to discrete dislocation dynamics. However, it is important not to overlook the work that enables the obtention of results. Modern academia deems the final result to be paramount. But what is a result if it cannot be scrutinised because nobody can understand how it came about? Moreover, by developing good software, we bring others into the fold. We deem this to be one of the main contributions of the present project. We feel safe our ability to claim that we now have the capacity for providing more faithful recreations of reality in a more user-friendly way.
 \savearabiccounter
 % 5445 words
