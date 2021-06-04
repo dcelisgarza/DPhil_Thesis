@@ -57,7 +57,7 @@ The lowest hanging fruit and most obvious problem were collisions that share a l
 \begin{enumerate}
     \item Remeshing to eliminate the middle node because the area, $a$, enclosed by the triangle created by segments $s_1$ and $s_2$ is less than the minimum allowable area, $a_{\rvar{min}}$.
     \item Colliding $s_1$ into $s_2$ if the minimum distance, $l_1$, between the non-hinge node of $s_1$ (the node $s_1$ does not share with $s_2$) and segment $s_2$ is less than the collision distance, $l_1 < l_{\rvar{col}}$.
-    \item Colliding $s_2$ into $s_1$ if the minimum distance between the non-hinge node of $s_2$ and segment $s_1$ is less than the collision distance, $l_2 < l_{\rvar{col}}$.
+    \item Colliding $s_2$ into $s_1$ if the minimum distance, $l_2$, between the non-hinge node of $s_2$ and segment $s_1$ is less than the collision distance, $l_2 < l_{\rvar{col}}$.
 \end{enumerate}
 \begin{figure}
     \centering
@@ -84,7 +84,7 @@ In the same vein as \cref{ss:hinges}, two-line collisions were being improperly 
     \label{f:collisionRadius}
 \end{figure}
 
-The actual algorithm is more sophisticated because it accounts for whole segments, as well as their relative velocities. It returns the points along the segments that minimise the distance between segments. These points are then used to decide which and how two colliding nodes should be merged.
+The actual algorithm is more sophisticated because it accounts for whole segments, as well as their relative velocities. It returns the points along the segments that minimise the distance between segments. These points are then used to decide which nodes to merge and how to do so.
 
 The problem was that as soon as a viable collision was found, the function returned. So in a scenario like \cref{f:collisionRadius}, if the code was looking for a collision on $s_1$, and it came across $s_3$ first, it would flag that as the collision, disregarding the fact that not only was $s_2$ closer, but $s_2$ and $s_3$ are also closer; and perhaps the true minimal distance was not even between $s_1$ and another segment, but between $s_2$ and $s_3$. We had to apply the same fix to hinge collisions. Admittedly, it matters less in that case as they tend to be rarer, plus their size is limited anyway, but still ensures a more correct solution.
 

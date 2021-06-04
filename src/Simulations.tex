@@ -23,13 +23,13 @@ In total, eight loading tests were carried out.
 
 The cross-section of the micropillars was well-known at $\SI{12}{\micro\metre} \times \SI{12}{\micro\metre}$, however the length was postulated to be $\sim \SI{30}{\micro\metre}$.
 
-The initial dislocation configuration was not well known but was postulated to be approximately 10 dislocations \si{\micro\metre^{-1}}. The total length of mobile dislocations influences how much plasticity we observe. Furthermore, the Frank-Reed (FR) source length was unknown. A dislocation line's yield stress is inversely proportional to its length,
+The initial dislocation configuration was not well known but was postulated to be approximately 10 dislocations \si{\micro\metre^{-2}}. The total length of mobile dislocations influences how much plasticity we observe. Furthermore, the Frank-Reed (FR) source size was unknown. The stress required to operate a source is approximately,
 \begin{align}\label{eq:yieldStress}
     \sigma_\rvar{y} & = \dfrac{\mu b}{l}\,,
 \end{align}
-where $\sigma_\rvar{y}$ is the yield stress, $\mu$ the shear modulus, $b =  \vec{b} $, and $l$ the dislocation line length. Both of these parameters had to be estimated and refined by running probing simulations.
+where $\sigma_\rvar{y}$ is the yield stress, $\mu$ the shear modulus, $b = \vec{b} $, and $l$ the source size. The shear modulus and source size had to be estimated and refined by running probing simulations.
 
-The tensile tests were set up as shown in \cref{f:expSetup}. The pillars were placed under tensile load in the $x$-direction but were free to move in the $xy$-plane, which would naturally happen as dislocations exit the surface and create slip steps.
+The tensile tests were set up as shown in \cref{f:expSetup}. The pillars were placed under tensile load in the $x$-direction but were free to contract in the $yz$-plane. As dislocations exit the surface they create slip steps, as shown in \cref{f:tensileFailure}, which we managed to recreate in \cref{f:Ni100_disp}.
 \begin{figure}
     \centering
     \begin{subfigure}[t]{0.45\linewidth}
@@ -66,17 +66,17 @@ The load was applied until the pillars failed by necking, as shown in \cref{f:te
     \label{f:tensileFailure}
 \end{figure}
 
-It is worth noting that the timescale of dislocation plasticity simulations make them unsuitable to simulate the entirety of the experiments. EasyDD also does not have the capability to dynamically remesh its finite elements, so it cannot account for fracture. For the same reason, simulation loading rates are higher than experimental ones, we expand on this in \cref{ss:modelSetup}.
+It is worth noting that the timescale of dislocation plasticity simulations make them unsuitable to simulate the entirety of the experiments. EasyDD does not have a damage law, so it cannot account for fracture. Simulation loading rates are also necessarily higher than experimental ones as discrete dislocation dynamics time scales are on the order of \si{\nano\second}.
 
 \subsection{Dislocation plasticity setup}
 \label{ss:modelSetup}
 
-The material parameters of the samples were also not known, so they were estimated from comercially available manufacturing spec sheets and measurements reported from literature. The exact values used for the lattice parameter, shear modulus and Poisson ratio are: $a \coloneqq \SI{3.499}{\angstrom}$, $ \mu  \coloneqq \SI{79e3}{\mega\pascal}$, $\nu \coloneqq 0.31$ respectively. The lattice parameter is from \cite{ni_lattice} and the othters are the mean of the upper and lower values reported by \cite{azom_nickel}.
+The material parameters of the samples were also not known, so they were estimated from comercially available manufacturing spec sheets and measurements reported from literature. The exact values used for the lattice parameter, shear modulus and Poisson ratio are: $a \coloneqq \SI{3.499}{\angstrom}$, $ \mu  \coloneqq \SI{79}{\giga\pascal}$, $\nu \coloneqq 0.31$ respectively. The lattice parameter is from \cite{ni_lattice} and the othters are the mean of the upper and lower values reported by \cite{azom_nickel}.
 
-We used prismatic loops with four sides as Frank-Reed sources to seed the domain with dislocations. Preliminary simulations showed the initially assumed dislocation density was too high, instead it was dropped to a single seed loop per active slip system. For the $\langle 1\, 0\, 0 \rangle$ loading direction, this was 8 loops, and for $\langle 1\, 1\, 0 \rangle$ it was only 4; \cref{t:slipSystems} contains the active slip systems for both scenarios.
+We used prismatic loops with four sides as Frank-Reed sources to seed the domain with dislocations. Preliminary simulations showed the initially assumed dislocation density necessitated the initial sources be quite small, so the yield stress of the simulation was much greater than what was experimentally observed. We therefore dropped the number of sources to a single seed loop per active slip system, while increasing the size of each source. For the $\langle 1\, 0\, 0 \rangle$ loading direction, this was 8 loops, and for $\langle 1\, 1\, 0 \rangle$ it was only 4; \cref{t:slipSystems} contains the active slip systems for both scenarios.
 \begin{table}
     \centering
-    \caption{Active slip systems for prismatic loops in the $\langle 1\, 0\, 0 \rangle$ and $\langle 1\, 1\, 0 \rangle$ tensile loading directions.}
+    \caption{Active FCC slip systems for prismatic loops in the $\langle 1\, 0\, 0 \rangle$ and $\langle 1\, 1\, 0 \rangle$ tensile loading directions.}
     \label{t:slipSystems}
     \begin{tabular}{rcl}
         \toprule
@@ -98,22 +98,24 @@ We used prismatic loops with four sides as Frank-Reed sources to seed the domain
         \bottomrule
     \end{tabular}
 \end{table}
-To minimise computation expenditure, we only included these active slip systems in our simulations. This obviously does not fully represent reality, but it saves simulations from having to resolve as many collisions and topological operations as would otherwise occur. Regardless of this decision, the simulations still managed to do an unexpectedly great job at quantitatively, and qualitatively reproducing the experimentally measured strain-stress curves as discussed in \cref{sc:NiResults}.
+To minimise computation expenditure, we only included these active slip systems in our simulations. This obviously does not fully represent reality, but it saves simulations from having to resolve as many collisions and topological operations as would otherwise occur. Regardless of this decision, the simulations still managed to do an unexpectedly great job at quantitatively, and qualitatively reproducing the experimentally measured strain-stress curves as discussed in \cref{s:NiResults}.
 
 The pillar length was defined as $\SI{36}{\micro\metre}$, or $3\times$ the length of one of the sides of the square cross-section. The extra length acts as a buffer zone for simulating dislocations moving into the bulk, where they pile up. In the simulation, they stick to the end of the cantilever, as per \cref{c:surfRem}. The initial FR sources were random-uniformly distributed within the central $80\%$ of the domain, i.e. $x \in [0.1X, 0.9X]$, where $x$ is a point along dimension $X$. Given the fact that the number of sources was quite low, various distributions were generated until we arrived at one that spanned the whole domain, rather than clustered about a region.
 
-We define surface node sets $\left\{\forall (x, y, z) \in [0,\, 1] \vert S_{xyz} \in \partial \hat{V}\right\}$, where $\hat{V}$ is a unit volume such that $S_{000}$ denotes the node at the origin, $S_{x00}$ the $x$-axis spanning edge at $y,\, z=0$, and $S_{xy0}$ the $xy$-plane at $z=0$. We use these node sets to define our Neuman (displacement) boundary conditions as follows.
+We define surface node sets $\left\{\forall (x, y, z) \in [0,\, 1] \vert S_{xyz} \in \partial \hat{V}\right\}$, where $\hat{V}$ is a unit volume such that $S_{000}$ denotes the node at the origin, $S_{x00}$ the $x$-axis spanning edge at $y,\, z=0$, and $S_{xy0}$ the $xy$-plane at $z=0$. We use these node sets to define our Neuman (displacement) boundary conditions as follows,
 \begin{subequations}
     \begin{align}
-        S_{0yz},\, S_{0y0},\, S_{0y1},\, S_{00z},\, S_{01z},\, S_{000},\, S_{001},\, S_{010},\, S_{011} & \gets u_x = 0        \\
-        S_{01z},\, S_{010},\, S_{011}                                                                   & \gets u_y = 0        \\
-        S_{0y0},\, S_{010},\, S_{000}                                                                   & \gets u_z = 0        \\
-        S_{1yz},\, S_{1y0},\, S_{1y1},\, S_{10z},\, S_{11z},\, S_{100},\, S_{101},\, S_{110},\, S_{111} & \gets u_x = U > 0\,.
+        u_x(0, y, z) & = 0    \\
+        u_y(0, Y, z) & = 0    \\
+        u_z(0, y, 0) & = 0    \\
+        u_x(X, y, z) & = U\,. \\
+        % S_{0yz},\, S_{0y0},\, S_{0y1},\, S_{00z},\, S_{01z},\, S_{000},\, S_{001},\, S_{010},\, S_{011} & \gets u_x = 0        \\
+        % S_{01z},\, S_{010},\, S_{011}                                                                   & \gets u_y = 0        \\
+        % S_{0y0},\, S_{010},\, S_{000}                                                                   & \gets u_z = 0        \\
+        % S_{1yz},\, S_{1y0},\, S_{1y1},\, S_{10z},\, S_{11z},\, S_{100},\, S_{101},\, S_{110},\, S_{111} & \gets u_x = U > 0\,.
     \end{align}
 \end{subequations}
-In simple terms, the whole $yz$-plane at $x=0$ (including corner and edge nodes) is fixed at zero displacement in the $x$-direction; the whole $y$-edge at $x,\,z=0$ (including corner nodes) is also fixed at zero displacement in the $z$-direction; the whole $z$-edge at $x = 0\,\, y = 1$ (including corner nodes) is fixed at zero displacement in the $y$-direction; and the whole $yz$-plane (including corner and edge nodes) nodes at $x=1$ have a displacement, $U > 0$, applied in the $x$-direction ($U < 0$ would be a compressive load). All other degrees of freedom are free to move as necessary.
-
-Once mapped to our simulated cuboid geometry, it looks like \cref{f:tensileSetup}.
+Where $X$, $Y$, $Z$ are the limits of the FE domain. Once mapped to our simulated cuboid geometry, it looks like \cref{f:tensileSetup}. All other degrees of freedom are free to move.
 \begin{figure}
     \centering
     \includegraphics[width=0.8\linewidth]{tensileSetup.pdf}
@@ -383,7 +385,7 @@ We made some very strong assumptions in \cref{ss:modelSetup} regarding the distr
 
 We managed to show slip steps and the beginning of necking behaviour that closely follow experimental patterns. We also managed to reproduce the yield stresses for both $\langle 1\, 0\, 0 \rangle$, $\langle 1\, 1\, 0 \rangle$ loading directions, to within experimental variation even when using much larger strain rates. The $\langle 1\, 0\, 0 \rangle$ simulations also showed the ``bumpiness'' of the experimental data, the reasons behind it, as well as how and why it differs from what is observed when loading the $\langle 1\, 1\, 0 \rangle$ direction.
 
-Unfortunately, the spatial and time scales of dislocation plasticity, as well as the practical constraints of time and computational resources did allow us to hit the same strains as the experiments. So we cannot be sure how the curves will behave going forward. Doubtless the stresses would increase, but would we see the dramatic increases and dips in stresses as the strains increase? The experimental setup is not sensitive enough to probe such small strains, so the simulations can only serve as a bridge between atomic and microscopic scales.
+Unfortunately, the spatial and time scales of dislocation plasticity, as well as the practical constraints of time and computational resources did not allow us to reach the same strains as the experiments. So we cannot be sure how the curves will behave going forward. Doubtless the stresses would increase, but would we see the dramatic increases and dips in stresses as the strains increase? The experimental setup is not sensitive enough to probe such small strains, so the simulations can only serve as a bridge between atomic and microscopic scales.
 
 We also only included active slip systems in either loading direction, so the question remains as to how including the inactive systems would affect the results. Our results point towards this assumption being sound, but a future avenue of research would be to include them in future simulations.
 

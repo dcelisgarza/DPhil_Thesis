@@ -31,7 +31,7 @@ Specifically, a linear-elastic solid $V$ bounded by a surface $S$ is subjected t
     %
      & \left.
     \begin{array}{l}
-        \vec{\tilde{u}} = \vec{U}, \quad t>0,\, \vec{U} \neq \bm{0} \\
+        \vec{\tilde{u}} = \vec{\tilde{U}}, \quad t>0 \\
         \vec{\tilde{u}} = \bm{0}, \quad t=0
         \label{eq:utildebc}
     \end{array}
@@ -50,7 +50,7 @@ As the dislocation fields do not vanish on $S$, the dislocations load the volume
     %
      & \hat{\tns{\sigma}}\cdot\vec{n} = \vec{T} - \tilde{\vec{T}} \quad \textrm{on } S_T \label{eq:thatbc} \\
     %
-     & \vec{\hat{u}} = \vec{U} - \vec{\tilde{u}} \quad \textrm{on } S_U \,. \label{eq:uhatbc}
+     & \vec{\hat{u}} = \vec{U} - \vec{\tilde{U}} \quad \textrm{on } S_U \,. \label{eq:uhatbc}
 \end{align}
 %
 Once the solutions to both problems are known, their superposition solves the desired mixed boundary value problem,
@@ -68,7 +68,7 @@ Once the solutions to both problems are known, their superposition solves the de
     %
      & \left.
     \begin{array}{l}
-        \vec{u} = \vec{U}, \quad t>0,\, \vec{U} \neq \bm{0} \\
+        \vec{u} = \vec{U}, \quad t>0 \\
         \vec{u} = \bm{0}, \quad t=0
     \end{array}
     \right\} \quad \textrm{on } S_U\,.
@@ -264,7 +264,7 @@ However, under finite-precision arithmetic, the check for orthogonality is depen
     \lvert\vec{l}\cdot\vec{n}\rvert \lesssim \max\left(\lvert\vec{R}\cdot\vec{n}\rvert\right) \cdot 10^{-8}\,.
 \end{align}
 %
-In our case we assume $\max\left(\lvert\vec{R}\cdot\vec{n}\rvert\right)$ to be the largest diagonal in our cuboid domain. A factor of $10^{-8}$ is used instead of actual machine precision $\sim10^{15}$ because the seed functions and large number of recurrence relations of the solution propagate errors if the value of $\vec{l} \cdot \vec{n}$ is too close to zero. Ironically, tolerances which are too large can cause the perturbations to rotate the dislocation segment closer to the singularity, producing erroneous results. Larger than necessary tolerances can also slow down the calculation by detecting dislocations that are far enough from the special case that they can be treated like non-parallel segments. This heuristic is a good general purpose rule that keeps the tolerance in a goldilocks zone.
+In our case we assume $\max\left(\lvert\vec{R}\cdot\vec{n}\rvert\right)$ to be the largest diagonal in our cuboid domain. A factor of $10^{-8}$ is used instead of actual machine precision $\sim10^{-15}$ because the seed functions and large number of recurrence relations of the solution propagate errors if the value of $\vec{l} \cdot \vec{n}$ is too close to zero. Ironically, tolerances which are too large can cause the perturbations to rotate the dislocation segment closer to the singularity, producing erroneous results. Larger than necessary tolerances can also slow down the calculation by detecting dislocations that are far enough from the special case that they can be treated like non-parallel segments. This heuristic is a good general purpose rule that keeps the tolerance in a goldilocks zone.
 
 Another issue with the rotation is that one does not want a dislocation segment to intersect the surface when it is being rotated. Naively one would calculate the maximum rotational angle, $\theta_{\textrm{max}}$, to be,
 %
@@ -345,9 +345,7 @@ Where $\vec{f_{e,n}}$ is a $3\times1$ column vector corresponding to the $(x\,,y
     \end{algorithmic}
 \end{algorithm}
 
-The resulting force vector is then used in \cref{eq:thatbc} to calculate $\tns{\hat{\sigma}}$, since $\tilde{\vec{T}} \coloneqq \tilde{\vec{F}}$. \Cref{f:headvstractionfem} shows the simple system we used to compare the image stresses calculated by our FE solver using numeric tractions v.s. analytic tractions v.s. infinite-domain, singular image stresses in \cref{eq:imageStressAnalyticEdge1,eq:imageStressAnalyticEdge2,eq:imageStressAnalyticScrew}. The three test cases are: two edge dislocations and one screw, all of which have line direction $\vec{l} = [0\, 0\, 1]$. The Burgers vectors for the different scenarios are $\vec{b}_\textrm{e1} \coloneqq \vec{b} = [1\, 0\, 0]$, $\vec{b}_\textrm{e2} \coloneqq \vec{b} = [0\, 1\, 0]$, as defined in \cite{head1953edge}; and $\vec{b}_\textrm{s} \coloneqq \vec{b} = \vec{l} = [0\, 0\, 1] $, as defined in \cite[p.~59,~64]{hirth1983theory}.
-
-The units in all our examples are normalised to lattice parameter, $a$ is the dislocation core radius for the non-singular formulation discussed in \cite{a_non-singular_continuum_theory_of_dislocations}, and $b \coloneqq \lVert \vec{b} \rVert = 1$.
+The resulting force vector is then used in \cref{eq:thatbc} to calculate $\tns{\hat{\sigma}}$, since $\tilde{\vec{T}} \coloneqq \tilde{\vec{F}}$. \Cref{f:headvstractionfem} shows the simple system we used to compare the image stresses calculated by our FE solver using numeric tractions v.s. analytic tractions v.s. infinite-domain, singular image stresses in \cref{eq:imageStressAnalyticEdge1,eq:imageStressAnalyticEdge2,eq:imageStressAnalyticScrew}. The three test cases are: two edge dislocations and one screw, all of which have line direction $\vec{l} = [0\, 0\, 1]$. The Burgers vectors for the different scenarios are $\vec{b}_\textrm{e1} \coloneqq \vec{b} = [1\, 0\, 0]$, $\vec{b}_\textrm{e2} \coloneqq \vec{b} = [0\, 1\, 0]$, as defined in \cite{head1953edge}; and $\vec{b}_\textrm{s} \coloneqq \vec{b} = \vec{l} = [0\, 0\, 1] $, and therefore $b \coloneqq \lVert \vec{b} \rVert = 1$ as defined in \cite[p.~59,~64]{hirth1983theory}. The units in all our examples are normalised to lattice parameter.
 
 \begin{figure}
     \centering
@@ -363,7 +361,7 @@ We also ran a very simple simulation comparing the results between using analyti
 However, we found a simple and realistic configuration that is close to the setup in the infinite domain examples. The differences between those comparisons and the simulation are described in \cref{t:simulation_params}. We use a mobility law developed in-house by B. Bromage \cite{bromage2018calculating}, that corrects common issues found in other laws. We also rotate the domain such that the $[1\, 1\, 1]$ and $[1\, \overline{1}\, 0]$ crystallographic directions respectively correspond to the simulation's $x$ and $y$-directions, for this we use the same rotation technique as \cite{YU2018}. The dislocation was allowed to move under no external loads or displacements, with $\vec{T} = \bm{0}$ boundary conditions only on the $yz$-plane and $\vec{U} = \bm{0}$ everywhere else.
 \begin{table}
     \centering
-    \caption[Numeric v.s. analytic tractions. Unloaded simulation comparison.]{Parameters for our simulation. Where $\mtx{R}$ is a rotation matrix such that the $\vec{x},\, \vec{y},\, \vec{z}$ basis vectors of our simulation correspond to the $\vec{b},\, \vec{n},\, \vec{l}$ crystallographic directions, i.e. $\mtx{R} \vec{x} = \vec{b}$. Everything else was kept just as the previous comparisons. All values are in units of lattice parameters.}
+    \caption[Numeric v.s. analytic tractions. Unloaded simulation comparison.]{Parameters for our simulation. Where $\mtx{R}$ is a rotation matrix such that the $\vec{x},\, \vec{y},\, \vec{z}$ basis vectors of our simulation correspond to the $\vec{b},\, \vec{n},\, \vec{l}$ crystallographic directions. As these are row rather than column vectors, the rotation is transposed to what is traditional, i.e. $\vec{x}\mtx{R} = \vec{b}$. All values are in units of lattice parameters.}
     \label{t:simulation_params}
     \begin{tabular}{ll}
         \toprule
@@ -381,7 +379,7 @@ However, we found a simple and realistic configuration that is close to the setu
         $(x_{0},\, y_{0})$       & $(62.5,\, 1000)\, a$                                      \\
         Min segment length       & $50\, a$                                                  \\
         Max segment length       & $125\, a$                                                 \\
-        $\mtx{R}^T$              & $\begin{bmatrix} \hat{\vec{b}} \\ \hat{\vec{n}} \\ \hat{\vec{l}} \end{bmatrix} = \begin{bmatrix} \sqrt{3}/3 & \sqrt{3}/3 & \sqrt{3}/3 \\ \sqrt{2}/2 & -\sqrt{2}/2 & 0 \\ \sqrt{6}/6 & \sqrt{6}/6 & -\sqrt{6}/3\end{bmatrix}$ \\
+        $\mtx{R}$                & $\begin{bmatrix} \hat{\vec{b}} \\ \hat{\vec{n}} \\ \hat{\vec{l}} \end{bmatrix} = \begin{bmatrix} \sqrt{3}/3 & \sqrt{3}/3 & \sqrt{3}/3 \\ \sqrt{2}/2 & -\sqrt{2}/2 & 0 \\ \sqrt{6}/6 & \sqrt{6}/6 & -\sqrt{6}/3\end{bmatrix}$ \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -815,7 +813,7 @@ Often the effects of tractions on a simulation can be quite subtle if things do 
 
 In other parts of this work, we have noted that despite the analytic tractions taking approximately 10 times longer to compute than numerically calculated tractions with $Q = 1$ (which agrees with the findings in \cite{analytic_tractions}), yield more accurate simulations.
 
-In general, we recommend using analytic tractions when available. The increased stability leads to better behaved simulations, especially when using particularly sensitive mobility laws, higher dislocation densities, and complicated loading conditions. In cases such as these, the numerical instability of numeric tractions can make dislocations move erratically and erroneously. However, as shown in \cref{sf:Ni100_DDD}, numeric tractions can do quite well.
+In general, we recommend using analytic tractions when available. The increased stability leads to better behaved simulations, especially when using particularly sensitive mobility laws, higher dislocation densities, and complicated loading conditions. In cases such as these, the numerical instability of numeric tractions can make dislocations move erratically and erroneously. However, as shown in \cref{sf:Ni100_DDD}, numeric tractions can do quite well under the right circumstances.
 
 % Even simple simulations are typically faster when using analytic tractions over numeric ones. This was not the case with the simulation we show here, but the numeric tractions led to a hung simulation, which we have found is quite common. The margin by which using analytic tractions leads to faster overall simulations grows as simulation complexity increases. Only the simplest simulations initially benefit from numeric tractions, but this often decreases and reverses as the simulation advances. Another fortunate side effect of more accurate tractions is the fact that fewer dislocation segments are generated during simulations, which \citet{bromage2018calculating} found when correctly accounting for the displacements generated by dislocations.
 
@@ -828,9 +826,9 @@ There is a case for combining both approaches in larger scale simulations. Since
 
 \subsection{Introduction}
 
-As mentioned in \cref{sc:compgpu}, GPUs have been traditionally leveraged to perform lightweight operations on vast amounts of limited-precision data. As such, their memory buses are extremely fast and and their processors very minimalistic, which is not conducive to scientific purposes.
+As mentioned in \cref{sc:compgpu}, GPUs have been traditionally leveraged to perform lightweight operations on vast amounts of limited-precision data. As such, their memory buses are extremely fast and and their processors very minimalistic, which is not ideal for scientific applications.
 
-It wasn't until much later that engineers and scientists picked up on the potential of GPUs \cite{gpu_comp,mixedPrecFEM,jia2014gpu}. Fields where lower precision is advantageous---because it increases the signal-to-noise ratio, or real-world tolerances exceed the in-silico precision---such as data science, civil engineering and image/signal processing, first leveraged this technology. In fact, many big data applications operate on half and some even go as low as quarter precision simply due to the low sensitivity, large amount of noise and vast quantities of data \cite{pagerank}.
+It wasn't until much later in their history, that engineers and scientists picked up on the potential of GPUs \cite{gpu_comp,mixedPrecFEM,jia2014gpu}. Fields where lower precision is advantageous---because it increases the signal-to-noise ratio, or real-world tolerances exceed the in-silico precision---such as data science, civil engineering and image/signal processing, first leveraged this technology. In fact, many big data applications operate on half and some even go as low as quarter precision simply due to the low sensitivity, large amount of noise and vast quantities of data \cite{pagerank}.
 
 NVidia has spearheaded the development and adoption of scientific-computing and high performance computing (HPC) GPUs with the development of their propriatory Compute Unified Device Architecture, CUDA technology. They now produce a wide range of GPUs tailored for scientific applications. These have specialised architecture \cite{nvidia}.
 \begin{itemize}
@@ -896,7 +894,7 @@ The algorithm for mapping from the objects to be parallelised over from host (CP
         \end{aligned}
     \end{align}
 \end{subequations}
-Where $ e $ is the element to be mapped, $ n $ the node number, $ E $ the total number of elements, $N$ the total number of nodes per element, $\vec{X}_{en}$ the vector of $(x,\,y,\,z)$ nodal coordinates for node $n$ in alement $e$.
+Where $ e $ is the element to be mapped, $ n $ the node number, $ E $ the total number of elements, $N$ the total number of nodes per element, and $\vec{X}_{en}$ the vector of $(x,\,y,\,z)$ nodal coordinates for node $n$ in alement $e$.
 
 \begin{figure}
     \centering
@@ -904,7 +902,7 @@ Where $ e $ is the element to be mapped, $ n $ the node number, $ E $ the total 
     \caption[Linear rectangular surface element mapping.]{Each linear rectangular surface element is mapped to one thread.}
     \label{f:paraLabel}
 \end{figure}
-For a set-up like \cref{f:paraLabel}, parallelising over the surface elements with node labels corresponding to \cref{f:force_lin_rect}, $\vec{x_1}$, $\vec{x_2}$, $\vec{x_3}$ and $\vec{x_4}$ yields,
+For a set-up like \cref{f:paraLabel}, parallelising over the surface elements with node labels corresponding to \cref{f:force_lin_rect}, $\vec{x_1}$, $\vec{x_2}$, $\vec{x_3}$ and $\vec{x_4}$ yields the vector of nodal coordinates $\vec{X}$, which allows for optimal data access within the GPU,
 \begin{align}\label{eq:fcne_eg}
     \vec{X} & = \begin{aligned}
         \left[\underbrace{h_{x},\, i_{x},\, f_{x},\, g_{x}}_{\vec{x_{1}}},\,
@@ -916,7 +914,7 @@ For a set-up like \cref{f:paraLabel}, parallelising over the surface elements wi
     \end{aligned}
 \end{align}
 
-Whether the parallelisation is done over dislocation line segments or surface elements, the item that wasn't parallelised over must also be mapped such that it can be contiguously accessed by the GPU. However, this just means merging arrays in a very simple manner,
+The data that was not parallelised also has to be mapped such that it can also be contiguously accessed by the GPU. However, this mapping is simpler,
 \begin{subequations}\label{eq:fnce}
     \begin{align}
         \vec{X}_{en}        & \coloneqq \left[x_{en},\, y_{en},\, z_{en}\right]                                                    \\
@@ -925,13 +923,13 @@ Whether the parallelisation is done over dislocation line segments or surface el
         \vec{X}_{1\to N}    & \mapsto \vec{X}\nn
         \vec{X}             & \coloneqq
         \begin{aligned}
-            \left[x_{11},\ldots,\, x_{E1},\, y_{11},\right. & \ldots,\, y_{E1},\, z_{11},\ldots,\, z_{E1}              \\
-            ,                                               & \ldots,                                                  \\
-            x_{1M},\ldots,\, x_{EN},\, y_{1N},              & \left.\ldots,\, y_{EN},\, z_{1N},\ldots,\, z_{EN}\right]
+            \left[x_{11},\ldots,\, x_{E1},\, y_{11},\right. & \ldots,\, y_{E1},\, z_{11},\ldots,\, z_{E1},                \\
+            ,                                               & \ldots,                                                     \\
+            x_{1M},\ldots,\, x_{EN},\, y_{1N},              & \left.\ldots,\, y_{EN},\, z_{1N},\ldots,\, z_{EN}\right]\,.
         \end{aligned}
     \end{align}
 \end{subequations}
-In a similar vein to \cref{eq:fcne_eg}, using \cref{eq:fnce} to map the data yields,
+Again, using the set-up described in \cref{f:paraLabel}, using the mapping described by \cref{eq:fnce} yields a different vector of coordinates $\vec{X}$,
 \begin{align}\label{eq:fnce_eg}
     \vec{X} & = \begin{aligned}
          & \left[\underbrace{h_{x},\, i_{x},\, f_{x},\, g_{x},\,
@@ -942,6 +940,8 @@ In a similar vein to \cref{eq:fcne_eg}, using \cref{eq:fnce} to map the data yie
          & ~\ldots~\vec{x_{3}},\, xyz\textrm{-coords}~\ldots]\,.
     \end{aligned}
 \end{align}
+
+The default in EasyDD is to parallelise over dislocation segments, as their number often surpases that of surface elements. In which case, \cref{eq:hostDeviceElementMap} is used on the segments and \cref{eq:fnce} on the surface elements. Users have the ability to pick which parallelisation to use.
 
 \subsubsection{Maximising performance}
 
@@ -989,9 +989,9 @@ The second issue is that of the singularity when a dislocation segment is parall
     \label{f:parallel}
 \end{figure}
 
-One of the greatest disapointments of this project can be seen in \cref{f:parallel}. It was produced using a linux workstation with an NVidia GTX 750 and an Intel Core i5-8500 @ 3.0 GHz. Both GPU and CPU are equally outdated, so the comparison remains relatively fair insofar as other non-HPC set-ups are concerned. That said, using a high performance GPU helps, as CPUs have somewhat stagnated in comparison. Regardless it wouldn't help the root cause. The $x$-axis is scaled to $10^5$ dislocation segments. We do not have the capacity to run a simulation with $10^5$ segments. The $\mathcal(O)(N^2)$ collision and remote force algorithms and $\mathcal(O)(N!)$ separation prevent us from going much past $10^4$ segments. Moreover, \cref{f:parallel} was obtained using only non-parallel segments, the code checking for parallel ones in the CPU was not even compiled for these tests. Therefore, the speed-up is purely from the GPU. As previously stated, checking for the special case means the CPU can lag behind the GPU in some scenarios, reducing the true gains by a noticeable margin.
+One of the greatest disapointments of this project can be seen in \cref{f:parallel}. It was produced using a linux workstation with an NVidia GTX 750 and an Intel Core i5-8500 @ 3.0 GHz. Both GPU and CPU are equally outdated, so the comparison remains relatively fair insofar as other non-HPC set-ups are concerned. That said, using a high performance GPU helps, as CPUs have somewhat stagnated in comparison. Regardless it wouldn't help the root cause. The $x$-axis is scaled to $10^5$ dislocation segments. We do not have the capacity to run a simulation with $10^5$ segments. The $\mathcal{O}(N^2)$ collision and remote force algorithms and $\mathcal{O}(N!)$ separation prevent us from going much past $10^4$ segments. Moreover, \cref{f:parallel} was obtained using only non-parallel segments, the code checking for parallel ones in the CPU was not even compiled for these tests. Therefore, the speed-up is purely from the GPU. As previously stated, checking for the special case means the CPU can lag behind the GPU in some scenarios, reducing the true gains by a noticeable margin.
 
-That said, when running simulations on a Windows 10 workstation with an NVidia Quadro GP100 and an Intel Core i9-7900X CPU \@ 3.30 GHz, the break-even point is $\sim 500$ dislocation segments. The Intel i9 series are known for high single-threaded performance, so they reduce the relative effectiveness of parallelisation. Machines with the same graphics card and whose single-threaded CPU perforamnce is worse, will see greater benefits the GPU parallelisation. Moreover, as simulations grow in number of segments, so do the advantages of using the GPU. For simulations such as those presented in \cref{c:simulations}, the GPU gives an $\sim 8$--$15\times$ speed-up (only for the traction calculation, not the whole simulation)---this is for $\sim 5$--$20$ thousand dislocation segments, fewer than those and the gains aren't very significant. However, with such a low break even point it's recommended that simulations on computers with high performance GPUs use this parallelisation once there are more than $\sim 500$ segments.
+That said, when running simulations on a Windows 10 workstation with an NVidia Quadro GP100 and an Intel Core i9-7900X CPU \@ 3.30 GHz, the break-even point is $\sim 500$ dislocation segments. The Intel i9 series are known for high single-threaded performance, so they reduce the relative effectiveness of parallelisation. Machines with the same graphics card and whose single-threaded CPU perforamnce is worse, will see greater benefits the GPU parallelisation. Moreover, as simulations grow in number of segments, so do the advantages of using the GPU. For simulations such as those presented in \cref{c:simulations}, the GPU gives an $\sim 8$--$15\times$ speed-up (only for the traction calculation, not the whole simulation)---this is for $\sim 5$--$20$ thousand dislocation segments, fewer than those and the gains aren't very significant. However, with such a low break-even point it's recommended that simulations on computers with high performance GPUs use this parallelisation once there are more than $\sim 500$ segments.
 
 Though it is not the $>100\times$ speed-up we were hoping, an order of magnitude in the analytic traction calculation during real simulations is very worthwhile. This is especially true compared to the remote force parallelisation, which uses memory less efficiently. In fact, in the same simulations on the same computer, its break-even point is $\sim 5$--$10\times$ higher, and the acceleration is not as significant, at $\sim 3$--$4 \times$ over the serial implementation at the exact same points in the simulations where tractions give $\sim 8$--$15\times$. This difference is down to the fact that the traction calculation uses a contiguous memory access pattern, as compared to the remote force function which uses contiguous memory access for one loop over all segments, but not the other \cite{gpu_ddd}.
 

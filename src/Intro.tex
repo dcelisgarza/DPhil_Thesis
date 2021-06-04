@@ -197,7 +197,7 @@ Special cases, such as having a parallel dislocation line segment to a surface, 
 \end{figure}
 One of the advantages of GPU-CPU independence is that both can work concurrently on different aspects of the problem. If both systems have to talk to each other, or there are any race conditions (one process needs to finish before the other can start), then one must tread carefully, ensuring proper syncronisation and data mapping before proceeding (see \cref{f:async_gpu_cpu}).
 
-The reason why code branching is bad for GPU parallelisation is down to the fact that they work like software-customisable vector machines. As in vector processors, collections of threads all carry out the same operation on different pieces of data at the same time. The threads essentially behave as one, operating on different data. This is advantageous to a GPU because it means more energy and space can be used for computation rather than logic and scheduling. However, this eliminates the ability of code branching within each collection of threads. This means that every branch of an \texttt{if} or \texttt{switch-case} statement will be executed whether a condition is met or not\footnote{If the branch can be resolved at compile time, it is possible for the compiler to prune it as part of compile time optimisation. However, this can be unreliable and depends on how transparent the optimsation is to the compiler, how agressive the optimisation setting is, and how the compiler is implemented. Therefore, relying on compile time optimisation to prune branches is not recommended.}. Only data storage depends on whether a condition is true or false, as illustrated in \cref{f:code_branching}.
+The reason why code branching is bad for GPU parallelisation is down to the fact that they work like software-customisable vector machines. As in vector processors, collections of threads all carry out the same operation on different pieces of data at the same time. The threads essentially behave as one, operating on different data. This is advantageous to a GPU because it means more energy and space can be used for computation rather than logic and scheduling. However, this eliminates the ability for code to branch within each collection of threads. This means that every branch of an \texttt{if} or \texttt{switch-case} statement will be executed whether a condition is met or not\footnote{If the branch can be resolved at compile time, it is possible for the compiler to prune it as part of compile time optimisation. However, this can be unreliable and depends on how transparent the optimsation is to the compiler, how agressive the optimisation setting is, and how the compiler is implemented. Therefore, relying on compile time optimisation to prune branches is not recommended.}. Only data storage depends on whether a condition is true or false, as illustrated in \cref{f:code_branching}.
 \begin{figure}
     \centering
     \begin{subfigure}[t]{0.48\linewidth}
@@ -349,7 +349,7 @@ The former would be very computationally expensive. Furthermore, no one has foun
 \subsection{Non-singular continuum theory of dislocations}
 \label{ss:non-singular_dln}
 
-The Peach-Koehler formula describes the fundamental interactions of dislocations \cite{pk_force} according to the force, $ \vec{f} $, that a local stress $ \tns{\sigma} $ exerts on a unit length dislocation line with Burgers vector, $ \vec{b} $, and line direction, $ \vec{\xi} $,
+The Peach-Koehler formula describes the fundamental interactions of dislocations \cite{pk_force} according to the force, $ \vec{f} $, that a local stress $ \tns{\sigma} $ exerts on a unit length of dislocation line with Burgers vector, $ \vec{b} $, and line direction, $ \vec{\xi} $,
 \begin{align}
     \vec{f} & = (\tns{\sigma} \cdot \vec{b}) \times \vec{\xi}\,.
 \end{align}
@@ -636,4 +636,4 @@ This project applies such techniques to accelerate and improve the ease with whi
 Much of the work presented herein has already proven useful in the simulation of complex simulations such as nano-indentation \cite{YU2018} and several other research projects within the Tarleton group. Here we showcase the new capabilities, findings and methods; improvements, fixes and redesign of the codebase; as well as a showcase of relatively simple, yet formerly inaccessible simulations resulting from this work. Finally, we present an ambitious proposal for future work resulting from the insights gained during the project.
 \savearabiccounter
 
-% 8780 words.
+% 8806 words.
