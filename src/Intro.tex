@@ -598,6 +598,7 @@ Though mathematically appealing, such an approach is far from representing the r
 
 \subsection{Parallelising discrete dislocation dynamics}
 \label{ss:parallel_ddd}
+
 It has been shown that DDD lends itself well to parallelisation. \Citet{gpu_ddd} investigated some of the more computationally intensive parts of DDD in DDLab \cite{ddlab}, a freely available DD code for Matlab. The algorithms whose parallel performance was studied in \cite{gpu_ddd} were
 \begin{inparaenum}
     \item remote (segment-segment) forces,
@@ -621,6 +622,63 @@ New NVidia architectures have made varying degrees of nested parallelisation pos
 The parallisation strategies for the other two problems, (b) and (c) in \cref{f:gpu_ddd}, involved similar decompositions as the remote force computation. For surface tractions \citet{gpu_ddd} parallelised over $ k $ surface nodes with sequential calculation and addition of the stress from each dislocation line segment. For the image stresses, they chose the reverse strategy since it allows for the serialised addition of the image stresses on dislocation line segments.
 
 Their findings showed very promising results for parallelising DDD simulations. Compared to serial implementations in C, depending on the specific problem and parameters used. The parallel implementation reduced computational time by a factor of $ \sim 110 $ at best and $ \sim 3 $ at worst, for sufficiently large problems. This is of course, provided one uses a card designed for high performance computing, as these are tailored towards \texttt{double} precision arithmetic and computationally intensive procedures. However, gaming graphics cards are increasingly capable of double precision arithmetic and though not as drastic, speed gains are still substantial for sufficiently large problems.
+
+\section{EasyDD}
+\label{s:EasyDDIntro}
+
+The software developed by the Tarleton Group is EasyDD. It is based on DDLab \cite{ddlab}, \href{http://micro.stanford.edu/wiki/M01_How_to_Obtain_and_Run_DDLab}{http://micro.stanford.edu/wiki/M01\_How\_to\_Obtain\_and\_Run\_DDLab}. EasyDD can be downloaded from \href{https://github.com/TarletonGroup/EasyDD}{https://github.com/TarletonGroup/EasyDD}.
+
+DDLab is based on various assumptions described in \cite{arsenlis2007enabling}. The fundamental one is that it is a thermodynamic code, meaning rate effects are not explicitly accounted for. This greatly simplifies a wide range of processes and lowers computational expense. For example, by assuming nodal acceleration is close to zero, mobility functions can remain linear, and therefore relatively simple and cheap to evaluate. The lack of kinetic considerations also makes topological operations easier to justify and compute. This is crucial because we only need to look at the initial and final states of a potential topological change to decide whether it should be performed.
+
+In simple terms, the simulated dislocation structure is assumed to be arbitrarily close to thermodynamic equilibrium after every time step. This is called the \emph{quasi-static} principle \cite{ddlab,arsenlis2007enabling}, and it necessitates loading rates be low enough that the assumption holds. However, it also makes it difficult to accrue much strain during a simulation. So one has to experiment with different loading rates---which are often much greater than experimental ones---such that a reasonable comprimise between quasi-static conditions and computational tractability is reached. \Cref{c:easydd,c:topology} deal with improving a few of the shortcomings EasyDD inherited from DDLab as a result of the quasi-static principle.
+
+EasyDD has diverged enough from DDLab that it is best we summarise the differences before grossly describing how EasyDD operates.
+
+DDLab is a purely discrete dislocation dynamics code. That means there is no FEM component. Without an FEM component there is no need for a large range of operations and data.
+\begin{enumerate}
+    \item FE meshing: stiffness matrix, FE node data.
+    \item Boundary conditions: applied displacements and tractions, loading functions, calculation of internal stresses.
+    \item FE solve: coupling the effects of dislocation motion to the purely elastic FEM.
+    \item Dislocation behaviour at the surface: dislocation topology and velocities at the surface.
+\end{enumerate}
+EasyDD and DDLab also differ greatly in their topological operations, Euler-Trapezoid integrator, mobility functions, and overall code design.
+
+\Cref{alg:EasyDD} describes the broad processes by which EasyDD goes through to simulate an experiment.
+\begin{center}
+    \captionof{algorithm}{EasyDD gross algorithm.}
+    \label{alg:EasyDD}
+    \begin{enumerate}
+        \item Generate input structures.
+        \item Check for missing variables and give them default values if necessary.
+        \item Check for outdated or uncompiled files and compile them if necessary.
+        \item Clean up input structures.
+        \item Generate connectivity matrices for the dislocations.
+        \item Check correctness of the input structures.
+        \item Generate FE variables.
+        \item Generate FE boundary conditions and variables.
+        \item Plot FE domain according to the boundary conditons.
+        \item Generate data structures for coupling DDD to FEM.
+        \item Generate surface triangulation for surface topological operations.
+        \item Remesh dislocations crossing surface boundaries.
+        \item Calculate initial surface displacements to ensure the initial total displacement is effectively zero.
+        \item Save static variables.
+        \item Start simulation loop which continues until the total simulation time has been reached or there are no more internal segments.
+        \item Save dynamically changing variables according to the save frequency.
+        \item Calculate loading.
+        \item Couple FEM to DDD via the \nameref{sss:superposition}.
+        \item Calculate output variables for the simulation.
+        \item Evolve dislocation structure in time. Calls the velocity function, which uses the segment force calculation function and mobility functions to respectively calculate nodal forces and velocities. It also fixes the surface velocity calculation such that surface nodes move along their slip plane correctly. The integrator dynamically adjusts the time step according to the desired error tolerances.
+        \item Plot simulation according to the plotting frequency.
+        \item Remesh dislocation network. This cleans up the structure before performing the collision detection, collision resolution, and separation procedures.
+        \item Perform collision-separation loop. This function calls the collision detection and resolution routines in a loop with the separation routine. The collisions and separations are only performed if they meet the right criteria. This ensures nodal connectivities are kept to a minimum, and minimises the network energy to first order separations. These functions saw many changes and are very divergeant from those found in DDLab. These changes are described in detail in \cref{c:topology}.
+        \item Mobilise highly connected, blockading nodes.
+        \item Perform separation. This is needed in case there were no collisions, but a separation is now energetically favourable after evolving the network in time, and also for any recently mobilised blockading nodes.
+        \item Remesh dislocation network. This cleans up the structure before it is evolved in the next step of the iteration.
+        \item Step time forward. Go to step 15 for the next iteration.
+    \end{enumerate}
+\end{center}
+
+The inner workings of the features of EasyDD that were modified, improved, and added as part of this project are covered in \cref{c:easydd,c:topology,c:tractions}, future improvements and a completely new alternative are described in \cref{c:future}.
 
 \section{Project outline and new science}
 \label{s:objectives}

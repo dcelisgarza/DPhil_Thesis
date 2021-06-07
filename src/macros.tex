@@ -40,3 +40,9 @@
 
 \definecolor{matlabOrange}{RGB}{217, 83, 25}
 \definecolor{matlabBlue}{RGB}{0, 114, 189}
+
+\DeclareCaptionFormat{algor}{%
+	\hrulefill\par\offinterlineskip\vskip1pt%
+	\textbf{#1#2}#3\offinterlineskip\hrulefill}
+\DeclareCaptionStyle{algori}{singlelinecheck=off,format=algor,labelsep=space}
+\captionsetup[algorithm]{style=algori}
