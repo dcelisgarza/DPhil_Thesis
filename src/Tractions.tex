@@ -894,7 +894,7 @@ The algorithm for mapping from the objects to be parallelised over from host (CP
         \end{aligned}
     \end{align}
 \end{subequations}
-Where $ e $ is the element to be mapped, $ n $ the node number, $ E $ the total number of elements, $N$ the total number of nodes per element, and $\vec{X}_{en}$ the vector of $(x,\,y,\,z)$ nodal coordinates for node $n$ in alement $e$.
+Where $ e $ is the element to be mapped, $ n $ the node number within the element, $ E $ the total number of elements, $N$ the total number of nodes per element, $\vec{X}_{en}$ the vector of $(x,\,y,\,z)$ nodal coordinates for node $n$ in alement $e$, $\vec{X}_n$ the vector of nodal coordinates of node $n$ of all elements, $\vec{X}$ the vector of nodal coordinates for all nodes of all elements.
 
 \begin{figure}
     \centering
@@ -929,7 +929,7 @@ The data that was not parallelised also has to be mapped such that it can also b
         \end{aligned}
     \end{align}
 \end{subequations}
-Again, using the set-up described in \cref{f:paraLabel}, using the mapping described by \cref{eq:fnce} yields a different vector of coordinates $\vec{X}$,
+Using the same nomenclature as \cref{eq:hostDeviceElementMap}. Again, using the set-up described in \cref{f:paraLabel}, using the mapping described by \cref{eq:fnce} yields a different vector of coordinates $\vec{X}$,
 \begin{align}\label{eq:fnce_eg}
     \vec{X} & = \begin{aligned}
          & \left[\underbrace{h_{x},\, i_{x},\, f_{x},\, g_{x},\,
