@@ -133,20 +133,20 @@ In EasyDD the dislocation mobility, $B \coloneqq 1$ and $\mu \coloneqq 1$. Howev
 
 The experimental strain rates were $\SI{5}{\nano\metre\per\second}$ and $\SI{500}{\nano\metre\per\second}$, give simulation strain rates that are far too low for the timescales we can simulate. However, as mentioned in \cref{ss:matrix}, it is important that a quasistatic condition is met for the mobility functions to hold. We therefore chose a strain rate that enabled simulations to advance sufficiently, without overloading the system. We settled on multiplying the converted value\footnote{The converted value used in the simulations is $\left(\SI{5e-3}{\micro\metre}/a\right) \times \left(B /  \mu \right)$, where $a$ is the lattice parameter in micrometers, $B$ the dislocation mobility and $ \mu $ the magnitude of the shear modulus from \cref{eq:timeConversion}.} of the $\SI{5}{\nano\metre\per\second}$ strain rate by a factor of $5 \times 10^6$, which corresponds to a strain rate of $\SI{2.5}{\centi\metre\per\second}$. Any higher and the yield point increased, any lower and the simulations took much longer to advance without a significant change in the dislocation structure and strain-stress curve.
 
-Two different initial source perimeters, $L$, were trialed for each loading direction. As previously mentined, each square source was made up of 8 equal segments. Source sizes were calculated based on estimates of the yield stress, $\sigma_\rvar{y}$, suggested by Alan and Dhriti, but had to be adjusted for the simulation's higher strain rate. We did not directly use \cref{eq:yieldStress}, but $l = 2 \mu b / \sigma_\rvar{y}$, to account for the sources being at an angle with respect to the loading direction\footnote{Perhaps it would be more accurate to drop the factor of two and use the critically resolved shear stress instead of the yield stress directly, $\tau = \cos(\phi)\cos(\lambda) \sigma_\rvar{y}$, where $\phi$ and $\lambda$ are the angles between the applied stress, glide plane normal, and glide direction respectively. However, a number of much stronger assumptions and adjustments had already been made, and this worked satisfactorily.}. This gave two source size parameters for each direction. This data is summarised in \cref{t:sourceSize}.
+Two different initial source segment lengths, $L$, were trialed for each loading direction. As previously mentined, each square source was made up of 8 equal segments. Source sizes were calculated based on estimates of the yield stress, $\sigma_\rvar{y}$, suggested by Alan and Dhriti, but had to be adjusted for the simulation's higher strain rate. We did not directly use \cref{eq:yieldStress}, but $l = 2 \mu b / \sigma_\rvar{y}$, to account for the sources being at an angle with respect to the loading direction\footnote{Perhaps it would be more accurate to drop the factor of two and use the critically resolved shear stress instead of the yield stress directly, $\tau = \cos(\phi)\cos(\lambda) \sigma_\rvar{y}$, where $\phi$ and $\lambda$ are the angles between the applied stress, glide plane normal, and glide direction respectively. However, a number of much stronger assumptions and adjustments had already been made, and this worked satisfactorily.}. This gave two source size parameters for each direction. This data is summarised in \cref{t:sourceSize}.
 \begin{table}
     \centering
-    \caption{Source parameters used for the simulations. Loading direction; estimated experimental yield stress, $\sigma_\rvar{y}$ in \si{\mega\pascal}; source perimeter, $L$ in \si{\micro\metre}; and initial dislocation density, $\rho$ in dislocations \si{\micro\metre^{-2}}.}
+    \caption{Source parameters used for the simulations. Loading direction; estimated experimental yield stress, $\sigma_\rvar{y}$ in \si{\mega\pascal}; source segment length, $L$ in \si{\micro\metre}; and initial dislocation density, $\rho$ in dislocations \si{\micro\metre^{-2}}.}
     \label{t:sourceSize}
     \begin{tabular}{rccl}
         \toprule
         Loading direction                            & $\sigma_\rvar{y}$ & $L$    & $\rho$              \\
         \midrule
-        \multirow{2}{*}{$\langle 1\, 0\, 0 \rangle$} & 183               & 3.4176 & $4.5\times 10^{-3}$ \\
-                                                     & 142               & 4.4047 & $5.8\times 10^{-3}$ \\
+        \multirow{2}{*}{$\langle 1\, 0\, 0 \rangle$} & 183               & 0.8545 & $4.5\times 10^{-3}$ \\
+                                                     & 142               & 1.1012 & $5.8\times 10^{-3}$ \\
         \midrule
-        \multirow{2}{*}{$\langle 1\, 1\, 0 \rangle$} & 158               & 3.9587 & $2.6\times 10^{-3}$ \\
-                                                     & 101               & 6.1928 & $4.1\times 10^{-3}$ \\
+        \multirow{2}{*}{$\langle 1\, 1\, 0 \rangle$} & 158               & 0.9897 & $2.6\times 10^{-3}$ \\
+                                                     & 101               & 1.5482 & $4.1\times 10^{-3}$ \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -200,7 +200,7 @@ Sophisticated statistical analyses cannot be performed due to the low number of 
 
 PCA gives as many principal components as there are samples. Often, only the first two components---Principal Components 1 and 2 (PC1 and PC2)--are used for categorisation. Subsequent principal components have less of an effect on the covariance matrix, and are therefore less important to the observed differences in the data. Having said that, comparing smaller principal components can provide extra insight in special circumstances. PCA works quite well when there is an exponential decrease in the contribution of each subsequent Principal Component to the data's covariance matrix. However, even when this is untrue, the reduction in dimensionality and powerful summarisation that PCA provides can be extremely valuable.
 
-We have used PCA on the experimentally derived strain-stress curves found in \cref{sf:Ni100,sf:Ni110}, and plotted the first two principal components in \cref{sf:Ni100_pca,sf:Ni110_pca}, respectively. The low strain rate curves are denoted by blue triangles (\textcolor{matlabBlue}{$\blacktriangle$}); the high strain rate ones by orange circles (\textcolor{matlabOrange}{$\bullet$}). With this we can find out whether the displacement rate is relevant to the observed behaviour. With so few data points, a clustering analysis on the PCA data would not yield quality information.
+We have used PCA on the experimentally derived strain-stress curves found in \cref{sf:Ni100,sf:Ni110}, and plotted the first two principal components in \cref{sf:Ni100_pca,sf:Ni110_pca}, respectively. The low strain rate curves are denoted by blue triangles (\textcolor{matlabBlue}{$\blacktriangle$}); the high strain rate by orange circles (\textcolor{matlabOrange}{$\bullet$}). With this we can find out whether the displacement rate is relevant to the observed behaviour. With so few data points, a clustering analysis on the PCA data would not yield quality information.
 
 \begin{figure}[t]
     \centering
@@ -236,35 +236,35 @@ Qualitatively and quantitatively, the simulations do a good job at reproducing t
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{../data/density_11-Mar-2021_8_tensile_ni_100.pdf}
-        \caption{$\langle 1\, 0\, 0 \rangle$, $L = \SI{3.4176}{\micro\metre}$, analytic tractions.}
+        \caption{$\langle 1\, 0\, 0 \rangle$, $L = \SI{0.8545}{\micro\metre}$, analytic tractions.}
         \label{sf:stressDens1}
     \end{subfigure}
     ~
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{../data/density_11-Mar-2021_numT_8_tensile_ni_100.pdf}
-        \caption{$\langle 1\, 0\, 0 \rangle$, $L = \SI{3.4176}{\micro\metre}$, numeric tractions.}
+        \caption{$\langle 1\, 0\, 0 \rangle$, $L = \SI{0.8545}{\micro\metre}$, numeric tractions.}
         \label{sf:stressDens2}
     \end{subfigure}
 
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{../data/density_16-Mar-2021_8_tensile_ni_100.pdf}
-        \caption{$\langle 1\, 0\, 0 \rangle$, $L = \SI{4.4047}{\micro\metre}$, analytic tractions.}
+        \caption{$\langle 1\, 0\, 0 \rangle$, $L = \SI{1.1012}{\micro\metre}$, analytic tractions.}
         \label{sf:stressDens3}
     \end{subfigure}
 
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{../data/density_11-Mar-2021_4_tensile_ni_110.pdf}
-        \caption{$\langle 1\, 1\, 0 \rangle$, $L = \SI{3.9587}{\micro\metre}$, analytic tractions.}
+        \caption{$\langle 1\, 1\, 0 \rangle$, $L = \SI{0.9897}{\micro\metre}$, analytic tractions.}
         \label{sf:stressDens4}
     \end{subfigure}
     ~
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{../data/density_16-Mar-2021_4_tensile_ni_110.pdf}
-        \caption{$\langle 1\, 1\, 0 \rangle$, $L = \SI{6.1928}{\micro\metre}$, analytic tractions.}
+        \caption{$\langle 1\, 1\, 0 \rangle$, $L = \SI{1.5482}{\micro\metre}$, analytic tractions.}
         \label{sf:stressDens5}
     \end{subfigure}
     \caption{Strain-stress curves (blue solid lines) and dislocation densiti (orange dotted lines) for all 5 simulations.}
@@ -310,7 +310,7 @@ We cannot compare exactly equivalent points between simulations using numeric vs
         \caption[Structure at a local minimum dislocation density for the simulation using analytic tractions.]{Structure at a local minimum dislocation density for the simulation using numeric tractions. $\rho = 1.6\times 10^{-2}$ dislocations \si{\micro\metre^{2}} at $1.6 \times 10^{-3}$ strain, 204 internal segments and 8204 total segments.}
         \label{sf:minDensNum}
     \end{subfigure}
-    \caption{Dislocation structures for simulations using analytic vs numeric tractions in the loading direction $\langle 1\, 0\, 0\rangle$, and source perimeter $L = \SI{3.4}{\micro\metre}$.}
+    \caption{Dislocation structures for simulations using analytic vs numeric tractions in the loading direction $\langle 1\, 0\, 0\rangle$, and source segment length $L = \SI{3.4}{\micro\metre}$.}
     \label{f:minMaxDens}
 \end{figure}
 
