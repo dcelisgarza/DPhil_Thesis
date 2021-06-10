@@ -157,6 +157,7 @@ All simulations ran for approximately 5 weeks. They did not use the new power di
 \label{s:NiResults}
 
 The experimental measurements go up to fracture, well beyond the domain of dislocation plasticity simulations; they also discard the elastic region, and the early onset of plasticity as shown in \cref{sf:Ni100,sf:Ni110}. Conversely, dislocation plasticity simulations are limited to small strains, i.e. the part of the curves that typically fall below the experimental limit of detection as shown in \cref{sf:Ni100_DDD,sf:Ni110_DDD}. However, they can elucidate dislocation mechanisms behind plasticity. Here, dislocation plasticity serves as a bridge between the elastic and plastic regimes and lets us explore the mechanisms behind the differences in strain-stress curves between the $\langle 1\,0\,0 \rangle$ and $\langle 1\,1\,0 \rangle$ loading directions.
+
 \begin{figure}
     \centering
     \begin{subfigure}[t]{0.45\linewidth}
@@ -271,7 +272,14 @@ Qualitatively and quantitatively, the simulations do a good job at reproducing t
     \label{f:stressDens}
 \end{figure}
 
-That said, we must be aware that the strain rate is 5 million times higher than $\SI{5}{\nano\meter\per\second}$. As previously mentioned, this strain rate was arrived at by finding the highest strain rate that would not exponentially increase the yield point. However, this does not mean lower strain rates do not decrease the yield point, they do, just not very drastically. They are also impractically slow for our needs.
+That said, we must be aware that the strain rate is 5 million times higher than $\SI{5}{\nano\meter\per\second}$. As previously mentioned, this strain rate was arrived at by finding the highest one that would not exponentially increase the yield point. However, this does not mean lower strain rates do not decrease the yield point, they do, just not very drastically. They are also impractically slow for our needs. \Cref{f:strainRate} shows the effect of different strain rates on the same simulation.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{../data/strainRate_16-Mar-2021_8_tensile_ni_100.pdf}
+    \caption{Strain rate effect on the yield point of the same simulation in the $\langle 1\, 0\, 0 \rangle$ loding direction, $L = \SI{1.1012}{\micro\metre}$, using analytic tractions.}
+    \label{f:strainRate}
+\end{figure}
 
 It is also interesting to note that this was achieved with very small dislocation densities (see \cref{t:sourceSize}), contrary to the originally assumed 10 dislocations \si{\micro\metre^{-2}}. They were also all prismatic and uniform in both size and shape. These are not wholly unreasonable assumptions, but they are definitely not strictly true, yet they did a remarkable job.
 
@@ -310,13 +318,13 @@ We cannot compare exactly equivalent points between simulations using numeric vs
         \caption[Structure at a local minimum dislocation density for the simulation using analytic tractions.]{Structure at a local minimum dislocation density for the simulation using numeric tractions. $\rho = 1.6\times 10^{-2}$ dislocations \si{\micro\metre^{2}} at $1.6 \times 10^{-3}$ strain, 204 internal segments and 8204 total segments.}
         \label{sf:minDensNum}
     \end{subfigure}
-    \caption{Dislocation structures for simulations using analytic vs numeric tractions in the loading direction $\langle 1\, 0\, 0\rangle$, and source segment length $L = \SI{3.4}{\micro\metre}$.}
+    \caption{Dislocation structures for simulations using analytic vs numeric tractions in the loading direction $\langle 1\, 0\, 0\rangle$, and source segment length $L = \SI{0.8545}{\micro\metre}$.}
     \label{f:minMaxDens}
 \end{figure}
 
 In this case, the numeric tractions managed to get further than the analytic ones, but this is not always true. If the network is sensitive to the instabilities of numeric tractions, simulations can be negatively impacted by the incorrect movement of segments (see \cref{f:simulation}). The reason numeric tractions got further in this case is quite simple. A universally observed feature of numeric tractions, is evidenced by the total number segments in \cref{f:minMaxDens}. The simulations using numeric tractions generated more segments at roughly equivalent points than their analytic counterparts. The number of extra segments grew as the simulations advanced, from an extra $10\%$ in \cref{sf:maxDensNum} with respect to \cref{sf:maxDensAna}, to an extra $14\%$ in \cref{sf:minDensNum} compared to \cref{sf:minDensAna}. However, not only were segments generated more readily, but they exited the domain more quickly, as evidenced by simultaneously having more total segments, but fewer internal ones, in both absolute and relative terms. As mentioned in \cref{c:topology}, external segments are only used to keep track of slip steps, so they are computationally much cheaper than internal ones. Simulations where segments cannot leave the domain so readily are slowed down by virtue of there being more internal segments. For example, cantilever bending has a neutral axis where segments pile up, and nanoindentation pushes segments into the simulation domain. We have also anecdotally observed in cantilever simulations, that dislocations pile up near the neutral axis much closer to one another when using numeric tractions as opposed to analytic ones, which is likely the result of faster moving segments (though a more formal investigation is needed to confirm this). Clearly, further study of other non-trivial emergent behaviours would help us provide better guidelines for different use cases of EasyDD. For the time being, as mentioned in \cref{c:topology,c:tractions}, we have found the analytic tractions to be much more robust and reliable, so the recommendation is to use them if available.
 
-We have also produced \texttt{mp4} videos showing the evolution of the dislocation structure alongside the strain-stress curve. The videos are found in the following link \href{https://github.com/dcelisgarza/DPhil_Thesis/tree/master/data}{https://github.com/dcelisgarza/DPhil\_Thesis/tree/master/data}.
+We have also produced \texttt{mp4} videos showing the evolution of the dislocation structure alongside the strain-stress curve for the simulations in \cref{f:NiStrainStress}. The videos are found in the following link \href{https://github.com/dcelisgarza/DPhil_Thesis/tree/master/data}{https://github.com/dcelisgarza/DPhil\_Thesis/tree/master/data}.
 % The ``bumpy'' quality of the strain-stress curves in $\langle 1\, 0\, 0 \rangle$, as shown in \cref{sf:Ni100,sf:Ni100_DDD}, is the result of the dislocation density changes as the strain increases. \Cref{f:Ni100_bumps} shows the dislocation structures and corresponding strain-stress curve for simulation (a) in \cref{sf:Ni100_DDD}. It can be observed that the slope of the peaks and valleys of the ``bumps'' correspond to how quickly the total internal dislocation length is growing. Upward slopes correspond to rapidly decreasing internal dislocation length. Conversely, downward slopes correspond rapidly increasing internal dislocation length. Of course, exited dislocations contribute to the relaxation of stresses via the creation of slip steps, but once they have left the simulation domain, their contributions remain static.
 % \begin{figure}
 %     \centering
@@ -487,5 +495,5 @@ We also only included active slip systems in either loading direction, so the qu
 
 The results presented in this chapter are the culmination of meeting the objectives posed for this DPhil, as stated in \cref{s:objectives}. It makes use of the work described in all the other chapters (except for the power dissipation criteria for collision-serparation) and barely scratches at the surface of the remarkable capabilities of dislocation plasticity and EasyDD.
 \savearabiccounter
-% 4088
+% 4090
 
