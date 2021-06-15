@@ -244,7 +244,7 @@ The plastic deformation of materials is generally governed by the generation and
 
 One of the most often used parametrisations of DD is Discrete Dislocation Dynamics (DDD). Where dislocations are parametrised as a series of nodes linked by straight line segments. This reduces computational requirements and allows for analytic solutions to be obtained. At present, neither DDD nor Finite Element (FE) models can truly handle all the complexities of real-world alloys \cite{ddd_fem1, paradis, fem_ddd2, fem_ddd}. For one, DDD relies on assuming a linear-elastic isotropic solid domain with periodic or infinite boundary conditions, while FE relies on assuming continuum properties inside a \emph{finite} domain.
 
-Crystal Plasticity Finite Element Methods (CPFEM) use constitutive equations to calculate dislocation motion and generation on a set of slip systems. These are given as dislocation densities and thus can still be considered ``bulk'' models because there are no explicit dislocations interacting with one another \cite{cpfem1}. CPFEM can handle finite strains and anisotropy but not strain localisation/slip bands, etc.
+Crystal Plasticity Finite Element Methods (CPFEM) use constitutive equations to calculate dislocation motion and generation on a set of slip systems. These are given as dislocation densities and thus can still be considered ``continuum'' models because there are no explicit dislocations interacting with one another \cite{cpfem1}. CPFEM can handle finite strains and anisotropy but not strain localisation/slip bands, etc.
 
 Furthermore, dislocations often accumulate in the vicinity of microstructural features. The interaction of dislocations with microstructure and other dislocations can lead to work hardening and local stress concentrations that can lead to failure initiation \cite{size_effects, dln_ind_hard}. Hardware accleration, i.e. using Graphics Processing Units (GPUs), has been shown to be very effective in DDD \cite{gpu_ddd}, and has the potential to enable the simulation of much larger numbers of dislocations for longer timescales. In order to study these phenomena we must find a way of coupling DDD and FEM into a single multiscale model with the potential to simulate micromechanical tests more accurately than CPFEM. With a model such as this, we may potentially be able to predict and observe emergent phenomena/properties, explain michromechanical behaviours, and even predict and explain experimental results based on underlying dislocation mechanisms\footnote{Though predicting and replicating experimental results requires the initial conditions of the experiment and simulation be roughly equivalent.}.
 
@@ -267,7 +267,7 @@ The Superposition Method (SM) works by decomposing the problem into separate DDD
 \begin{subequations}
     \label{eq:superposition}
     \begin{align}
-        \vec{U}      & = \vec{\tilde{u}} + \vec{\hat{u}}\,,            \\
+        \vec{u}      & = \vec{\tilde{u}} + \vec{\hat{u}}\,,            \\
         \tns{\sigma} & = \tns{\tilde{\sigma}} + \tns{\hat{\sigma}}\, .
     \end{align}
 \end{subequations}
@@ -354,7 +354,7 @@ The Peach-Koehler formula describes the fundamental interactions of dislocations
     \vec{f} & = (\tns{\sigma} \cdot \vec{b}) \times \vec{\xi}\,.
 \end{align}
 
-The internal stress field of a dislocation loop in a homogenous, infinite, linear-elastic medium is given by the contour integral around a loop $ L $ \cite{mura_t},
+The internal stress field of a dislocation loop, $L$, in a homogenous, infinite, linear-elastic medium is given by the contour integral around the loop \cite{mura_t},
 \begin{align}\label{eq:field_stress}
     \sigma_{ij}^{\infty}(\vec{x}) & = C_{ijkl} \oint_{L} \epsilon_{lnh} C_{pqmn} \dfrac{\partial G_{kp}(\vec{x} - \vec{x'})}{\partial x_{q}} b_{m}\; \rvar{d}x'_{h}\,,
 \end{align}
@@ -628,22 +628,22 @@ Their findings showed very promising results for parallelising DDD simulations. 
 
 The software developed by the Tarleton Group is EasyDD. It is based on DDLab \cite{ddlab}, \href{http://micro.stanford.edu/wiki/M01_How_to_Obtain_and_Run_DDLab}{http://micro.stanford.edu/wiki/M01\_How\_to\_Obtain\_and\_Run\_DDLab}. EasyDD can be downloaded from \href{https://github.com/TarletonGroup/EasyDD}{https://github.com/TarletonGroup/EasyDD}.
 
-DDLab is based on various assumptions described in \cite{arsenlis2007enabling}. The fundamental one is that it is a thermodynamic code, meaning rate effects are not explicitly accounted for. This greatly simplifies a wide range of processes and lowers computational expense. For example, by assuming nodal acceleration is close to zero, mobility functions can remain linear, and therefore relatively simple and cheap to evaluate. The lack of kinetic considerations also makes topological operations easier to justify and compute. This is crucial because we only need to look at the initial and final states of a potential topological change to decide whether it should be performed.
+DDLab is based on various assumptions described in \cite{arsenlis2007enabling}. The fundamental one is that it is a quasi-static code, meaning inertial effects are neglected. This greatly simplifies a wide range of processes and lowers computational expense. For example, by assuming nodal acceleration is close to zero, mobility functions can remain linear, and therefore relatively simple and cheap to evaluate. The lack of kinetic considerations also makes topological operations easier to justify and compute. This is crucial because we only need to look at the initial and final states of a potential topological change to decide whether it should be performed.
 
 In simple terms, the simulated dislocation structure is assumed to be arbitrarily close to thermodynamic equilibrium after every time step. This is called the \emph{quasi-static} principle \cite{ddlab,arsenlis2007enabling}, and it necessitates loading rates be low enough that the assumption holds. However, it also makes it difficult to accrue much strain during a simulation. So one has to experiment with different loading rates---which are often much greater than experimental ones---such that a reasonable comprimise between quasi-static conditions and computational tractability is reached. \Cref{c:easydd,c:topology} deal with improving a few of the shortcomings EasyDD inherited from DDLab as a result of the quasi-static principle.
 
-EasyDD has diverged enough from DDLab that it is best we summarise the differences before grossly describing how EasyDD operates.
+EasyDD has diverged enough from DDLab that it is best we summarise the differences before describing how EasyDD operates.
 
 DDLab is a purely discrete dislocation dynamics code. That means there is no FEM component. Without an FEM component there is no need for a large range of operations and data.
 \begin{enumerate}
     \item FE meshing: stiffness matrix, FE node data.
     \item Boundary conditions: applied displacements and tractions, loading functions, calculation of internal stresses.
     \item FE solve: coupling the effects of dislocation motion to the purely elastic FEM.
-    \item Dislocation behaviour at the surface: dislocation topology and velocities at the surface.
+    \item Dislocation behaviour at the surface: dislocation topology and velocities at surfaces.
 \end{enumerate}
 EasyDD and DDLab also differ greatly in their topological operations, Euler-Trapezoid integrator, mobility functions, and overall code design.
 
-\Cref{alg:EasyDD} describes the broad processes by which EasyDD goes through to simulate an experiment.
+\Cref{alg:EasyDD} describes the broad processes by which EasyDD goes through in a simulation.
 \begin{center}
     \captionof{algorithm}{EasyDD gross algorithm.}
     \label{alg:EasyDD}
@@ -670,9 +670,9 @@ EasyDD and DDLab also differ greatly in their topological operations, Euler-Trap
         \item Evolve dislocation structure in time. Calls the velocity function, which uses the segment force calculation function and mobility functions to respectively calculate nodal forces and velocities. It also fixes the surface velocity calculation such that surface nodes move along their slip plane correctly. The integrator dynamically adjusts the time step according to the desired error tolerances.
         \item Plot simulation according to the plotting frequency.
         \item Remesh dislocation network. This cleans up the structure before performing the collision detection, collision resolution, and separation procedures.
-        \item Perform collision-separation loop. This function calls the collision detection and resolution routines in a loop with the separation routine. The collisions and separations are only performed if they meet the right criteria. This ensures nodal connectivities are kept to a minimum, and minimises the network energy to first order separations. These functions saw many changes and are very divergeant from those found in DDLab. These changes are described in detail in \cref{c:topology}.
-        \item Mobilise highly connected, blockading nodes.
-        \item Perform separation. This is needed in case there were no collisions, but a separation is now energetically favourable after evolving the network in time, and also for any recently mobilised blockading nodes.
+        \item Perform collision-separation loop. This function calls the collision detection and resolution routines in a loop with the separation routine. The collisions and separations are only performed if they meet the right criteria. This ensures nodal connectivities are kept to a minimum, and minimises the network energy to first order separations. These functions saw many changes and are very different from those found in DDLab. These changes are described in detail in \cref{c:topology}.
+        \item Mobilise highly connected, sessile nodes.
+        \item Perform separation. This is needed in case there were no collisions, but a separation is now energetically favourable after evolving the network in time, and also for any recently mobilised sessile nodes.
         \item Remesh dislocation network. This cleans up the structure before it is evolved in the next step of the iteration.
         \item Step time forward. Go to step 15 for the next iteration.
     \end{enumerate}
