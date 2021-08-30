@@ -6,7 +6,7 @@
 
 Metals and alloys are of such importance to humankind that entire eras of our history have been defined by and named after discoveries and advances in metallurgy \cite{metals_prehistory1, metals_prehistory2}. A civilisation's ability to gain mastery of the properties and usage of materials is often strongly correlated with its success in history \cite{metals_success1}. The historical influence of metals and alloys has touched all areas of human existence, from fashion to warfare \cite{metals_social}.
 
-It should come as no surprise that a material's use is often linked to its properties. When a civilisation learned to harness the properties of a novel material, its influence often grew as a result \cite{guns_germs_steel, metals_success2}. Whether building a woodcutter's axe or a fusion reactor, the mechanical properties of materials---metals and alloys in particular---are among the most important considerations for using a material in engineering applications.
+It should come as no surprise that a material's use is often linked to its properties. When a civilisation learned to harness the properties of a novel material, its influence often grew as a result \cite{metals_success1,metals_success2}. Whether building a woodcutter's axe or a fusion reactor, the mechanical properties of materials---metals and alloys in particular---are among the most important considerations for using a material in engineering applications.
 
 Traditionally, such properties have been largely studied via empirical methods such as tensile and compressive tests, beam bending, and indentation \cite{tensile_test_theory, bending_test_theory, indentation_theory}. Such tests have mainly focused on macroscopic scales, thus offering bulk-averaged properties valuable to engineers. Unfortunately, such methods only describe observed behaviours without truly elucidating the fundamental mechanisms behind them \cite{micromech_test1}. Advancing technology has allowed progressively smaller scale tests. Micro- and nano-scale testing, where tests can be performed on carefully controlled samples such as single crystals, thin films, crystal boundaries, etc. For example, it is possible to probe specific slip systems to see how they behave under various loading scenarios \cite{micromech_test2, micromech_test3}. The increased resolution and more thorough parameter control goes a long way in providing a window through which more fundamental behaviours can be observed and hopefully explained; thus providing a way of deconvolving macroscopic observations into their constituent phenomena \cite{micro_macro1, micro_macro2}.
 
@@ -251,7 +251,7 @@ Furthermore, dislocations often accumulate in the vicinity of microstructural fe
 \subsection{Coupling dislocation dynamics to finite element methods}
 \label{ss:ddd_fem}
 
-Coupling dislocation dynamics (DD) to FEM is important to properly simulate micromechanical tests because DD provides us with a more precise set of inputs and greater granularity for solving the FE problem. There are at present two methods with which to do so, the \nameref{sss:superposition} and the \nameref{sss:discrete_continuum}. Discrete dislocation dynamics, where the dislocation is broken into nodes connected by segments is a relatively compuationally- and data-efficient implementation of dislocation dynamics, which has the added advantage of having analytical solutions for straight-line segments. However, as discussed in \cref{sss:lvl_set}, explicit discretisation is not the only way to tackle the problem.
+Coupling dislocation dynamics (DD) to FEM is important to properly simulate micromechanical tests because DD provides us with a more precise set of inputs and greater granularity for solving the FE problem. There are at present two methods with which to do so, the \cref{sss:superposition} and the \cref{sss:discrete_continuum}. Discrete dislocation dynamics, where the dislocation is broken into nodes connected by segments is a relatively compuationally- and data-efficient implementation of dislocation dynamics, which has the added advantage of having analytical solutions for straight-line segments. However, as discussed in \cref{sss:lvl_set}, explicit discretisation is not the only way to tackle the problem.
 
 \subsubsection{Superposition Method}
 \label{sss:superposition}
@@ -527,7 +527,7 @@ Aside from the Hall-Petch effect, the model has also been utilised by \citet{2d_
     \item surface passivation layer, and
     \item surface grain refinement zones.
 \end{inparaenum}
-In their study, Frank-Reed sources were seeded across the domain, and the superposition principle was utilised to calculate displacement, strain and stresses in the thin films. Their results qualitatively reproduced experimental observations from expected dislocation patterns, stress distributions, and the eventual disappearance of the size effect as the films got thicker.
+In their study, Frank-Read sources were seeded across the domain, and the superposition principle was utilised to calculate displacement, strain and stresses in the thin films. Their results qualitatively reproduced experimental observations from expected dislocation patterns, stress distributions, and the eventual disappearance of the size effect as the films got thicker.
 
 Though two-dimensional models might seem useless, they have their place, particularly when thin films are concerned. However, they may also be of use when investigating the effects of dislocations on the mechanical behaviour of superconducting tape---whose applications range from medical imaging to fusion energy production. The exotic composition and crystallography of many superconductors (perovskites) would make 3D models very complex and computationally expensive, so 2D models may offer viable alternatives. On top of this, a superconducting tape's operating environment would often have it under strains which might not strictly lie in-plane, but given a small enough segment of tape, strains orthogonal to its plane may be neglected. Thus making 2D models an acceptable first attempt at tacking the problem, at least until developments in 3D models make more realistic studies of such complex systems possible.
 
@@ -626,7 +626,7 @@ Their findings showed very promising results for parallelising DDD simulations. 
 \section{EasyDD}
 \label{s:EasyDDIntro}
 
-The software developed by the Tarleton Group is EasyDD. It is based on DDLab \cite{ddlab}, \href{http://micro.stanford.edu/wiki/M01_How_to_Obtain_and_Run_DDLab}{http://micro.stanford.edu/wiki/M01\_How\_to\_Obtain\_and\_Run\_DDLab}. EasyDD can be downloaded from \href{https://github.com/TarletonGroup/EasyDD}{https://github.com/TarletonGroup/EasyDD}.
+The software developed by the Tarleton Group is EasyDD is based on DDLab \cite{ddlab}, \href{http://micro.stanford.edu/wiki/M01_How_to_Obtain_and_Run_DDLab}{http://micro.stanford.edu/wiki/M01\_How\_to\_Obtain\_and\_Run\_DDLab}. EasyDD can be downloaded from \href{https://github.com/TarletonGroup/EasyDD}{https://github.com/TarletonGroup/EasyDD}.
 
 DDLab is based on various assumptions described in \cite{arsenlis2007enabling}. The fundamental one is that it is a quasi-static code, meaning inertial effects are neglected. This greatly simplifies a wide range of processes and lowers computational expense. For example, by assuming nodal acceleration is close to zero, mobility functions can remain linear, and therefore relatively simple and cheap to evaluate. The lack of kinetic considerations also makes topological operations easier to justify and compute. This is crucial because we only need to look at the initial and final states of a potential topological change to decide whether it should be performed.
 
@@ -643,42 +643,42 @@ DDLab is a purely discrete dislocation dynamics code. That means there is no FEM
 \end{enumerate}
 EasyDD and DDLab also differ greatly in their topological operations, Euler-Trapezoid integrator, mobility functions, and overall code design.
 
-\Cref{alg:EasyDD} describes the broad processes by which EasyDD goes through in a simulation.
+\Cref{alg:EasyDD} describes the broad processes by which EasyDD goes through in a simulation. If this project modified or is responsible for a given step, we include a hyperlinked reference in \emph{italics} to the relevant part of the thesis.
 \begin{center}
     \captionof{algorithm}{EasyDD gross algorithm.}
     \label{alg:EasyDD}
     \begin{enumerate}
         \item Generate input structures.
-        \item Check for missing variables and give them default values if necessary.
-        \item Check for outdated or uncompiled files and compile them if necessary.
+        \item Check for missing variables and give them default values if necessary. \emph{\Cref{s:rse}}.
+        \item Check for outdated or uncompiled files and compile them if necessary. \emph{\Cref{ss:qol}}.
         \item Clean up input structures.
         \item Generate connectivity matrices for the dislocations.
         \item Check correctness of the input structures.
-        \item Generate FE variables.
-        \item Generate FE boundary conditions and variables.
+        \item Generate FE variables. \emph{\Cref{ss:feOpt,ss:memAlloc,ss:genFun}}.
+        \item Generate FE boundary conditions and variables. \emph{\Cref{ss:feOpt,ss:memAlloc,ss:genFun}}.
         \item Plot FE domain according to the boundary conditons.
-        \item Generate data structures for coupling DDD to FEM.
+        \item Generate data structures for coupling DDD to FEM. \emph{\Cref{ss:memAlloc,ss:genFun}}.
         \item Generate surface triangulation for surface topological operations.
-        \item Remesh dislocations crossing surface boundaries.
+        \item Remesh dislocations crossing surface boundaries. \emph{\Cref{s:surfRem}}.
         \item Calculate initial surface displacements to ensure the initial total displacement is effectively zero.
-        \item Save static variables.
+        \item Save static variables. \emph{\Cref{ss:qol}}.
         \item Start simulation loop which continues until the total simulation time has been reached or there are no more internal segments.
-        \item Save dynamically changing variables according to the save frequency.
-        \item Calculate loading.
-        \item Couple FEM to DDD via the \nameref{sss:superposition}.
-        \item Calculate output variables for the simulation.
-        \item Evolve dislocation structure in time. Calls the velocity function, which uses the segment force calculation function and mobility functions to respectively calculate nodal forces and velocities. It also fixes the surface velocity calculation such that surface nodes move along their slip plane correctly. The integrator dynamically adjusts the time step according to the desired error tolerances.
-        \item Plot simulation according to the plotting frequency.
-        \item Remesh dislocation network. This cleans up the structure before performing the collision detection, collision resolution, and separation procedures.
-        \item Perform collision-separation loop. This function calls the collision detection and resolution routines in a loop with the separation routine. The collisions and separations are only performed if they meet the right criteria. This ensures nodal connectivities are kept to a minimum, and minimises the network energy to first order separations. These functions saw many changes and are very different from those found in DDLab. These changes are described in detail in \cref{c:topology}.
-        \item Mobilise highly connected, sessile nodes.
-        \item Perform separation. This is needed in case there were no collisions, but a separation is now energetically favourable after evolving the network in time, and also for any recently mobilised sessile nodes.
-        \item Remesh dislocation network. This cleans up the structure before it is evolved in the next step of the iteration.
+        \item Save dynamically changing variables according to the save frequency. \emph{\Cref{ss:qol}}.
+        \item Calculate loading. \emph{\Cref{ss:genFun}}.
+        \item Couple FEM to DDD via the \nameref{sss:superposition}. \emph{\Cref{c:tractions}}.
+        \item Calculate output variables for the simulation. \emph{\Cref{ss:genFun}}.
+        \item Evolve dislocation structure in time. Calls the velocity function, which uses the segment force calculation function and mobility functions to respectively calculate nodal forces and velocities. It also fixes the surface velocity calculation such that surface nodes move along their slip plane correctly. The integrator dynamically adjusts the time step according to the desired error tolerances. \emph{\Cref{ss:integrator,ss:matrix}}.
+        \item Plot simulation according to the plotting frequency. \emph{\Cref{ss:qol}}.
+        \item Remesh dislocation network. This cleans up the structure before performing the collision detection, collision resolution, and separation procedures. \emph{\Cref{s:nonCommutativity}}.
+        \item Perform collision-separation loop. This function calls the collision detection and resolution routines in a loop with the separation routine. The collisions and separations are only performed if they meet the right criteria. This ensures nodal connectivities are kept to a minimum, and minimises the network energy to first order separations. These functions saw many changes and are very different from those found in DDLab. \emph{\Cref{c:topology}}.
+        \item Mobilise highly connected, sessile nodes. \emph{\Cref{s:nonCommutativity}}.
+        \item Perform separation. This is needed in case there were no collisions, but a separation is now energetically favourable after evolving the network in time, and also for any recently mobilised sessile nodes.  \emph{\Cref{s:nonCommutativity}}.
+        \item Remesh dislocation network. This cleans up the structure before it is evolved in the next step of the iteration.  \emph{\Cref{s:nonCommutativity}}.
         \item Step time forward. Go to step 15 for the next iteration.
     \end{enumerate}
 \end{center}
 
-The inner workings of the features of EasyDD that were modified, improved, and added as part of this project are covered in \cref{c:easydd,c:topology,c:tractions}, future improvements and a completely new alternative are described in \cref{c:future}.
+Future improvements that have been identified are described in \cref{c:future}, and a completely new alternative in \cref{c:DDDjl}.
 
 \section{Project outline and new science}
 \label{s:objectives}

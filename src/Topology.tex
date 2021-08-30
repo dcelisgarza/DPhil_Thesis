@@ -131,7 +131,7 @@ It is worth noting that the power dissipation criterion has not been used in \cr
 This is an imperfect solution as a node may be separated into a different configuration than it was initially. It also can create highly connected nodes, but nowhere near as many or as highly connected as before. However, this was the method available to us at the time and was still a huge improvement over the previous one.
 
 \section{Surface remeshing}
-\label{c:surfRem}
+\label{s:surfRem}
 
 Most of the improvements to remeshing subroutines were done by Bruce Bromage, including the surface remeshing. His work on dislocation displacements necessitated the surface and virtual remeshing to be accurate. Among these requirements is the need to prevent dislocations from exiting out of surfaces with fixed displacements. If we take \cref{f:tensileSetupTop}, which describes the displacement boundary conditions for \cref{c:simulations}, we see two surfaces upon which displacements are specified.
 \begin{figure}

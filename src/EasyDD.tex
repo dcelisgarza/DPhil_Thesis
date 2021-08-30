@@ -11,7 +11,7 @@ As mentioned in \cref{s:objectives}, this project aims to integrate multidiscipl
 \subsection{Correct time-adaptive integrator}
 \label{ss:integrator}
 
-The first obvious hurdle to overcome when making more complex simulations possible was the unreasonably long computational time taken for a dislocation plasticity simulation to sufficiently advance past the elastic regime. A simple microcantilever bending simulation with a few Frank-Reed sources would take a whole night to reach the plastic regime.
+The first obvious hurdle to overcome when making more complex simulations possible was the unreasonably long computational time taken for a dislocation plasticity simulation to sufficiently advance past the elastic regime. A simple microcantilever bending simulation with a few Frank-Read sources would take a whole night to reach the plastic regime.
 
 The unacceptable slowness prompted a closer examination of the adaptive-time Euler-trapezoid predictor-corrector solver described in algorithm 10.2 and equations (10.42, 10.45 and 10.46) in \cite[p.~214--216]{ddlab}, reproduced here by \cref{alg:trapezoid,eq:trapezoid},
 \begin{align}\label{eq:trapezoid}
@@ -95,7 +95,7 @@ Different mobility laws can have different parametrisations for their permitted 
     \label{f:lineMovement}
 \end{figure}
 
-In the overdamped regime, $\dfrac{\rvar{d}\vec{v}}{\rvar{d}t}(\vec{x}) \to \vec{0}$, known driving forces (segment-segment interaction force + remote forces + self-force) and the unkown drag force sum to give,
+In the overdamped regime, $\dfrac{\rvar{d}\vec{v}}{\rvar{d}t}(\vec{x}) \to \vec{0}$, known driving forces (external forces + segment-segment interaction force + self-force) and the unkown drag force sum to give,
 \begin{align}\label{eq:drivePlusDrag}
     \vec{F}_\rvar{drag}(\vec{x}) + \vec{F}_\rvar{drive}(\vec{x}) = \vec{0}\,.
 \end{align}
@@ -276,7 +276,7 @@ Object-oriented programming can be very useful if used properly. But it has the 
 
 However, we can take a data driven approach and leverage \mintinline{matlab}{struct} to simplify the process. These are more of an ordered dictionary (Hash table), than a true object, but they are what we have available. Converting the code to use them is an ongoing process, but they have so far allowed us to make use of generic functions for different mobility functions, loading conditions, and various auxiliary variables. All of which have a simplifying effect on the code without sacrifing performance. While this project pioneered this task, Daniel Hortelano-Roig has been doing much in the way of increasing its scope. His changes already greatly simplify the code, and will slowly be ported over to the main branch.
 
-\subsubsection{Generic functions}
+\subsubsection{Generic functions}\label{ss:genFun}
 
 Generic functions are implementation-agnostic functions that can be given by the user as any other variable. \mintinline{matlab}{MATLAB} has an old method that enables generic programming using \mintinline{matlab}{feval()}, where the first argument is the name of the file whose function is being called, and subsequent arguments are passed on to the function. However, this has some limitations, mainly their performance, and function handles are now preferred, e.g.
 \begin{minted}[frame=lines, linenos]{matlab}
@@ -308,7 +308,7 @@ The introduction of regressions makes it so code must be thoroughly and exhausti
 \setlength{\epigraphwidth}{0.75\linewidth}
 \epigraph{We \emph{should} forget about small efficiencies, say about 97\% of the time: pre-mature optimisation is the root of all evil. Yet we should not pass up our opportunities in that critical 3\%.}{\textit{--- Donald E. Knuth \cite[p.~268]{knuth1974structured}}}
 
-\subsubsection{Spurious memory allocation}
+\subsubsection{Spurious memory allocation}\label{ss:memAlloc}
 
 \mintinline{matlab}{MATLAB} is infamous for the way it will happily grow an array dynamically when going out of bounds. This \emph{terrible} practice is even fundmental to the operation of \texttt{EasyDD}. However, changing this fundamental part of the codebase requires a complete rewrite and not deemed worthwhile, there are worse bottlenecks.
 
@@ -316,7 +316,7 @@ For example, the amount of memory unecessarily reallocated in the function that 
 
 More memory allocation also means more garbage collection (GC) \cite{hanson1990fast} i.e. automatically freeing memory, based on a set of criteria. The cost of GC can be significantly higher than that of memory allocation. Timing the equivalent of allocating a $20 \times 20 \times 20$ mesh in \mintinline{matlab}{MATLAB 2020b} takes on the order of \SI{70}{\micro\sec} on x86 CPU architectures, which is in-line with what it costs in \mintinline{C}{C}. However, deallocating memory takes about $5 \times$ longer. In a function that otherwise takes a few \si{\milli\sec}, adding almost \SI{0.5}{\milli\sec} because of spurious allocation is an overhead that can be very easily remedied.
 
-\subsubsection{Finite element optimisation}
+\subsubsection{Finite element optimisation}\label{ss:feOpt}
 
 The use of sparse arrays is a must when working with finite elements, where matrices often take structured sparse forms. Taking advantage of this sparsity significantly reduces memory footprint and computational expense. The code already used these special data structures, along with Cholesky factorisation for faster solves of linear systems. However, \mintinline{matlab}{MATLAB} has a special form of it that exploits sparsity. This reduced the time required for the factorisation by around $50\times$, reduced the memory footprint of the final sparse arrays by a similar amount, and reduced the memory footprint of the actual factorisation procedure by approximately $10 \times$. The whole point of this factorisation is to make solving linear systems faster, in this case the calculation of the corrective displacements, $\vec{\hat{u}}$, on the fixed boundaries, $S_u$, as a result of the forces acting upon them,
 \begin{align}
@@ -331,11 +331,13 @@ The final two optimisations also deal with memory. The first, removes unecessary
 
 In aggregate, these changes have given us the ability to use $15 \times$ more nodes than previously, as well as letting us build meshes over two orders of magnitude faster, mostly thanks to improved memory access patterns inside the mesh building loops.
 
-\subsection{Misc quality of life improvements}\label{s:qol}
+\subsection{Misc quality of life improvements}\label{ss:qol}
 
 Formerly, initialising a simulation would involve a series of non-obvious steps, particularly when compiling the C and CUDA code for the first time. This is now done automatically on a need-to-compile basis and has a fallback in case no \mintinline{CUDA}{CUDA} compiler is found.
 
 There was also a recurring problem with simulations suddenly failing when a function was called with an undefined argument. This extremely common scenario is unbecoming of good software, especially if the failure happened a few minutes after starting a simulation. This has been remedied with the automatic calculation of a set of reasonable defaults for each and every undefined variable, aside from the arrays defining a dislocation network. Any new developments get added to this very simple, yet much needed script.
+
+We also separated variable saving to minimise memory footprint and speed up simulations. Variables that remain constant throughout the simulation are saved only once before the main simulation loop, the rest are saved at whatever save frequency is provided in the input file. Plotting was also changed such that plotting functions are modular and provide more user control.
 
 \section{Conclusions}
 

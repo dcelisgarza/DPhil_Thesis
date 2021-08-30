@@ -1,0 +1,30 @@
+# Corrections
+
+- [ ] Add a section reviewing DDD efforts to date.
+  - [ ] This should include references to early work on edge-screw codes
+    - [ ] Devincre and others,
+    - [ ] including Novokshanov and
+    - [ ] Roberts if they ever published it,
+  - [ ] the advances to nodal codes, and
+    - [ ] a survey of the various existing DDD codes out there.
+    - [ ] Include references to the Stanford/Livermore ParaDiS code,
+    - [ ] the work of Zbib, and also
+    - [ ] the current work of Fivel and collaborators,
+    - [ ] Dupuy,
+    - [ ] Ghoniem/Sun,
+    - [ ] and Giacomo Po’s code MODEL. Make sure the big papers are cited (e.g. Bulatov’s Nature papers, and those of Arsenlis, Cai, Marian).
+  - [ ] LLNL (Arsenlis/Rhee?) did 3D FEM coupling 15 years ago too.
+- [ ] Add a brief section on alternative approaches
+  - [ ] e.g. dislocation density-based theories of Sandfeld and Hochrainer (near where you discuss level-set methods), and
+  - [ ] where DD sits in the multiscale hierarchy in comparison with DFT, MD, kMC, large scale FEM as discussed in viva.
+- [ ] (Eshelby) inclusions can’t be mentioned without citing Eshelby!
+- [ ] Mention the anisotropic work of Fitzgerald and Aubry (I think MODEL is aniso too?) and where anisotropy is important (e.g. hot Fe)/can be neglected (e.g. W).
+- [ ] Nonlinearity of velocity response: work of Fitzgerald and Tarleton/Roberts. Did Bruce work on this too?
+- [x] Put the section on DDD.jl into its own chapter.
+- [ ] Clearly state where your work has advanced the field,
+  - [x] e.g. in the EasyDD algorithm 1.1
+  - [ ] show haiyang's loading and unloading simulation to show it.
+- [ ] Spell check throughout and check references – some are repeated
+  - [x] e.g. 92 and 156.
+  - [x] It’s Frank-Read rather than Reed.
+- [ ] Page 110: figs 5.1, 5.2, 5.4(a, b) need citations or credits

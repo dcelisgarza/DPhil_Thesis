@@ -23,7 +23,7 @@ In total, eight loading tests were carried out.
 
 The cross-section of the micropillars was well-known at $\SI{12}{\micro\metre} \times \SI{12}{\micro\metre}$, however the length was postulated to be $\sim \SI{30}{\micro\metre}$.
 
-The initial dislocation configuration was not well known but was postulated to be approximately 10 dislocations \si{\micro\metre^{-2}}. The total length of mobile dislocations influences how much plasticity we observe. Furthermore, the Frank-Reed (FR) source size was unknown. The stress required to operate a source is approximately,
+The initial dislocation configuration was not well known but was postulated to be approximately 10 dislocations \si{\micro\metre^{-2}}. The total length of mobile dislocations influences how much plasticity we observe. Furthermore, the Frank-Read (FR) source size was unknown. The stress required to operate a source is approximately,
 \begin{align}\label{eq:yieldStress}
     \sigma_\rvar{y} & = \dfrac{\mu b}{l}\,,
 \end{align}
@@ -73,7 +73,7 @@ It is worth noting that the timescale of dislocation plasticity simulations make
 
 The material parameters of the samples were also not known, so they were estimated from comercially available manufacturing spec sheets and measurements reported from literature. The exact values used for the lattice parameter, shear modulus and Poisson ratio are: $a \coloneqq \SI{3.499}{\angstrom}$, $ \mu  \coloneqq \SI{79}{\giga\pascal}$, $\nu \coloneqq 0.31$ respectively. The lattice parameter is from \cite{ni_lattice} and the othters are the mean of the upper and lower values reported by \cite{azom_nickel}.
 
-We used prismatic loops with four sides as Frank-Reed sources to seed the domain with dislocations. Each side of the square sources had two segments of equal length (8 segments per source). Because we used Frank-Reed sources, only two opposite sides per source were allowed to move, the others were pinned.
+We used prismatic loops with four sides as Frank-Read sources to seed the domain with dislocations. Each side of the square sources had two segments of equal length (8 segments per source). Because we used Frank-Read sources, only two opposite sides per source were allowed to move, the others were pinned.
 
 Preliminary simulations showed the initially assumed dislocation density necessitated the initial sources be quite small, so the yield stress of the simulation was much greater than what was experimentally observed. We therefore dropped the number of sources to a single seed loop per active slip system, while increasing the size of each source. For the $\langle 1\, 0\, 0 \rangle$ loading direction, this was 8 loops, and for $\langle 1\, 1\, 0 \rangle$ it was only 4; \cref{t:slipSystems} contains the active slip systems for both scenarios.
 \begin{table}
@@ -102,7 +102,7 @@ Preliminary simulations showed the initially assumed dislocation density necessi
 \end{table}
 To minimise computation expenditure, we only included these active slip systems in our simulations. This obviously does not fully represent reality, but it saves simulations from having to resolve as many collisions and topological operations as would otherwise occur. Regardless of this decision, the simulations still managed to do an unexpectedly great job at quantitatively, and qualitatively reproducing the experimentally measured strain-stress curves as discussed in \cref{s:NiResults}.
 
-The pillar length was defined as $\SI{42}{\micro\metre}$, or $3.5\times$ the length of one of the $\SI{12}{\micro\metre}$ sides of the square cross-section. The extra length acts as a buffer zone for simulating dislocations moving into the bulk, where they pile up. In the simulation, they get pinned to the end of the cantilever as per \cref{c:surfRem}. The initial FR sources were random-uniformly distributed within the central $80\%$ of the domain, i.e. $x \in [0.1X, 0.9X]$, where $x$ is a point along dimension $X$. Given the fact that the number of sources was quite low, various distributions were generated until we arrived at one that spanned the whole domain, rather than clustered about a region.
+The pillar length was defined as $\SI{42}{\micro\metre}$, or $3.5\times$ the length of one of the $\SI{12}{\micro\metre}$ sides of the square cross-section. The extra length acts as a buffer zone for simulating dislocations moving into the bulk, where they pile up. In the simulation, they get pinned to the end of the cantilever as per \cref{s:surfRem}. The initial FR sources were random-uniformly distributed within the central $80\%$ of the domain, i.e. $x \in [0.1X, 0.9X]$, where $x$ is a point along dimension $X$. Given the fact that the number of sources was quite low, various distributions were generated until we arrived at one that spanned the whole domain, rather than clustered about a region.
 
 We define surface node sets $\left\{\forall (x, y, z) \in [0,\, 1] \vert S_{xyz} \in \partial \hat{V}\right\}$, where $\hat{V}$ is a unit volume such that $S_{000}$ denotes the node at the origin, $S_{x00}$ the $x$-axis spanning edge at $y,\, z=0$, and $S_{xy0}$ the $xy$-plane at $z=0$. We use these node sets to define our Neuman (displacement) boundary conditions as follows,
 \begin{subequations}
