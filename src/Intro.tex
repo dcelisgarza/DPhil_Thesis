@@ -183,11 +183,11 @@ The largest hurdle when implementing parallel algorithms is often the efficient 
 Efficient parallelisation of many problems requires \emph{coalesced memory access} as shown in \cref{f:mem_accessIntro}, which means we have to be extremely careful when mapping CPU memory to global GPU (device) memory. The fact that threads work ``simultaneously''\footnote{Not quite but essentially simultaneously. See \cite{nvidia} for details.} means that in order to obtain good performance, data which is to be simultaneously loaded into each thread must be contiguous. This maximises cache memory use and therefore reduces slow memory fetch operations.
 
 Special cases, such as having a parallel dislocation line segment to a surface, as discussed in \cref{ss:analytic_forces}, must be treated carefully due to the way code branching works in GPUs. There are various ways of doing so:
-\begin{inparaenum}[\itshape 1\upshape)]
+\begin{enumerate}
     \item if the special case is inexpensive, it can be treated within the same GPU function;
     \item if the special case is expensive and always known (such as certain boundary conditions in FEM), it can be placed in its own GPU function that treats it separately;
     \item if the special case is expesive and only found at runtime, it may be asynchronously treated by the CPU or buffered into its own GPU function to be executed at a later time.
-\end{inparaenum}
+\end{enumerate}
 
 \begin{figure}
     \centering
@@ -340,10 +340,10 @@ where $ \vec{v} $ is the dislocation velocity. This definition uses the material
 \end{figure}
 
 The level set method is significantly more computationally expensive than DDD \cite{lvl_set_dd}. It must solve two coupled quasi-linear partial differential equations whose character is in general undefined. It therefore requires the use of very robust numerical solvers such as higher order Total Variation Deminishing (TVD) Runge-Kutta methods for time discretisation (TVD-RK4 or higher), and high order ENO (Essentially Nonoscillatory $ \mathcal{O}(N^5) $ or higher) or WENO (Weighted Essentially Non-Oscilatory) interpolation methods for spatial discretisation \cite{lvl_set_ddd_inc} for the solutions to converge satisfactorily. The method also makes it impossible to use many of the useful analytical solutions one can find by discretising dislocations into straight line segments. Another problem is that this method has never been truly coupled to the finite element method. However, if one were to do so there are two naïve ways of going about it:
-\begin{inparaenum}[\itshape1\upshape)]
+\begin{enumerate}
     \item numerically integrating along the dislocation lines and finding a way to numerically calculate the forces on FE nodes, or
     \item discretising the level set curves and using either the DCM or SM to find forces and displacements.
-\end{inparaenum}
+\end{enumerate}
 The former would be very computationally expensive. Furthermore, no one has found a way to compute the forces or displacements exerted by generally shaped, non-discretised dislocations, numerical solutions are possible as they are needed to find self-interaction energies and dislocation-dislocation forces \cite{lvl_set_dd} but general, closed-form analytical ones are most likely impossible to find. Both approaches defeat the purpose of the level set method, necessitating some form of discretisation whilst keeping the high computational cost. As a result of this, the level set method is not nearly as popular as DDD utilising either the SM or DCM.
 
 \subsection{Non-singular continuum theory of dislocations}
@@ -377,14 +377,14 @@ which is important when describing how \citet{a_non-singular_continuum_theory_of
 
 The singularity in $ R $ is the result of unreasonably and unphysically assuming a dislocation loop's Burgers vector distribution is a Delta function. The assumption was made to allow for closed-form and relatively simple expressions. As noted in \cite{bv_dist}, other distributions may be used but they either result in significantly more complicated expressions or destroy the analytical nature of the classical formulation.
 
-There have been many attempts at removing this singularity, including finite-strain elasticity \cite{non_sing3}, non-local and gradient elasticity \cite{non_sing1, non_sing2}, interaction cut-off radius \cite{pk_force}, average stress at two points on opposite sides of the dislocation line \cite{non_sing4, non_sing5}, and spreading the Burgers vector distribution out over a finite width \cite{bv_dist, non_sing6, non_sing7}. Unfortunately all of these approaches failed in one way or another \cite{a_non-singular_continuum_theory_of_dislocations}. Depending on the approach, various undesirable qualities may present themselves, including
-\begin{inparaenum}[\itshape1\upshape)]
+There have been many attempts at removing this singularity, including finite-strain elasticity \cite{non_sing3}, non-local and gradient elasticity \cite{non_sing1, non_sing2}, interaction cut-off radius \cite{pk_force}, average stress at two points on opposite sides of the dislocation line \cite{non_sing4, non_sing5}, and spreading the Burgers vector distribution out over a finite width \cite{bv_dist, non_sing6, non_sing7}. Unfortunately all of these approaches failed in one way or another \cite{a_non-singular_continuum_theory_of_dislocations}. Depending on the approach, various undesirable qualities may present themselves, including:
+\begin{enumerate}
     \item inconsistencies with other theories;
     \item impractical implementation;
     \item lack of closed-form solutions for non-straight finite dislocations;
     \item lack of self-consistency; and
     \item the possibility for multiple non-degenerate expressions and solutions for the line integral of the dislocation line energy.
-\end{inparaenum}
+\end{enumerate}
 
 \Citet{a_non-singular_continuum_theory_of_dislocations} defined and justified a different Burgers vector distribution that maintains the mathematical convenience of the classical formulation and eliminates such an unphysical assumption. They did so by introducing a Burgers vector density function,
 \begin{subequations}\label{eq:b_dist}
@@ -522,33 +522,33 @@ This is of course a gross simplification of the real 3D problem, but this approa
 where $ \sigma_{0} $ is the yield stress, $ d_{0} $ a reference crystal size, $ \kappa $ the Hall-Petch slope and $ n $ the crystal size sensitivity parameter. \Citet{2d_pcm} showed that the model reproduces the Hall-Petch effect quite successfully. As a consequence, they showed that even what might appear as an overly simplistic approach can describe a complex emergent phenomenon such as the Hall-Petch effect.
 
 Aside from the Hall-Petch effect, the model has also been utilised by \citet{2d_pcm2} to study the thickness effects of three different types of polycrystalline thin films:
-\begin{inparaenum}[\itshape 1\upshape )]
+\begin{enumerate}
     \item no surface treatment,
     \item surface passivation layer, and
     \item surface grain refinement zones.
-\end{inparaenum}
+\end{enumerate}
 In their study, Frank-Read sources were seeded across the domain, and the superposition principle was utilised to calculate displacement, strain and stresses in the thin films. Their results qualitatively reproduced experimental observations from expected dislocation patterns, stress distributions, and the eventual disappearance of the size effect as the films got thicker.
 
 Though two-dimensional models might seem useless, they have their place, particularly when thin films are concerned. However, they may also be of use when investigating the effects of dislocations on the mechanical behaviour of superconducting tape---whose applications range from medical imaging to fusion energy production. The exotic composition and crystallography of many superconductors (perovskites) would make 3D models very complex and computationally expensive, so 2D models may offer viable alternatives. On top of this, a superconducting tape's operating environment would often have it under strains which might not strictly lie in-plane, but given a small enough segment of tape, strains orthogonal to its plane may be neglected. Thus making 2D models an acceptable first attempt at tacking the problem, at least until developments in 3D models make more realistic studies of such complex systems possible.
 
 The 3D case is substantially more complicated than the 2D case. A study by \citet{twinning}, looked at the role of twinning on the hardening response of polycrystalline Mg using 3D DDD. The article is a perfect example of why 3D DDD is so much more complex than 2D DDD. Admitedly, it uses a material with a HCP crystal structure, whose mobility laws are substantially more complex than those of FCC or BCC materials.
 
-In 3D DDD one must account for dislocation-twin boundary (TB) interactions. These may be obtained via geometric considerations, MD, and experimental evidence \cite{twinning2,twinning3,twinning4,twinning5}. We must have information regarding how dislocations are transmitted through a TB such as
-\begin{inparaenum}[\itshape 1\upshape)]
+In 3D DDD one must account for dislocation-twin boundary (TB) interactions. These may be obtained via geometric considerations, MD, and experimental evidence \cite{twinning2,twinning3,twinning4,twinning5}. We must have information regarding how dislocations are transmitted through a TB such as:
+\begin{enumerate}
     \item whether a dislocation leaves a residual dislocation on the TB,
     \item the possible pre-TB and post-TB slip planes a dislocation can be transmitted to,
     \item which loading conditions are conducive to which transmission behaviour and
     \item which types of dislocation can be transmitted or reflected and in what ways \cite{twinning}.
-\end{inparaenum}
+\end{enumerate}
 All this obviously depends on the twinning plane, so in order to study more realistic scenarios one must have all the necessary knowledge to properly account for all dislocation-TB interactions. Furthermore, it is possible that certain dislocations may leave behind twinning dislocations that end up as TB steps, whose movement can lead to TB migration and twin growth \cite{twinning6, twinning7}.
 
-\Citet{twinning} modelled four scenarios in order to deconvolve the effects that twins and grain boundaries have on the mechanical behaviour of a cube-shaped crystal. They modelled
-\begin{inparaenum}[\itshape 1\upshape)]
+\Citet{twinning} modelled four scenarios in order to deconvolve the effects that twins and grain boundaries have on the mechanical behaviour of a cube-shaped crystal. They modelled:
+\begin{enumerate}
     \item a twinned polycrystal with two TBs and GBs on the edges of the cube,
     \item a single crystal with no TBs or GBs,
     \item a polycrystal with no TBs but GBs,
     \item a twinned crystal with TBs but not GBs.
-\end{inparaenum}
+\end{enumerate}
 It is worth noting that the effects of twin growth in plasticity were not accounted for in their DDD simulation and instead had to be numerically computed via the hardening rate $ \theta $,
 \begin{subequations}
     \begin{align}
@@ -599,12 +599,12 @@ Though mathematically appealing, such an approach is far from representing the r
 \subsection{Parallelising discrete dislocation dynamics}
 \label{ss:parallel_ddd}
 
-It has been shown that DDD lends itself well to parallelisation. \Citet{gpu_ddd} investigated some of the more computationally intensive parts of DDD in DDLab \cite{ddlab}, a freely available DD code for Matlab. The algorithms whose parallel performance was studied in \cite{gpu_ddd} were
-\begin{inparaenum}
+It has been shown that DDD lends itself well to parallelisation. \Citet{gpu_ddd} investigated some of the more computationally intensive parts of DDD in DDLab \cite{ddlab}, a freely available DD code for Matlab. The algorithms whose parallel performance was studied in \cite{gpu_ddd} were:
+\begin{enumerate}
     \item remote (segment-segment) forces,
     \item surface tractions and
     \item image stresses.
-\end{inparaenum}
+\end{enumerate}
 The remote force computation has $ \mathcal{O}(N^{2}) $ computational complexity, where $ N $ is the number of dislocation segments. The quadratic scaling is due to the $ r^{-1} $ dependence of the dislocation stress fields, so long range interactions cannot be ignored. Both the surface traction and image stress calculations have $ \mathcal{O}(k N) $ computational where $ k $ is the total number of surface nodes and $ N $ the number of dislocation line segments.
 
 As is usually the case in parallel computing, there is often more than one way to parallelise a problem. The optimal strategy depends on the problem itself. It was no different in \cite{gpu_ddd} as shown in \cref{f:gpu_ddd}. \Citet{gpu_ddd} realised that the segment-segment computation can be done via $ \mathcal{O}(N^{2}) $ parallelism, where single pairs of dislocation segments are sent to a single thread, and then globally reduced. However, this approach is $ \mathcal{O}(N^{2}) $ in memory and can lead to inefficient data reuse. So they opted instead for $ \mathcal{O}(N) $ parallelisation and serialisation. In this scheme each thread is assigned a unique segment, and each thread computes the forces between its assigned segment and all the others while serially adding the force contributions. The memory access pattern they found best was that of a serial procedure, the reason is that in-thread calculations are serialised so having coalesced memory access patterns for threads would cause problems when serially accessing data for the calculation.

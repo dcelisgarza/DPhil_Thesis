@@ -222,27 +222,27 @@ An oft-overlooked aspect of code useability is its organisation. However, as a c
 \subsubsection{Source control}
 
 Source control is a crucial aspect of industrial software development. It is an industry standard and is the very first thing to set up when starting a software development project. Academia is \emph{very} far behind in this regard. Source control software can perform a wide variety of tasks but among the most important are:
-\begin{inparaenum}[\itshape1\upshape)]
+\begin{enumerate}
     \item provide a history of restore points in case things break;
     \item keep a history of changes, who and when they made them;
     \item lets developers and users make changes independently and request their changes be added to the main code as patches or new versions;
     \item detect conflicts between versions to be merged; and
     \item a robust versioning system integrated to the history of changes.
-\end{inparaenum}
+\end{enumerate}
 
-With regard to reproducibility, source control is a crucial tool. In both \cref{ss:integrator,ss:matrix} we took advantage of this to provide a specific commit and a file name. Source control can be used in local and remote services via private LAN (Local Area Network), as well as webhosting services such as Gitlab, Bitbucket, or GitHub as in our case. Webhosted services are a popular choice because they simplify and enhance the user and developer experience. For example, the visibility of code can be easily set to
-\begin{inparaenum}
+With regard to reproducibility, source control is a crucial tool. In both \cref{ss:integrator,ss:matrix} we took advantage of this to provide a specific commit and a file name. Source control can be used in local and remote services via private LAN (Local Area Network), as well as webhosting services such as Gitlab, Bitbucket, or GitHub as in our case. Webhosted services are a popular choice because they simplify and enhance the user and developer experience. For example, the visibility of code can be easily set to:
+\begin{enumerate}
     \item private, where only those explicitly given access have read and write access; or
     \item public, where anyone can view the code and propose changes which can then be reviewed and either accepted or rejected by those with write access.
-\end{inparaenum}
-They also simplify the use of addons and webhooks that can perform myriad tasks like,
-\begin{inparaenum}
+\end{enumerate}
+They also simplify the use of addons and webhooks that can perform myriad tasks like:
+\begin{enumerate}
     \item automated remote testing on different platforms;
     \item code coverage reports (what lines and how many times each of them was hit during automated testing);
     \item automated documentation generation;
     \item automated merge checks; and even
     \item automated encryption/installation key generation.
-\end{inparaenum}
+\end{enumerate}
 
 LAN-hosted version control software can make use of everything webhosted implementations can\footnote{Although man quality of life improvements such as GUIs (Graphical User Interfaces) and code editor integration might be unaccessible.}. Indeed, LAN-hosting is used for things pertaining to defense and national security, but the use of webhosted services is an easy choice for academia, industry, and private users. In fact, the digital version of this document is found in \href{https://github.com/dcelisgarza/DPhil_Thesis}{\texttt{https://github.com/dcelisgarza/DPhil\_Thesis}}, among many other repositories from recreational and past work. Moreover, whenever this document references a specific file, the digital version directly links to the relevant information (including relevant lines).
 

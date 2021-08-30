@@ -19,13 +19,13 @@ It is our belief that we are currently in a renaissance of programming languages
     \item Interoperability: calling other languages from \mintinline{julia}{Julia} is seamless, so the use of external libraries or languages is as easy as calling a \mintinline{julia}{Julia} function. However, \mintinline{julia}{Julia} is so powerful and performant that most of its packages are single-language. A feature often shared by other modern languages such as \mintinline{go}{Go}, \mintinline{rust}{Rust}, \mintinline{swift}{Swift} and \mintinline{elixir}{Elixir}.
 \end{enumerate}
 
-The code can be found here \href{https://github.com/dcelisgarza/DDD.jl}{\texttt{https://github.com/dcelisgarza/DDD.jl}}. Of note are the banners at the top of the README, from left to right they link to
-\begin{inparaenum}
+The code can be found here \href{https://github.com/dcelisgarza/DDD.jl}{\texttt{https://github.com/dcelisgarza/DDD.jl}}. Of note are the banners at the top of the README, from left to right they link to:
+\begin{enumerate}
     \item the documentation;
     \item automated, remote testing;
     \item two test coverage reports i.e. which lines of code have been hit during testing and how many times; and
     \item an interactive Jupyter notebook on Binder, which runs on a browser and has no external dependancies.
-\end{inparaenum}
+\end{enumerate}
 
 It is the result of the lessons learned while working on EasyDD. Its design avoids the same pitfalls and has a clear vision for usability, modularity, and extensibility, without sacrificing performance. It has been a didactic, after hours project to escape the anxieties of the pandemic and ease the frustrations with some fundamental design aspects of EasyDD (many carried over from DDLab). But it has also been an attempt to understand how EasyDD can be improved without all the clutter, risk, and technical debt (some solutions were even trialed in DDD.jl and backported to EasyDD). It is therefore not feature-complete. Nevertheless, it has turned into a promising weekend project for which we can provide a sample of current capabilities.
 
@@ -197,11 +197,11 @@ boundaryP, forceDispP = Boundaries(femParamsP, meshP);
 
 \section{Generating dislocations}
 
-Generating dislocation sources is also quite easy. We can use some information from the simulation parameters to generate two types of dislocations,
-\begin{inparaenum}
-    \item prismatic loop with 8 sides, 8 nodes and 8 segments with $\vec{b} = [1\, 1\, 1]$ and $n = [\overline{1}\, 1\, 0]$,
-    \item and a shear loop with 5 sides, 10 nodes and 10 segments with $b = [1\, 1\, \overline{1}]$ and $n = [1\, \overline{1}\, 0]$.
-\end{inparaenum}
+Generating dislocation sources is also quite easy. We can use some information from the simulation parameters to generate two types of dislocations:
+\begin{enumerate}
+    \item prismatic loop with 8 sides, 8 nodes and 8 segments with $\vec{b} = [1\, 1\, 1]$ and $n = \left[\overline{1}\, 1\, 0\right]$,
+    \item and a shear loop with 5 sides, 10 nodes and 10 segments with $b = \left[1\, 1\, \overline{1}\right]$ and $n = \left[1\, \overline{1}\, 0\right]$.
+\end{enumerate}
 Both structures represent 5 loops with segment lengths equal to \mintinline{julia}{segLen}, which will generate random uniformly distributed loops in $x = [0,\, dx]$, $y = [0,\, dy]$, $z = [0,\, dz]$.
 \begin{minted}[frame=lines, linenos]{julia}
 # Julia supports multiple assignments in a single line
