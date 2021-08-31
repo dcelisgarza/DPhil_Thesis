@@ -27,4 +27,4 @@
 - [x] Spell check throughout and check references – some are repeated
   - [x] e.g. 92 and 156.
   - [x] It’s Frank-Read rather than Reed.
-- [ ] Page 110: figs 5.1, 5.2, 5.4(a, b) need citations or credits
+- [x] Page 110: figs 5.1, 5.2, 5.4(a, b) need citations or credits
