@@ -649,31 +649,31 @@ EasyDD and DDLab also differ greatly in their topological operations, Euler-Trap
   \label{alg:EasyDD}
   \begin{enumerate}
     \item Generate input structures.
-    \item Check for missing variables and give them default values if necessary. \emph{\Cref{s:rse}}.
-    \item Check for outdated or uncompiled files and compile them if necessary. \emph{\Cref{ss:qol}}.
+    \item Check for missing variables and give them default values if necessary. \emph{New feature: \cref{s:rse}}.
+    \item Check for outdated or uncompiled files and compile them if necessary. \emph{New feature: \cref{ss:qol}}.
     \item Clean up input structures.
     \item Generate connectivity matrices for the dislocations.
     \item Check correctness of the input structures.
-    \item Generate FE variables. \emph{\Cref{ss:feOpt,ss:memAlloc,ss:genFun}}.
-    \item Generate FE boundary conditions and variables. \emph{\Cref{ss:feOpt,ss:memAlloc,ss:genFun}}.
+    \item Generate FE variables. \emph{Improved feature: \cref{ss:feOpt,ss:memAlloc,ss:genFun}}.
+    \item Generate FE boundary conditions and variables. \emph{Improved feature: \cref{ss:feOpt,ss:memAlloc,ss:genFun}}.
     \item Plot FE domain according to the boundary conditons.
-    \item Generate data structures for coupling DDD to FEM. \emph{\Cref{ss:memAlloc,ss:genFun}}.
+    \item Generate data structures for coupling DDD to FEM. \emph{New and improved features: \cref{ss:memAlloc,ss:genFun}}.
     \item Generate surface triangulation for surface topological operations.
-    \item Remesh dislocations crossing surface boundaries. \emph{\Cref{s:surfRem}}.
+    \item Remesh dislocations crossing surface boundaries. \emph{Improved feature: \cref{s:surfRem}}.
     \item Calculate initial surface displacements to ensure the initial total displacement is effectively zero.
-    \item Save static variables. \emph{\Cref{ss:qol}}.
+    \item Save static variables. \emph{Improved feature: \cref{ss:qol}}.
     \item Start simulation loop which continues until the total simulation time has been reached or there are no more internal segments.
-    \item Save dynamically changing variables according to the save frequency. \emph{\Cref{ss:qol}}.
-    \item Calculate loading. \emph{\Cref{ss:genFun}}.
-    \item Couple FEM to DDD via the \nameref{sss:superposition}. \emph{\Cref{c:tractions}}.
-    \item Calculate output variables for the simulation. \emph{\Cref{ss:genFun}}.
-    \item Evolve dislocation structure in time. Calls the velocity function, which uses the segment force calculation function and mobility functions to respectively calculate nodal forces and velocities. It also fixes the surface velocity calculation such that surface nodes move along their slip plane correctly. The integrator dynamically adjusts the time step according to the desired error tolerances. \emph{\Cref{ss:integrator,ss:matrix}}.
-    \item Plot simulation according to the plotting frequency. \emph{\Cref{ss:qol}}.
-    \item Remesh dislocation network. This cleans up the structure before performing the collision detection, collision resolution, and separation procedures. \emph{\Cref{s:nonCommutativity}}.
-    \item Perform collision-separation loop. This function calls the collision detection and resolution routines in a loop with the separation routine. The collisions and separations are only performed if they meet the right criteria. This ensures nodal connectivities are kept to a minimum, and minimises the network energy to first order separations. These functions saw many changes and are very different from those found in DDLab. \emph{\Cref{c:topology}}.
-    \item Mobilise highly connected, sessile nodes. \emph{\Cref{s:nonCommutativity}}.
-    \item Perform separation. This is needed in case there were no collisions, but a separation is now energetically favourable after evolving the network in time, and also for any recently mobilised sessile nodes.  \emph{\Cref{s:nonCommutativity}}.
-    \item Remesh dislocation network. This cleans up the structure before it is evolved in the next step of the iteration.  \emph{\Cref{s:nonCommutativity}}.
+    \item Save dynamically changing variables according to the save frequency. \emph{Improved feature: \cref{ss:qol}}.
+    \item Calculate loading. \emph{New feature: \cref{ss:genFun}}.
+    \item Couple FEM to DDD via the \nameref{sss:superposition}. \emph{New features: \cref{c:tractions}}.
+    \item Calculate output variables for the simulation. \emph{Improved feature: \cref{ss:genFun}}.
+    \item Evolve dislocation structure in time. Calls the velocity function, which uses the segment force calculation function and mobility functions to respectively calculate nodal forces and velocities. It also fixes the surface velocity calculation such that surface nodes move along their slip plane correctly. The integrator dynamically adjusts the time step according to the desired error tolerances. \emph{Improved features: \cref{ss:integrator,ss:matrix}}.
+    \item Plot simulation according to the plotting frequency. \emph{Improved feature: \cref{ss:qol}}.
+    \item Remesh dislocation network. This cleans up the structure before performing the collision detection, collision resolution, and separation procedures. \emph{Improved feature: \cref{s:nonCommutativity}}.
+    \item Perform collision-separation loop. This function calls the collision detection and resolution routines in a loop with the separation routine. The collisions and separations are only performed if they meet the right criteria. This ensures nodal connectivities are kept to a minimum, and minimises the network energy to first order separations. These functions saw many changes and are very different from those found in DDLab. \emph{Improved feature: \cref{c:topology}}.
+    \item Mobilise highly connected, sessile nodes. \emph{Improved feature: \cref{s:nonCommutativity}}.
+    \item Perform separation. This is needed in case there were no collisions, but a separation is now energetically favourable after evolving the network in time, and also for any recently mobilised sessile nodes.  \emph{Improved feature: \cref{s:nonCommutativity}}.
+    \item Remesh dislocation network. This cleans up the structure before it is evolved in the next step of the iteration.  \emph{Improved feature: \cref{s:nonCommutativity}}.
     \item Step time forward. Go to step 15 for the next iteration.
   \end{enumerate}
 \end{center}
