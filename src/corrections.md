@@ -1,8 +1,10 @@
 # Corrections
 
 - [ ] Add a section reviewing DDD efforts to date.
-  - [ ] This should include references to early work on edge-screw codes
-    - [ ] Devincre and others,
+  - [x] This should include references to early work on edge-screw codes
+    - [x] Devincre and others,
+    - [x] TRIDIS
+    - [x] microMegas
     - [ ] including Novokshanov and
     - [ ] Roberts if they ever published it,
   - [ ] the advances to nodal codes, and
