@@ -15,23 +15,23 @@ The first obvious hurdle to overcome when making more complex simulations possib
 
 The unacceptable slowness prompted a closer examination of the adaptive-time Euler-trapezoid predictor-corrector solver described in algorithm 10.2 and equations (10.42, 10.45 and 10.46) in \cite[p.~214--216]{ddlab}, reproduced here by \cref{alg:trapezoid,eq:trapezoid},
 \begin{align}\label{eq:trapezoid}
-    \vec{r}_i^{\rvar{P}}(t + \Delta t) & = \vec{r}_i(t) + \vec{g}_i\left(\left\{ \vec{r}_i(t) \right\}\right) \Delta t\,,                                                                     \\
-    \vec{r}_i(t + \Delta t)            & = \vec{r}_i + \dfrac{\vec{g}_i(\left\{\vec{r}_i(t)\right\}) + \vec{g}_i\left(\left\{\vec{r}_i^{\rvar{P}}(t + \Delta t)\right\}\right)}{2}\Delta t\,, \\
-    \vec{v}_i                          & \coloneqq \dfrac{\rvar{d}\vec{r}_i}{\rvar{d}t} = \vec{g}_i\left(\left\{\vec{r}_i\right\}\right)\,,
+  \vec{r}_i^{\rvar{P}}(t + \Delta t) & = \vec{r}_i(t) + \vec{g}_i\left(\left\{ \vec{r}_i(t) \right\}\right) \Delta t\,,                                                                     \\
+  \vec{r}_i(t + \Delta t)            & = \vec{r}_i + \dfrac{\vec{g}_i(\left\{\vec{r}_i(t)\right\}) + \vec{g}_i\left(\left\{\vec{r}_i^{\rvar{P}}(t + \Delta t)\right\}\right)}{2}\Delta t\,, \\
+  \vec{v}_i                          & \coloneqq \dfrac{\rvar{d}\vec{r}_i}{\rvar{d}t} = \vec{g}_i\left(\left\{\vec{r}_i\right\}\right)\,,
 \end{align}
 where $\vec{r}_i$ are nodal coordinates, $\vec{v}_i$ are nodal velocities, $\vec{g}_i$ is the function that uses the mobility model and nodal forces to compute the nodal velocities, and the superscript $\rvar{P}$ denotes the predictor. This solver is fast and accurate for a small enough timestep $\Delta t$. The algorithm contains two free parameters, $\Delta t_{\rvar{max}}$ and $\epsilon$, which respectively denote the maximum allowed timestep and accuracy.
 \begin{algorithm}
-    \caption{Adaptive Euler-trapezoid predictor-corrector algorithm.}
-    \label{alg:trapezoid}
-    \begin{enumerate}
-        \item Initialise time step $\Delta t = \Delta t_{\rvar{max}}$.
-        \item $\Delta t_0 = \Delta t$.
-        \item Compute $\vec{r}_i^{\rvar{P}}(t + \Delta t)$ and corrector $\vec{r}_i(t + \Delta t)$ from \cref{eq:trapezoid}.
-        \item If $\max_i\left(\lVert \vec{r}_i^{\rvar{P}}(t + \Delta t) - \vec{r}_i(t + \Delta t)\rVert\right) > \epsilon$, reduce time step $\Delta t = \Delta t / 2$ and go to 3.
-        \item $t = t + \Delta t$.
-        \item If $\Delta t = \Delta t_0$, increase time step to $\Delta t = \min(1.2 \Delta t, \Delta t_{\rvar{max}})$.
-        \item Return to 2, unless total number of cycles is reached.
-    \end{enumerate}
+  \caption{Adaptive Euler-trapezoid predictor-corrector algorithm.}
+  \label{alg:trapezoid}
+  \begin{enumerate}
+    \item Initialise time step $\Delta t = \Delta t_{\rvar{max}}$.
+    \item $\Delta t_0 = \Delta t$.
+    \item Compute $\vec{r}_i^{\rvar{P}}(t + \Delta t)$ and corrector $\vec{r}_i(t + \Delta t)$ from \cref{eq:trapezoid}.
+    \item If $\max_i\left(\lVert \vec{r}_i^{\rvar{P}}(t + \Delta t) - \vec{r}_i(t + \Delta t)\rVert\right) > \epsilon$, reduce time step $\Delta t = \Delta t / 2$ and go to 3.
+    \item $t = t + \Delta t$.
+    \item If $\Delta t = \Delta t_0$, increase time step to $\Delta t = \min(1.2 \Delta t, \Delta t_{\rvar{max}})$.
+    \item Return to 2, unless total number of cycles is reached.
+  \end{enumerate}
 \end{algorithm}
 
 The original, supposed implementation of this is found in commit \href{https://github.com/TarletonGroup/EasyDD/blob/780a6c41b35687b443d3241674af7393d2140639/int_trapezoid.m}{\texttt{65907b0}} under the name \texttt{int\_trapezoid.m}.
@@ -40,40 +40,40 @@ However, this was not the case. There were a number of problems with the impleme
 
 An improved algorithm is described in \cref{alg:trapezoid_improved}. This algorithm maximises the time step given absolute and relative error criteria, ($\epsilon_{\rvar{max}}$, $\eta_{\rvar{max}}$), absolute maximal and minimal timesteps, ($\Delta t_{\rvar{max}}$, $\Delta t_{\rvar{min}}$) and number of iterations, $\rvar{iter}_{\rvar{max}}$. It also uses a modulated timestep increase by how far under the absolute accuracy criteria we are. It also fixes a bug that made the error calculation only account for the largest magnitude of a single component of the 3D vectors, rather than the largest norm. The new implementation can be found in the most current version of \href{https://github.com/TarletonGroup/EasyDD/blob/master/src/int_trapezoid.m}{\texttt{int\_trapezoid.m}}.
 \begin{algorithm}
-    \caption{Improved adaptive timestep algorithm.}
-    \label{alg:trapezoid_improved}
-    \begin{algorithmic}
-        \State $\rvar{Convergent} = \rvar{false}$, $\Delta t_{\rvar{valid}} = 0$, $\rvar{iter} = 0$, $\rvar{flag} = \rvar{false}$
-        \While{$\rvar{Convergent} == \rvar{false}$}
-        \State Compute $\vec{r}_i^{\rvar{P}}(t + \Delta t)$ and corrector $\vec{r}_i(t + \Delta t)$ from \cref{eq:trapezoid}.
-        \State $\Delta \vec{r}_i = \vec{r}_i(t + \Delta t) - \vec{r}_i^{\rvar{P}}(t + \Delta t)$
-        \State $\vec{\overline{r}}_i = \dfrac{\vec{g}_i(\left\{\vec{r}_j(t)\right\}) + \vec{g}_i\left(\left\{\vec{r}_i^{\rvar{P}}(t + \Delta t)\right\}\right)}{2}\Delta t$
-        \State $\epsilon = \max_i\left(\lVert \Delta \vec{r}_i \rVert \right)$
-        \State $\eta = \max_i\left(\lVert \Delta \vec{r}_i - \vec{\overline{r}}_i \rVert\right)$
-        \If{$\epsilon < \epsilon_{\rvar{max}} $ and $\eta < \eta_{\rvar{max}}$}
-        \State $\Delta t_{\textrm{valid}} = \Delta t$
-        \State $\gamma = 1.2\left(\dfrac{1}{\left[1 + (1.2^{20} - 1) (\epsilon / \epsilon_{\textrm{max}})\right]}\right)^{1/20}$
-        \State $\rvar{flag} = \rvar{true}$
-        \State $\rvar{iter} = \rvar{iter} + 1$
-        \State $\Delta t = \max\left(\gamma \Delta t,\, \Delta t_\rvar{max}\right)$
-        \ElsIf{$\rvar{flag} == \rvar{true}$}
-        \State $\Delta t = \Delta t_{\rvar{valid}}$
-        \State $\rvar{iter} = \rvar{iter}_\rvar{max}$
-        \ElsIf{$\Delta t < \Delta t_\rvar{min}$}
-        \State $\Delta t = \Delta t / 2$
-        \State $\rvar{iter} = \rvar{iter} + 1$
-        \ElsIf{$\Delta t == \Delta t_\rvar{min}$}
-        \State $\rvar{iter} = \rvar{iter}_\rvar{max} + 1$
-        \Else
-        \State $\Delta t = \Delta t / 2$
-        \EndIf
-        \If{$\rvar{iter} > \rvar{iter}_{\rvar{max}}$ or $\Delta t == \Delta t_{\rvar{max}}$}
-        \State $\rvar{Convergent} = \rvar{true}$
-        \EndIf
-        \EndWhile
-        \State $t = t + \Delta t$
-        \State Proceed with the rest of the simulation.
-    \end{algorithmic}
+  \caption{Improved adaptive timestep algorithm.}
+  \label{alg:trapezoid_improved}
+  \begin{algorithmic}
+    \State $\rvar{Convergent} = \rvar{false}$, $\Delta t_{\rvar{valid}} = 0$, $\rvar{iter} = 0$, $\rvar{flag} = \rvar{false}$
+    \While{$\rvar{Convergent} == \rvar{false}$}
+    \State Compute $\vec{r}_i^{\rvar{P}}(t + \Delta t)$ and corrector $\vec{r}_i(t + \Delta t)$ from \cref{eq:trapezoid}.
+    \State $\Delta \vec{r}_i = \vec{r}_i(t + \Delta t) - \vec{r}_i^{\rvar{P}}(t + \Delta t)$
+    \State $\vec{\overline{r}}_i = \dfrac{\vec{g}_i(\left\{\vec{r}_j(t)\right\}) + \vec{g}_i\left(\left\{\vec{r}_i^{\rvar{P}}(t + \Delta t)\right\}\right)}{2}\Delta t$
+    \State $\epsilon = \max_i\left(\lVert \Delta \vec{r}_i \rVert \right)$
+    \State $\eta = \max_i\left(\lVert \Delta \vec{r}_i - \vec{\overline{r}}_i \rVert\right)$
+    \If{$\epsilon < \epsilon_{\rvar{max}} $ and $\eta < \eta_{\rvar{max}}$}
+    \State $\Delta t_{\textrm{valid}} = \Delta t$
+    \State $\gamma = 1.2\left(\dfrac{1}{\left[1 + (1.2^{20} - 1) (\epsilon / \epsilon_{\textrm{max}})\right]}\right)^{1/20}$
+    \State $\rvar{flag} = \rvar{true}$
+    \State $\rvar{iter} = \rvar{iter} + 1$
+    \State $\Delta t = \max\left(\gamma \Delta t,\, \Delta t_\rvar{max}\right)$
+    \ElsIf{$\rvar{flag} == \rvar{true}$}
+    \State $\Delta t = \Delta t_{\rvar{valid}}$
+    \State $\rvar{iter} = \rvar{iter}_\rvar{max}$
+    \ElsIf{$\Delta t < \Delta t_\rvar{min}$}
+    \State $\Delta t = \Delta t / 2$
+    \State $\rvar{iter} = \rvar{iter} + 1$
+    \ElsIf{$\Delta t == \Delta t_\rvar{min}$}
+    \State $\rvar{iter} = \rvar{iter}_\rvar{max} + 1$
+    \Else
+    \State $\Delta t = \Delta t / 2$
+    \EndIf
+    \If{$\rvar{iter} > \rvar{iter}_{\rvar{max}}$ or $\Delta t == \Delta t_{\rvar{max}}$}
+    \State $\rvar{Convergent} = \rvar{true}$
+    \EndIf
+    \EndWhile
+    \State $t = t + \Delta t$
+    \State Proceed with the rest of the simulation.
+  \end{algorithmic}
 \end{algorithm}
 
 \Cref{alg:trapezoid_improved} is more computationally expensive per iteration, but can increase the timestep more rapidly, optimally and is more robust than \cref{alg:trapezoid}. The original algorithm also wasn't correctly implemented. Together, these changes let the new version of the software move through the elastic regime of our simulations orders of magnitude faster than before. Simulations that took hours to days to reach the plastic regime, started doing so in minutes to hours. It also narrowed the gap between different loading conditions, as simulations were now more capable of effectively adjusting the timestep to more efficiently match the error tolerances. However, as discussed in \cref{c:simulations}, there is still a danger of overloading simulations. Fixing the integrator was the first major bottleneck we fixed, allowing us to identify and resolve downstream issues that were previously unkown.
@@ -83,39 +83,39 @@ An improved algorithm is described in \cref{alg:trapezoid_improved}. This algori
 
 A common problem with discrete dislocation dynamics is the tendancy for some networks to have a large degree of variation in the speed of dislocation nodes \cite{bertin2019gpu,ddlab,arsenlis2007enabling}. This is a consequence of the fact that nodes are discretised representations of dislocation lines. As such, nodal motion must be constrained to the motion of dislocations, i.e. nodal movement must be consistent with how a dislocation glides, climbs and cross-slips, accounting for dislocation character and slip system. Dislocation motion can be assumed to follow a linear, anisotropic, viscous drag model \cite{ddlab},
 \begin{align}\label{eq:dragCoef}
-    \vec{F}_\textrm{drag}(\vec{x}) & = -\mathcal{B}(\vec{\xi}(\vec{x})) \cdot \vec{v}(\vec{x})\,,
+  \vec{F}_\textrm{drag}(\vec{x}) & = -\mathcal{B}(\vec{\xi}(\vec{x})) \cdot \vec{v}(\vec{x})\,,
 \end{align}
 where $\mathcal{B}$ is a tensor constructed from the anisotropic drag that a dislocation node at $\vec{x}$, experiences as a result of its constrained velocity $\vec{v}(\vec{x})$ due to being part of a discritesed line segment with direction $\vec{\xi}(\vec{x})$. This means a node can experience very different resitances to moving along its allowed movement vectors.
 
 Different mobility laws can have different parametrisations for their permitted movement. A problem that often plagues traditional mobility laws\footnote{Bruce Bromage, of \cite{bromage2018calculating} has developed a new BCC mobility law, \href{https://github.com/TarletonGroup/EasyDD/blob/master/src/mobbcc_bb1b.m}{\texttt{mobbcc1\_bb.m}} which can be found in the most current version of EasyDD. It solves many of the issues with traditional laws and is our new go-to for BCC materials. Among the things it fixes are: unreasonable cross-slip, pencil glide, and the problematic line-direction parametrisation. The drag matrix, $\mtx{B}$ in \cref{eq:nodeVel}, can still be singular however, so this law also includes the scale-averaged Levenberg-Marquardt regularisation discussed in this chapter.} is the movement of a node along a line segment itself. \Cref{f:lineMovement} shows how a node moving along a line segment does not change its topology, and should therefore have no effect on the energy of the network. Consequently, nodal movement along the line direction must not contribute to the total drag, so the line drag component of the stress tensor, $\mathcal{B}$, should tend to zero. On the other end of the spectrum we have climb, which is orders of magnitude slower than glide, so that component of the drag tensor should be much larger than the rest. However, these requirements can make the drag matrix, $\mtx{B}$ in \cref{eq:nodeVel}, singular. Keeping the matrix invertible while simultaneously meeting the physical requirements is a careful balancing act. Moreover, the low drag along the line direction often causes nodal speeds along these vectors to be much higher than other directions, often limiting the integration time step as a result.
 \begin{figure}
-    \centering
-    \includegraphics[width=0.5\linewidth]{lineDirMov.pdf}
-    \caption{Node movement along dislocation line should have no drag contribution.}
-    \label{f:lineMovement}
+  \centering
+  \includegraphics[width=0.5\linewidth]{lineDirMov.pdf}
+  \caption{Node movement along dislocation line should have no drag contribution.}
+  \label{f:lineMovement}
 \end{figure}
 
 In the overdamped regime, $\dfrac{\rvar{d}\vec{v}}{\rvar{d}t}(\vec{x}) \to \vec{0}$, known driving forces (external forces + segment-segment interaction force + self-force) and the unkown drag force sum to give,
 \begin{align}\label{eq:drivePlusDrag}
-    \vec{F}_\rvar{drag}(\vec{x}) + \vec{F}_\rvar{drive}(\vec{x}) = \vec{0}\,.
+  \vec{F}_\rvar{drag}(\vec{x}) + \vec{F}_\rvar{drive}(\vec{x}) = \vec{0}\,.
 \end{align}
 Substituting \cref{eq:dragCoef} into \cref{eq:drivePlusDrag} and rearranging gives,
 \begin{align}\label{eq:nodeMob}
-    \mathcal{B}(\vec{\xi}(\vec{x})) \cdot \vec{v}(\vec{x}) & = \vec{F}_\rvar{drive}(\vec{x})\,.
+  \mathcal{B}(\vec{\xi}(\vec{x})) \cdot \vec{v}(\vec{x}) & = \vec{F}_\rvar{drive}(\vec{x})\,.
 \end{align}
 Strictly speaking, solving \cref{eq:nodeMob} requires global knowledge of the network. Fortunately, the discretisation makes it possible to distribute $\mathcal{B}$ along a line segment $i-j$,
 \begin{align}\label{eq:dragMatrix}
-    \mtx{B}_{ij} & = \oint_{C} N_i(\vec{x}) \mathcal{B}(\vec{\xi}(\vec{x})) N_j(\vec{x}) \rvar{d}L\,,
+  \mtx{B}_{ij} & = \oint_{C} N_i(\vec{x}) \mathcal{B}(\vec{\xi}(\vec{x})) N_j(\vec{x}) \rvar{d}L\,,
 \end{align}
 where $C$ is the whole network, $N_i$ and $N_j$ are simply shape functions that interpolate quantities given the relative position of a node to a segment, and $\rvar{d}L$ is the infinitesimal line segment. Thus giving individual expressions for node $i$ connected to node $j$. Using this discretisation and assuming the nodes connected to $i$ are subject to similar conditions, \cref{eq:nodeMob} can be broken up into an approximate expression for the velocity of a single node,
 \begin{align}\label{eq:nodeVel}
-    \vec{v}_i \approx \left(\sum\limits_j \mtx{B}_{ij}\right)^{-1} \cdot \vec{f}_i,\,
+  \vec{v}_i \approx \left(\sum\limits_j \mtx{B}_{ij}\right)^{-1} \cdot \vec{f}_i,\,
 \end{align}
 where $i$ is the node in question, $j$ are the nodes it shares segments with, and $\vec{f}_i$ is the local driving force on the node. From now on, we will drop the Einstein notation and refer to the local frame as $\vec{v} = \mtx{B}^{-1} \vec{f}$.
 
 The immediate implication of the orders of magnitude difference in the drag coefficients used to construct $\mathcal{B}$ (and therefore $\mtx{B}$) means the condition number of $\mtx{B}$ has the potential to be very large. Given that $\mtx{B}$ is symmetric and therefore normal, its condition number is given by,
 \begin{align}\label{eq:conditionNumb}
-    \kappa(\mtx{B}) = \dfrac{\lvert \lambda_\rvar{max} \rvert}{\lvert \lambda_\rvar{min} \rvert} \,,
+  \kappa(\mtx{B}) = \dfrac{\lvert \lambda_\rvar{max} \rvert}{\lvert \lambda_\rvar{min} \rvert} \,,
 \end{align}
 where $\lambda_\rvar{min}$, $\lambda_\rvar{max}$ are the minumum and maximum eigenvalues.
 
@@ -129,32 +129,32 @@ Bugs that evade tests and make it into production code are often either low impa
 
 The way our old mobility functions dealt with ill-conditioned $\mtx{B}$, relied on the integrator picking up the slack. There are several flaws with the approach found in \cref{alg:bTotalOld}, an example of a mobility function with this problem can be found under commit \href{https://github.com/TarletonGroup/EasyDD/blob/65907b022d1fe408fc1b2e5c5ca2bd1797ccae04/mobbcc1.m#L68}{\texttt{65907b0}} under the name \texttt{mobbcc1.m}. Every mobility law in that commit has this issue.
 \begin{algorithm}
-    \caption[Bad way of avoiding drag matrix inversion singularity.]{Avoiding the inversion of a singular matrix by making $\mtx{B}$ extremely wrong and hoping the integrator error bounds pick it up and decrease the timestep.}
-    \label{alg:bTotalOld}
-    \begin{algorithmic}
-        \State Diagonalise via eigenvalue decomposition, $\mtx{B} = \mtx{P} \mtx{D} \mtx{P}^{-1} \to \mtx{D} = \mtx{P}^{-1} \mtx{B} \mtx{P}$.
-        \State{\Comment{$\lambda_{\rvar{max}}$ and $\lambda_{\rvar{min}}$ are the maximum and minimum eigenvalues respectively.}}
-        \State $\kappa(\mtx{B}) = \lvert \lambda_{\rvar{max}} \rvert/ \lvert \lambda_{\rvar{min}} \rvert$
-        \If{$\kappa(\mtx{B}) < \kappa_{\rvar{min}}$}
-        \State{\Comment{Normalise $\mtx{D}$ and $\vec{f}$ to the maximum eigenvalue.}}
-        \State $\mtx{D} = \mtx{D} / \lambda_{\rvar{max}}$
-        \State $\vec{f} = \vec{f} / \lambda_{\rvar{max}}$
-        \State{\Comment{Invert $\mtx{D}$ by inverting each non-maximal eigenvalue.}}
-        \ForAll{$(\lambda_k \in \mtx{D}) \neq \lambda_{\rvar{max}}$}
-        \State{\Comment{$\lambda_\rvar{crit} \to 0$ is some arbitrary threshold for the minimum value of $\lambda_k$.}}
-        \If{$\lambda_k > \lambda_{\rvar{crit}}$}
-        \State $\lambda_k = 1/\lambda_k$
-        \Else
-        \State{\Comment{The inverse of 0 is not 0.}}
-        \State $\lambda_k = 0$
-        \EndIf
-        \EndFor
-        \State{\Comment{$\mtx{D}$ is already inverted.}}
-        \State $\vec{v} = \mtx{P} \mtx{D} \mtx{P}^{-1} \vec{f}$
-        \Else
-        \State $\vec{v} = \mtx{B}^{-1} \vec{f}$
-        \EndIf
-    \end{algorithmic}
+  \caption[Bad way of avoiding drag matrix inversion singularity.]{Avoiding the inversion of a singular matrix by making $\mtx{B}$ extremely wrong and hoping the integrator error bounds pick it up and decrease the timestep.}
+  \label{alg:bTotalOld}
+  \begin{algorithmic}
+    \State Diagonalise via eigenvalue decomposition, $\mtx{B} = \mtx{P} \mtx{D} \mtx{P}^{-1} \to \mtx{D} = \mtx{P}^{-1} \mtx{B} \mtx{P}$.
+    \State{\Comment{$\lambda_{\rvar{max}}$ and $\lambda_{\rvar{min}}$ are the maximum and minimum eigenvalues respectively.}}
+    \State $\kappa(\mtx{B}) = \lvert \lambda_{\rvar{max}} \rvert/ \lvert \lambda_{\rvar{min}} \rvert$
+    \If{$\kappa(\mtx{B}) < \kappa_{\rvar{min}}$}
+    \State{\Comment{Normalise $\mtx{D}$ and $\vec{f}$ to the maximum eigenvalue.}}
+    \State $\mtx{D} = \mtx{D} / \lambda_{\rvar{max}}$
+    \State $\vec{f} = \vec{f} / \lambda_{\rvar{max}}$
+    \State{\Comment{Invert $\mtx{D}$ by inverting each non-maximal eigenvalue.}}
+    \ForAll{$(\lambda_k \in \mtx{D}) \neq \lambda_{\rvar{max}}$}
+    \State{\Comment{$\lambda_\rvar{crit} \to 0$ is some arbitrary threshold for the minimum value of $\lambda_k$.}}
+    \If{$\lambda_k > \lambda_{\rvar{crit}}$}
+    \State $\lambda_k = 1/\lambda_k$
+    \Else
+    \State{\Comment{The inverse of 0 is not 0.}}
+    \State $\lambda_k = 0$
+    \EndIf
+    \EndFor
+    \State{\Comment{$\mtx{D}$ is already inverted.}}
+    \State $\vec{v} = \mtx{P} \mtx{D} \mtx{P}^{-1} \vec{f}$
+    \Else
+    \State $\vec{v} = \mtx{B}^{-1} \vec{f}$
+    \EndIf
+  \end{algorithmic}
 \end{algorithm}
 There are various problems with \cref{alg:bTotalOld}.
 
@@ -168,30 +168,30 @@ The regularisation of ill-conditioned systems is an active field of research \ci
 
 One of the most effective regularisations for low rank matrices is dampening the inversion by adding a small value, $c$---called the Levenberg-Marquardt coefficient---to a diagonal element of the matrix. This is roughly equivalent to perturbing the smallest eigenvalue as previously mentioned. If this factor is added to the diagonal elements of $\mtx{B}$, the inversion can be sufficiently dampened, whilst keeping the main contribution from each basis vector roughly equal in relation to each other. This amounts to adding a small multiple of the identity matrix, $\mtx{I}$, to an ill-conditioned matrix. For a more accurate solution, one can iteratively refine $c$ to find the smallest value that keeps the matrix inversion from blowing up. A good heuristic for the value of the Levenberg-Marquardt coefficient is,
 \begin{align}\label{eq:marquardt}
-    c = \max\left(\lvert\mtx{A}\rvert\right) \sqrt{\epsilon}\,,
+  c = \max\left(\lvert\mtx{A}\rvert\right) \sqrt{\epsilon}\,,
 \end{align}
 where $\epsilon$ is machine precision and $\lvert \mtx{A}\rvert$ denotes the absolute values of matrix $\mtx{A}$. This ensures the perturbation is scaled to a number that will not underflow during arithmetic operations. Simply put, it ensures the perturbation is small but does not disappear during matrix inversion.
 
 It is worth noting that this renormalisation is a source of error. Adding noise to a system---even if small and along the diagonal---moves the system away from its true behaviour. However, the degree to which it is wrong is many orders of magnitude smaller than what is done in \cref{alg:bTotalOld}. Indeed, \cref{alg:bTotalNew} uses $\pm c $ and both perturbed solutions are averaged to give a much more accurate and simpler solution even under the traditionally problematic scenarios mentioned above. This new algorithm is now present in the mobility laws we use, such as the most current version of \href{https://github.com/TarletonGroup/EasyDD/blob/372984499dd60136fc7badabd6cee192058d55d9/src/mobbcc_bb1b.m#L199}{\texttt{mobbcc\_bb.m}}.
 \begin{algorithm}
-    \caption[Dampening the drag matrix inversion singularity.]{Improved regularisation of $\mtx{B}$ by way of perturbing the diagonal.}
-    \label{alg:bTotalNew}
-    \begin{algorithmic}
-        \If{$\lVert \mtx{B} \rVert < \epsilon$}
-        \State $\vec{v} = \vec{0}$
-        \ElsIf{$\lvert \lambda_{\rvar{max}} \rvert/ \lvert \lambda_{\rvar{min}} \rvert > 1/\epsilon$}
-        \State $\mtx{B}_+ = \mtx{B} + \sqrt{\epsilon} \max(\mtx{\lvert B\rvert}) \mtx{I}$
-        \State $\mtx{B}_- = \mtx{B} - \sqrt{\epsilon} \max(\mtx{\lvert B\rvert}) \mtx{I}$
-        \State $\vec{v}_+ = \mtx{B}_+^{-1} \vec{f}$
-        \State $\vec{v}_- = \mtx{B}_-^{-1} \vec{f}$
-        \State $\vec{v} = (\vec{v}_- + \vec{v}_+)/2$
-        \Else
-        \State $\vec{v} = \mtx{B}^{-1} \vec{f}$
-        \EndIf
-    \end{algorithmic}
+  \caption[Dampening the drag matrix inversion singularity.]{Improved regularisation of $\mtx{B}$ by way of perturbing the diagonal.}
+  \label{alg:bTotalNew}
+  \begin{algorithmic}
+    \If{$\lVert \mtx{B} \rVert < \epsilon$}
+    \State $\vec{v} = \vec{0}$
+    \ElsIf{$\lvert \lambda_{\rvar{max}} \rvert/ \lvert \lambda_{\rvar{min}} \rvert > 1/\epsilon$}
+    \State $\mtx{B}_+ = \mtx{B} + \sqrt{\epsilon} \max(\mtx{\lvert B\rvert}) \mtx{I}$
+    \State $\mtx{B}_- = \mtx{B} - \sqrt{\epsilon} \max(\mtx{\lvert B\rvert}) \mtx{I}$
+    \State $\vec{v}_+ = \mtx{B}_+^{-1} \vec{f}$
+    \State $\vec{v}_- = \mtx{B}_-^{-1} \vec{f}$
+    \State $\vec{v} = (\vec{v}_- + \vec{v}_+)/2$
+    \Else
+    \State $\vec{v} = \mtx{B}^{-1} \vec{f}$
+    \EndIf
+  \end{algorithmic}
 \end{algorithm}
 
-This change enabled other team members, namely Haiyang Yu and Fengxian Liu to get further with their simulations. Haiyang's nanoindentation simulations have particularly complex dislocation structures with a substantial amount of junction formation \cite{YU2018}; while Fengxian's have large localised stress gradients as a result of inclusions \cite{fengxian}. Both require nodal velocities to be very accurately calculated, else the dislocations move erratically, readily cross slip, and cause massive slowdowns as simulations advance.
+This change enabled other team members, namely Haiyang Yu and Fengxian Liu to get further with their simulations. Haiyang's nanoindentation simulations have particularly complex dislocation structures with a substantial amount of junction formation \cite{YU2018,yu2020simulating,yu2019influence}; while Fengxian's have large localised stress gradients as a result of inclusions \cite{fengxian,fengxian2}. Both require nodal velocities to be very accurately calculated, else the dislocations move erratically, readily cross slip, and cause massive slowdowns as simulations advance.
 
 \section{Research software engineering}
 \label{s:rse}
@@ -202,11 +202,11 @@ In experimental research, a lot of care is take to ensure the methodoogy used is
 
 Along this vein, one of the primary goals of this project was to develop a competent codebase that non-experts can take advantage of with minimal preparation. There were multiple sub-objectives that help us achieve this.
 \begin{enumerate}
-    \item Provide a generic framework upon which the software can be modularly expanded with minimal change to the source: prevents increasingly divergent and incompatible source code between researchers.
-    \item Provide an easy way to autocomplete inputs with sensible default parameters: prevents the software from crashing when---inevitably---one of the required arguments for a function is undefined.
-    \item Improve readability and organisation: makes it easy to identify, fix bugs and know what the code does.
-    \item Compartmentalise variables: makes the code more generic and increases usability and readability by reducing the number of function arguments.
-    \item Optimise memory and computation: improves computational speed and reduces resource use.
+  \item Provide a generic framework upon which the software can be modularly expanded with minimal change to the source: prevents increasingly divergent and incompatible source code between researchers.
+  \item Provide an easy way to autocomplete inputs with sensible default parameters: prevents the software from crashing when---inevitably---one of the required arguments for a function is undefined.
+  \item Improve readability and organisation: makes it easy to identify, fix bugs and know what the code does.
+  \item Compartmentalise variables: makes the code more generic and increases usability and readability by reducing the number of function arguments.
+  \item Optimise memory and computation: improves computational speed and reduces resource use.
 \end{enumerate}
 
 Akin to the Ship of Theseus, it is hard to tell whether the new version of the code is the same code as when this project began. While \href{https://github.com/TarletonGroup/EasyDD}{\texttt{EasyDD v2.0}} is ``complete'', the process of improving the code is ongoing. The amount of initial technical debt since its inception as the infinite-domain discrete dislocation dynamics code, \href{http://micro.stanford.edu/wiki/Main_Page}{\texttt{DDLab}} \cite{ddlab}, plus what it accrued as the Tarleton Group expanded its functionality and turned it into \href{https://github.com/TarletonGroup/EasyDD/tree/65907b022d1fe408fc1b2e5c5ca2bd1797ccae04}{\texttt{EasyDD}}, is quite large and needs to be carefully chipped away so as not to introduce regressions. However, while the quality and capabilities of the code can be greatly improved, there is only so much that can be done without fundamentally redesigning it completely. This is in part the subject of \cref{c:future}.
@@ -223,25 +223,25 @@ An oft-overlooked aspect of code useability is its organisation. However, as a c
 
 Source control is a crucial aspect of industrial software development. It is an industry standard and is the very first thing to set up when starting a software development project. Academia is \emph{very} far behind in this regard. Source control software can perform a wide variety of tasks but among the most important are:
 \begin{enumerate}
-    \item provide a history of restore points in case things break;
-    \item keep a history of changes, who and when they made them;
-    \item lets developers and users make changes independently and request their changes be added to the main code as patches or new versions;
-    \item detect conflicts between versions to be merged; and
-    \item a robust versioning system integrated to the history of changes.
+  \item provide a history of restore points in case things break;
+  \item keep a history of changes, who and when they made them;
+  \item lets developers and users make changes independently and request their changes be added to the main code as patches or new versions;
+  \item detect conflicts between versions to be merged; and
+  \item a robust versioning system integrated to the history of changes.
 \end{enumerate}
 
 With regard to reproducibility, source control is a crucial tool. In both \cref{ss:integrator,ss:matrix} we took advantage of this to provide a specific commit and a file name. Source control can be used in local and remote services via private LAN (Local Area Network), as well as webhosting services such as Gitlab, Bitbucket, or GitHub as in our case. Webhosted services are a popular choice because they simplify and enhance the user and developer experience. For example, the visibility of code can be easily set to:
 \begin{enumerate}
-    \item private, where only those explicitly given access have read and write access; or
-    \item public, where anyone can view the code and propose changes which can then be reviewed and either accepted or rejected by those with write access.
+  \item private, where only those explicitly given access have read and write access; or
+  \item public, where anyone can view the code and propose changes which can then be reviewed and either accepted or rejected by those with write access.
 \end{enumerate}
 They also simplify the use of addons and webhooks that can perform myriad tasks like:
 \begin{enumerate}
-    \item automated remote testing on different platforms;
-    \item code coverage reports (what lines and how many times each of them was hit during automated testing);
-    \item automated documentation generation;
-    \item automated merge checks; and even
-    \item automated encryption/installation key generation.
+  \item automated remote testing on different platforms;
+  \item code coverage reports (what lines and how many times each of them was hit during automated testing);
+  \item automated documentation generation;
+  \item automated merge checks; and even
+  \item automated encryption/installation key generation.
 \end{enumerate}
 
 LAN-hosted version control software can make use of everything webhosted implementations can\footnote{Although man quality of life improvements such as GUIs (Graphical User Interfaces) and code editor integration might be unaccessible.}. Indeed, LAN-hosting is used for things pertaining to defense and national security, but the use of webhosted services is an easy choice for academia, industry, and private users. In fact, the digital version of this document is found in \href{https://github.com/dcelisgarza/DPhil_Thesis}{\texttt{https://github.com/dcelisgarza/DPhil\_Thesis}}, among many other repositories from recreational and past work. Moreover, whenever this document references a specific file, the digital version directly links to the relevant information (including relevant lines).
@@ -262,10 +262,10 @@ Modern software practices usually make heavy use of some form of variable encaps
 
 The act of keeping variables neatly stored in a way that fits a purpose is called encapsulation. By encapsulating variables, we greatly improve the usability of software by increasing readability, reducing the risk of human error by reducing the number of things to keep track of, and---if done properly---can even improve performance. How we go about encapsulating code is tightly bound to the design philosophy and programming paradigm of a software product, and the capabilities of the language it is written in. Common programming paradigms are outlined below.
 \begin{itemize}
-    \item Object-Oriented Programming (OOP): where variables are viewed as objects upon which the logic acts. Functions can take these objects and operate on them. This paradigm keeps related variables as part of a single entity and reduces the number of things users and developers have to keep track of, thus reducing the chance of implementation and user error. There are many advanced concepts and pitfalls in OOP that unecessarily increase complexity, so it is best to apply the KISS (keep it simple, stupid) approach for best results.
-    \item Data-Oriven Programming (DDP): where the data dictates the structure of the programme. It can be similar to OOP in some ways, where the object is made to fit the data, not the data made to fit the object. It often leads to more performant code and avoids many of the issues that arise from OOP because it forces developers to really think about how to manage the data.
-    \item Functional programming: where everything is a function. There is no state, but also no side effects. This is the strongest form of encapsulation but also the most inflexible.
-    \item Procedural programming: this is the most ancient form of programming (that makes use of functions) where there are only functions and variables. It is the form most scientific software packages take, and it is the most difficult to work with both, as a developer and as a user. Even modern computers which can make use of branch prediction and deletion, cache pre-fetching, and compiler optimisations can be hindered by this approach.
+  \item Object-Oriented Programming (OOP): where variables are viewed as objects upon which the logic acts. Functions can take these objects and operate on them. This paradigm keeps related variables as part of a single entity and reduces the number of things users and developers have to keep track of, thus reducing the chance of implementation and user error. There are many advanced concepts and pitfalls in OOP that unecessarily increase complexity, so it is best to apply the KISS (keep it simple, stupid) approach for best results.
+  \item Data-Oriven Programming (DDP): where the data dictates the structure of the programme. It can be similar to OOP in some ways, where the object is made to fit the data, not the data made to fit the object. It often leads to more performant code and avoids many of the issues that arise from OOP because it forces developers to really think about how to manage the data.
+  \item Functional programming: where everything is a function. There is no state, but also no side effects. This is the strongest form of encapsulation but also the most inflexible.
+  \item Procedural programming: this is the most ancient form of programming (that makes use of functions) where there are only functions and variables. It is the form most scientific software packages take, and it is the most difficult to work with both, as a developer and as a user. Even modern computers which can make use of branch prediction and deletion, cache pre-fetching, and compiler optimisations can be hindered by this approach.
 \end{itemize}
 
 Procedural programming is what gives us ``spagghetti'' code\footnote{Code with many branches and disparate procedures without a clear purpose. It is difficult to work with as a user and developer. It also tends to interfere with branch prediction and deletion, as well as many other compiler optimisations.}. Unfortunately, education in programming or software engineering in science is sorely lacking. As a result, a large amount of scientific software tends to be written in this way (particularly legacy software). Thus, we strive to separate ourselves from it as much as possible.
@@ -320,8 +320,8 @@ More memory allocation also means more garbage collection (GC) \cite{hanson1990f
 
 The use of sparse arrays is a must when working with finite elements, where matrices often take structured sparse forms. Taking advantage of this sparsity significantly reduces memory footprint and computational expense. The code already used these special data structures, along with Cholesky factorisation for faster solves of linear systems. However, \mintinline{matlab}{MATLAB} has a special form of it that exploits sparsity. This reduced the time required for the factorisation by around $50\times$, reduced the memory footprint of the final sparse arrays by a similar amount, and reduced the memory footprint of the actual factorisation procedure by approximately $10 \times$. The whole point of this factorisation is to make solving linear systems faster, in this case the calculation of the corrective displacements, $\vec{\hat{u}}$, on the fixed boundaries, $S_u$, as a result of the forces acting upon them,
 \begin{align}
-    \vec{\hat{u}} & = \mtx{K}^{-1} \vec{f}\quad \text{on } S_u                                               \\
-                  & = \mtx{P_l}^{-1} \mtx{U}^{-1} \mtx{L}^{-1} \mtx{P_u}^{-1} \vec{f}\quad \text{on } S_u\,.
+  \vec{\hat{u}} & = \mtx{K}^{-1} \vec{f}\quad \text{on } S_u                                               \\
+                & = \mtx{P_l}^{-1} \mtx{U}^{-1} \mtx{L}^{-1} \mtx{P_u}^{-1} \vec{f}\quad \text{on } S_u\,.
 \end{align}
 Where $\mtx{P_l}$ and $\mtx{P_u}$ are sparse permutation matrices of the sparse upper and lower $\mtx{U}$, $\mtx{L}$ matrices given by the sparse factorisation.
 
