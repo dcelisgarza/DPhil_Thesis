@@ -1,13 +1,13 @@
 # Corrections
 
-- [ ] Add a section reviewing DDD efforts to date.
+- [x] Add a section reviewing DDD efforts to date.
   - [x] This should include references to early work on edge-screw codes
     - [x] Devincre and others,
     - [x] TRIDIS
     - [x] microMegas
     - [x] including Novokshanov and Roberts if they ever published it,
-  - [ ] the advances to nodal codes, and
-    - [ ] a survey of the various existing DDD codes out there.
+  - [x] the advances to nodal codes, and
+    - [x] a survey of the various existing DDD codes out there.
     - [x] Include references to the Stanford/Livermore ParaDiS code,
     - [x] the work of Zbib, and also
     - [x] the current work of Fivel and collaborators,
@@ -17,7 +17,7 @@
   - [x] LLNL (Arsenlis/Rhee?) did 3D FEM coupling 15 years ago too.
 - [ ] Add a brief section on alternative approaches
   - [ ] e.g. dislocation density-based theories of Sandfeld and Hochrainer (near where you discuss level-set methods), and
-  - [ ] where DD sits in the multiscale hierarchy in comparison with DFT, MD, kMC, large scale FEM as discussed in viva.
+- [x] where DD sits in the multiscale hierarchy in comparison with DFT, MD, kMC, large scale FEM as discussed in viva.
 - [x] (Eshelby) inclusions can’t be mentioned without citing Eshelby!
 - [x] Mention the anisotropic work of Fitzgerald and Aubry (I think MODEL is aniso too?) and where anisotropy is important (e.g. hot Fe)/can be neglected (e.g. W).
 - [x] Nonlinearity of velocity response: work of Fitzgerald and Tarleton/Roberts. Did Bruce work on this too?
