@@ -15,8 +15,8 @@
     - [x] Ghoniem/Sun,
     - [x] and Giacomo Po’s code MODEL. Make sure the big papers are cited (e.g. Bulatov’s Nature papers, and those of Arsenlis, Cai, Marian).
   - [x] LLNL (Arsenlis/Rhee?) did 3D FEM coupling 15 years ago too.
-- [ ] Add a brief section on alternative approaches
-  - [ ] e.g. dislocation density-based theories of Sandfeld and Hochrainer (near where you discuss level-set methods), and
+- [x] Add a brief section on alternative approaches
+  - [x] e.g. dislocation density-based theories of Sandfeld and Hochrainer (near where you discuss level-set methods), and
 - [x] where DD sits in the multiscale hierarchy in comparison with DFT, MD, kMC, large scale FEM as discussed in viva.
 - [x] (Eshelby) inclusions can’t be mentioned without citing Eshelby!
 - [x] Mention the anisotropic work of Fitzgerald and Aubry (I think MODEL is aniso too?) and where anisotropy is important (e.g. hot Fe)/can be neglected (e.g. W).
