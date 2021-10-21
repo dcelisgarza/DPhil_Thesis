@@ -9,7 +9,7 @@ Throughout this chapter we will refer to various subroutines by what they perfor
     \item Collision resolution: resolve collisions between segments, i.e. where they collide, what nodes to merge and where to do so.
     \item Remeshing: ensuring the network has the appropriate resolution. Broken into 3 main parts:
           \begin{enumerate}
-              \item Virtual: nodes that have exited the finite volume need to be tracked so the slip step displacements can be properly accounted for. Virtual-surface segments, and virtual-virual segments are considered external and do not interact with internal segments in any way.
+              \item Virtual: nodes that have exited the finite volume need to be tracked, so the slip step displacements can be properly accounted for. Virtual-surface segments, and virtual-virual segments are considered external and do not interact with internal segments in any way.
               \item Surface: segments that exit the finite volume need a node on the surface to keep track of where they connect to the internal network. Surface-internal nodes are considered internal, so they interact with other internal segments.
               \item Internal: nodes that are internal to the finite volume.
           \end{enumerate}
@@ -32,7 +32,7 @@ For a given iteration, the time-evolution and topological changes used to be per
 \end{enumerate}
 This ordering was problematic. Fundamentally, it means the time evolution erroneously accounts for complex structures that should have dissipated into lower energy ones as per the quasi-static principle the model is based on. In other words, detecting and resolving collisions, generates highly connected structures that are high energy and thus produce large local stress gradients. The assumption that a node and its neighbours experience similar conditions breaks down near highly connected nodes. Moreover, the assmumption that the network is at thermodynamic equilibrium at every time step breaks down when there are highly connected nodes that would otherwise be broken up by separation. Both of these lead to \cref{eq:nodeVel} not holding, which is the fundamental assumption behind our mobility laws.
 
-Moreover, the order in which topological changes were carried out was also very sub-optimal from a practical aspect. Colliding after separating would sometimes result in nodes being separated only to immediately collide again. Remeshing only at the end meant the input network for the topological operations could have contained segments whose lengths were outside the bounds defined by the input file. Meaning the network may not have been properly discretised, leading to unecessarily complex structures that may not have had the required resolution. The solution was to simply remesh the network after its time evolution and before topological functions.
+Moreover, the order in which topological changes were carried out was also very suboptimal from a practical aspect. Colliding after separating would sometimes result in nodes being separated only to immediately collide again. Remeshing only at the end meant the input network for the topological operations could have contained segments whose lengths were outside the bounds defined by the input file. Meaning the network may not have been properly discretised, leading to unecessarily complex structures that may not have had the required resolution. The solution was to simply remesh the network after its time evolution and before topological functions.
 
 The other problem with this ordering was the combinatorial complexity of the separation subroutine. The consequence of the old ordering is that as simulations advanced, collisions tend to become more common. A higher collision rate means more highly connected nodes. The role of separation is to break these high energy, highly connected nodes into lower energy nodes with fewer connections. However, splitting nodes is a combinatorial problem, so the gross computational complexity is functionally $\mathcal{O}(N!)$, which is pretty much the worst possible scaling barring special cases such as tetration. \Cref{s:separation} contains a more detailed explanation as well as resolution of the problem.
 
@@ -80,7 +80,7 @@ In the same vein as \cref{ss:hinges}, two-line collisions were being improperly 
 \begin{figure}
     \centering
     \includegraphics[width=0.9\linewidth]{collisionDist.pdf}
-    \caption[Dislocation segments inside different collision radii.]{Multiple dislocation segments inside the same collision radius. Resolving all collisions at once leads to 3 different structures, 6 total but half are degenerate. Circles represent collision radii for the segments with corresponding line style and colour.}
+    \caption[Dislocation segments inside different collision radii.]{Multiple dislocation segments inside the same collision radius. Resolving all collisions at once leads to 3 different structures (6 total but half are degenerate). Circles represent collision radii for the segments with corresponding line style and colour.}
     \label{f:collisionRadius}
 \end{figure}
 

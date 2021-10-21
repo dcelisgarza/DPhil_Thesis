@@ -117,3 +117,6 @@
 {"rule":"COMMA_COMPOUND_SENTENCE","sentence":"^\\QThank you for having me over for Christmas so I wouldn't be alone, it meant the world to me.\\E$"}
 {"rule":"POSSESSIVE_APOSTROPHE","sentence":"^\\Q“La Isla”, mis amigos mi Ohana elegida desde mi retorno a México en el 2008.\\E$"}
 {"rule":"COMMA_PARENTHESIS_WHITESPACE","sentence":"^\\QSimulation strain rates are also necessarily higher than experimental ones as discrete dislocation dynamics time scales are on the order of .\\E$"}
+{"rule":"EN_COMPOUNDS","sentence":"^\\QHybrid MPI/OpenMP parallel programming on clusters of multi-core SMP nodes\\E$"}
+{"rule":"COMMA_COMPOUND_SENTENCE_2","sentence":"^\\QResolving all collisions at once leads to 3 different structures (6 total but half are degenerate).\\E$"}
+{"rule":"SUBJECT_VERB_AGREEMENT_PLURAL","sentence":"^\\QThe separation criteria is the power dissipation of the split configuration, compared to the power dissipation of the unseparated structure.\\E$"}

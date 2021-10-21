@@ -646,7 +646,7 @@ where $ \rvar{m},~\rvar{p} $ denote whether a variable belongs to the matrix or 
 
 The eigenstrain method \cite{eigenstrain_incl} as described in \cref{sss:discrete_continuum} has been shown to be a viable solution to this problem. One can compute the stresses and displacements produced by the dislocation ensemble on the inclusions' surfaces via DCM or SM. The SM method however needs to calculate polarisation stresses \cite{bdd}, an operation that significantly increases the number of calculations necessary to solve the problem.
 
-The DCM method has been used to simulate multiphase materials where the simulated dislocations reproduced experimentally observed behaviours such as the zig-zag patterns and dislocation forests produced by dislocations around precipitates in nickel superalloys \cite{dcm0, dcm_incl}. Reproducing such behaviours is not as trivial as simply adding inclusions to the simulation domain. In order to produce accurate results, one requires knowledge of the coherency stress between the different phases \cite{dcm_incl}. Such stresses are often due to lattice mismatches and differences in the thermal expansion coefficients. These coherency stresses localise the dislocations around the inclusions and are responsible for the observed localisation and aggregation of dislocations around precipitates as seen in \cref{f:coherency} \cite{dcm_incl}.
+The DCM method has been used to simulate multiphase materials where the simulated dislocations reproduced experimentally observed behaviours such as the zigzag patterns and dislocation forests produced by dislocations around precipitates in nickel superalloys \cite{dcm0, dcm_incl}. Reproducing such behaviours is not as trivial as simply adding inclusions to the simulation domain. In order to produce accurate results, one requires knowledge of the coherency stress between the different phases \cite{dcm_incl}. Such stresses are often due to lattice mismatches and differences in the thermal expansion coefficients. These coherency stresses localise the dislocations around the inclusions and are responsible for the observed localisation and aggregation of dislocations around precipitates as seen in \cref{f:coherency} \cite{dcm_incl}.
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{dln_inclusion.jpg}
@@ -753,7 +753,26 @@ With increasing frequency, one finds people across vastly different fields who c
 
 This project applies such techniques to accelerate and improve the ease with which outstanding problems in materials science can be tackled; making use of more accurate models, hardware acceleration and the techniques of high performance computing to enable more accurate, larger, more complex simulations than before---striving for increasingly faithful and insightful recreations of reality with a user-friendly code on a desktop PC.
 
-Much of the work presented herein has already proven useful in the simulation of complex simulations such as nano-indentation \cite{YU2018,yu2020simulating,yu2019influence} and several other research projects within the Tarleton group. Here we showcase the new capabilities, findings and methods; improvements, fixes and redesign of the codebase; as well as a showcase of relatively simple, yet formerly inaccessible simulations resulting from this work. Finally, we present an ambitious proposal for future work resulting from the insights gained during the project.
+Much of the work presented herein has already proven useful in the simulation of complex simulations such as nano-indentation \cite{YU2018,yu2020simulating,yu2019influence} and several
+other research projects within the Tarleton group. \Cref{f:nanoind} is a figure prepared with nanoindentation data from a simulation ran by Haiyang Yu over the course of a week. Without the improvements and additions presented in this work (particularly \cref{c:easydd,c:topology,c:tractions}), this would have been impossible even with months or years of runtime. In fact, Haiyang originally misinterpreted my request, and had been trying to get his simulation to stall during topological operations (collision-separation), as they used to stall so often, but he failed to do so because he did not take advantage of git's version control, and he did not have access to old versions. The figure was created with a loading rate that was one to two orders of magnitude greater than recommended and is not representative of any particular experiment, but even with the increased loading rate, the implications are clear: EasyDD is now much more robust, reliable, and capable than it ever was.
+
+\begin{figure}
+  \begin{subfigure}[b]{0.45\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{nanoindent.pdf}
+    \caption{Reaction force vs indentation depth.}
+  \end{subfigure}
+  ~
+  \begin{subfigure}[b]{0.45\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{nanoindentDln.pdf}
+    \caption{Prismatic dislocation structures pushed into the domain.}
+  \end{subfigure}
+  \caption{Simulated loading and unloading of spherical-tipped nanoindentation of a sample. Data and simulations provided by Haiyang Yu.}
+  \label{f:nanoind}
+\end{figure}
+
+Here we showcase the new capabilities, findings and methods; improvements, fixes and redesign of the codebase; as well as a showcase of relatively simple, yet formerly inaccessible simulations resulting from this work. We then present future plans for continuously improving the codebase. And finally we make a radical and ambitious proposal for future work resulting from the insights gained during the project.
 \savearabiccounter
 
 % 9591 words.
